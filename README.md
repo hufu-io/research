@@ -6,6 +6,8 @@
 
 HuFu 以 FullOn Network Blockchain 为基础公链，同时连接 Bitcoin、Ethereum、Solana、BNB Smart Chain、Tron Network 等多链生态。用户自主掌管钱包和数字资产，并可以通过统一入口进行社交互动、了解市场信息、发现 Web3 应用及获得 Aime 的使用引导。
 
+HuFu 连接 FullOn 生态中的 FullSwap、FullBridge、FullVest 等 DApp。其中 **FullVest** 是面向投资人的链上资产锁仓合约，用于按约定周期锁定资产，并在满足解锁条件后按照既定计划线性释放。
+
 ## 文档目录
 
 | 文档 | 内容 |
@@ -25,6 +27,7 @@ HuFu 以 FullOn Network Blockchain 为基础公链，同时连接 Bitcoin、Ethe
 - FullOn Network：[https://flon.network](https://flon.network)
 - FullSwap：[https://fullswap.flon.network](https://fullswap.flon.network)
 - FullBridge：[https://fullbridge.flon.network](https://fullbridge.flon.network)
+- FullVest：[https://fullvest.flon.network](https://fullvest.flon.network)
 
 Android 和 iOS App 的安装方式请通过 HuFu 官方网站获取。
 
