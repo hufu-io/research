@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#ffffff">
   <meta name="description" content="Hufu Wallet · UI/UX v1 正式视觉设计稿">
   <title>Hufu Wallet · UI/UX v1</title>
-  <link rel="stylesheet" href="ui.css?v=46">
+  <link rel="stylesheet" href="ui.css?v=80">
 </head>
 <body>
   <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -18,6 +18,7 @@
     <symbol id="i-profile" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></symbol>
     <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m8 10 4 4 4-4"/></symbol>
     <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
     <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
     <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></symbol>
     <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.8 1.8 0 0 0 .4 2l.1.1-2.8 2.8-.1-.1a1.8 1.8 0 0 0-2-.4 1.8 1.8 0 0 0-1.1 1.6v.2H10V21a1.8 1.8 0 0 0-1.1-1.6 1.8 1.8 0 0 0-2 .4l-.1.1L4 17.1l.1-.1a1.8 1.8 0 0 0 .4-2A1.8 1.8 0 0 0 3 13.9h-.2V10H3a1.8 1.8 0 0 0 1.6-1.1 1.8 1.8 0 0 0-.4-2L4 6.8 6.8 4l.1.1a1.8 1.8 0 0 0 2 .4A1.8 1.8 0 0 0 10 3V2.8h3.9V3a1.8 1.8 0 0 0 1.1 1.6 1.8 1.8 0 0 0 2-.4l.1-.1 2.8 2.8-.1.1a1.8 1.8 0 0 0-.4 2 1.8 1.8 0 0 0 1.6 1.1h.2V14H21a1.8 1.8 0 0 0-1.6 1Z"/></symbol>
@@ -31,6 +32,8 @@
     <symbol id="i-transaction-file" viewBox="0 0 24 24"><path d="M7 4h7l4 4v12H7z"/><path d="M14 4v4h4M10 14h5M10 17h4"/></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
     <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.6l6.2-.9z"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
     <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></symbol>
     <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="m3 3 18 18M10.5 6.2A10.4 10.4 0 0 1 12 6c6.5 0 10 6 10 6a17 17 0 0 1-2.2 2.8M6.2 6.2A16.3 16.3 0 0 0 2 12s3.5 6 10 6a9.8 9.8 0 0 0 3.8-.7"/></symbol>
     <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.8 3.2 8 7.5 9.5 4.3-1.5 7.5-4.7 7.5-9.5V6z"/><path d="m9 12 2 2 4-4"/></symbol>
@@ -43,6 +46,9 @@
     <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6"/></symbol>
     <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
     <symbol id="i-user-plus" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M19 8v6M16 11h6"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 4.5a4 4 0 0 1 0 7.5M18 14a7 7 0 0 1 4 7"/></symbol>
+    <symbol id="i-user-check" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 11l2 2 4-4"/></symbol>
+    <symbol id="i-switch-account" viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><path d="M2.5 17a5.5 5.5 0 0 1 11 0M16 5h5l-2-2M21 5l-2 2M21.5 17h-5l2 2M16.5 17l2-2"/></symbol>
   </svg>
 
   <div id="app-frame">
@@ -58,8 +64,8 @@
           <div class="account-main">
             <button class="account-wallet-button" type="button" data-action="open-wallet" aria-label="切换当前钱包">
               <span class="account-copy">
-                <strong class="account-nickname context-label">dragonmaster</strong>
-                <span class="account-address-line"><span class="account-tag wallet-name">日常钱包</span><span class="header-account-meta"><span class="wallet-address">flon8Q…p6K2</span></span></span>
+                <strong class="account-wallet-name wallet-name">日常钱包</strong>
+                <span class="account-address-line"><span class="account-nickname context-label">dragonmaster</span><span class="account-separator" aria-hidden="true">·</span><span class="header-account-meta"><span class="wallet-address">flon8Q…p6K2</span></span></span>
               </span>
             </button>
             <button class="account-address-copy" type="button" data-action="copy-address" aria-label="复制当前钱包地址"><svg class="icon icon-sm"><use href="#i-copy"></use></svg></button>
@@ -92,8 +98,7 @@
             </div>
           </section>
 
-          <section class="quick-section" aria-labelledby="quick-title">
-            <div class="section-heading compact-heading"><h2 id="quick-title">快捷功能</h2></div>
+          <section class="quick-section" aria-label="首页快捷功能">
             <div class="quick-grid" role="group" aria-label="首页快捷功能">
               <button class="quick-action" type="button" data-action="open-transfer">
                 <span class="quick-icon"><span class="quick-icon-front"><svg class="icon"><use href="#i-transfer-up"></use></svg></span></span>
@@ -114,7 +119,7 @@
             </div>
           </section>
 
-          <section aria-labelledby="ecosystem-title">
+          <section class="ecosystem-section" aria-labelledby="ecosystem-title">
             <div class="section-heading">
               <h2 id="ecosystem-title">探索生态</h2>
               <button class="text-link" type="button" data-view-target="discover">全部<svg class="icon icon-xs"><use href="#i-right"></use></svg></button>
@@ -133,7 +138,7 @@
             </div>
           </section>
 
-          <section aria-labelledby="holding-title">
+          <section class="holding-section" aria-labelledby="holding-title">
             <div class="section-heading">
               <h2 id="holding-title">持仓行情</h2>
               <button class="text-link" type="button" data-view-target="market">市场<svg class="icon icon-xs"><use href="#i-right"></use></svg></button>
@@ -160,7 +165,7 @@
             </div>
           </section>
 
-          <section aria-labelledby="news-title">
+          <section class="news-section" aria-labelledby="news-title">
             <div class="section-heading"><h2 id="news-title">市场快讯</h2><button class="text-link" type="button" data-action="toast" data-message="已加载更多市场快讯">更多<svg class="icon icon-xs"><use href="#i-right"></use></svg></button></div>
             <div class="news-list" role="list">
               <article class="news-card" role="listitem">
@@ -185,25 +190,19 @@
 
       <!-- ============ 社交 ============ -->
       <section class="page-view" data-view="social" aria-labelledby="social-title" hidden>
-        <header class="appbar">
-          <div><span class="eyebrow">钱包身份已连接</span><h1 id="social-title">社交</h1></div>
-          <div class="appbar-actions">
-            <button class="icon-button" type="button" aria-label="搜索用户"><svg class="icon"><use href="#i-search"></use></svg></button>
-            <button class="icon-button" type="button" aria-label="添加联系人"><svg class="icon"><use href="#i-user-plus"></use></svg></button>
-          </div>
+        <header class="appbar social-appbar">
+          <button class="icon-button social-drawer-trigger" type="button" aria-label="打开社交菜单" aria-haspopup="dialog" aria-expanded="false" aria-controls="social-drawer" data-social-drawer-trigger><svg class="icon"><use href="#i-menu"></use></svg></button>
+          <h1 id="social-title">社交</h1>
         </header>
         <div class="page-content social-content">
-          <button class="search-field" type="button" data-action="toast" data-message="搜索用户、群聊或钱包账户名"><svg class="icon icon-sm"><use href="#i-search"></use></svg><span>搜索用户、群聊或账户名</span></button>
-          <section aria-labelledby="recent-dapp-title">
-            <div class="section-heading compact-heading"><h2 id="recent-dapp-title">最近访问</h2><button class="text-link" type="button" data-view-target="discover">管理</button></div>
+          <section class="recent-access-panel" aria-label="最近访问的 DApp">
             <div class="recent-dapps">
               <button type="button" data-action="open-dapp" data-dapp="FullSwap" data-domain="fullswap.flon.network" data-network="FullOn"><span class="dapp-logo logo-swap">FS</span><span>FullSwap</span></button>
               <button type="button" data-action="open-bridge"><span class="dapp-logo logo-bridge">FB</span><span>FullBridge</span></button>
-              <button type="button" data-action="toast" data-message="发现更多 FullOn 生态应用"><span class="dapp-logo logo-more"><svg class="icon"><use href="#i-grid"></use></svg></span><span>更多</span></button>
+              <button class="recent-dapp-manage" type="button" data-view-target="discover"><span class="dapp-logo logo-more"><svg class="icon"><use href="#i-grid"></use></svg></span><span>管理</span></button>
             </div>
           </section>
-          <section aria-labelledby="messages-title">
-            <div class="section-heading compact-heading"><h2 id="messages-title">消息</h2><span class="section-meta">3 条未读</span></div>
+          <section aria-label="消息列表">
             <div class="chat-list">
               <button class="chat-row" type="button" data-action="toast" data-message="打开 FullOn Builder 群聊">
                 <span class="chat-avatar group-avatar">FO<span class="online-dot"></span></span>
@@ -225,38 +224,35 @@
               </button>
             </div>
           </section>
-          <aside class="security-note"><svg class="icon"><use href="#i-shield"></use></svg><p><strong>资产操作始终由你确认</strong><span>聊天消息不会自动触发转账、授权或签名。</span></p></aside>
         </div>
       </section>
 
       <!-- ============ 市场 ============ -->
       <section class="page-view" data-view="market" aria-labelledby="market-title" hidden>
-        <header class="appbar">
-          <div><span class="eyebrow">公开市场数据</span><h1 id="market-title">市场</h1></div>
-          <button class="icon-button" type="button" aria-label="搜索币种"><svg class="icon"><use href="#i-search"></use></svg></button>
+        <header class="appbar market-appbar">
+          <h1 id="market-title">市场</h1>
+          <button class="icon-button market-search-trigger" type="button" aria-label="搜索币种" data-action="open-market-search"><svg class="icon"><use href="#i-search"></use></svg></button>
+          <form class="market-search" role="search" data-market-search hidden>
+            <div class="market-search-field"><svg class="icon icon-sm" aria-hidden="true"><use href="#i-search"></use></svg><label class="sr-only" for="market-search-input">搜索币种</label><input id="market-search-input" type="search" inputmode="search" autocomplete="off" placeholder="搜索币种" data-market-search-input><button class="market-search-clear" type="button" aria-label="清除搜索" data-action="clear-market-search" hidden><svg class="icon icon-sm" aria-hidden="true"><use href="#i-close"></use></svg></button></div>
+            <button class="market-search-cancel" type="button" data-action="close-market-search">取消</button>
+          </form>
         </header>
         <div class="page-content market-content">
           <div class="segmented-control" role="tablist" aria-label="行情分类">
-            <button class="is-active" type="button" role="tab" aria-selected="true">自选</button>
-            <button type="button" role="tab" aria-selected="false">FullOn</button>
-            <button type="button" role="tab" aria-selected="false">主流币</button>
+            <button class="is-active" type="button" role="tab" aria-selected="true" tabindex="0" data-market-category="self">自选</button>
+            <button type="button" role="tab" aria-selected="false" tabindex="-1" data-market-category="fullon">FullOn</button>
+            <button type="button" role="tab" aria-selected="false" tabindex="-1" data-market-category="mainstream">主流币</button>
           </div>
-          <section class="market-hero" aria-labelledby="flon-market-title">
-            <div class="market-hero-top"><div><span class="coin-pair">FLON / USDT</span><h2 id="flon-market-title">$0.0842</h2><span class="up">+8.24% 今日</span></div><span class="live-pill"><span></span>实时</span></div>
-            <svg class="large-chart" viewBox="0 0 340 112" role="img" aria-label="FLON 今日价格呈上升趋势"><defs><linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#42d4b9" stop-opacity=".3"/><stop offset="1" stop-color="#42d4b9" stop-opacity="0"/></linearGradient></defs><path class="chart-area" d="M0 92C25 84 36 89 56 71s31-10 51-19 30-32 54-21 37 16 60 3 29-6 49-15 37-3 70-19V112H0Z"/><path class="chart-line" d="M0 92C25 84 36 89 56 71s31-10 51-19 30-32 54-21 37 16 60 3 29-6 49-15 37-3 70-19"/></svg>
-            <div class="chart-range"><button type="button">1H</button><button class="is-active" type="button">1D</button><button type="button">1W</button><button type="button">1M</button><button type="button">1Y</button></div>
-            <button class="secondary-button market-cta" type="button" data-action="open-dapp" data-dapp="FullSwap" data-domain="fullswap.flon.network" data-network="FullOn">前往 FullSwap 市场<svg class="icon icon-sm"><use href="#i-external"></use></svg></button>
-          </section>
-          <section aria-labelledby="market-list-title">
-            <div class="section-heading compact-heading"><h2 id="market-list-title">行情列表</h2><span class="section-meta">更新于 13:42</span></div>
+          <section aria-label="行情列表">
             <div class="market-card market-card-flat">
-              <button class="market-row market-row-wide" type="button" data-action="open-market-detail" data-symbol="FLON"><img class="coin-logo" src="assets/images/dapplogo/flon.png" alt="FLON"><span class="coin-name"><strong>FLON</strong><small>FLON / USDT</small></span><span class="price"><strong>$0.0842</strong><small class="up">+8.24%</small></span></button>
-              <button class="market-row market-row-wide" type="button" data-action="open-market-detail" data-symbol="SING"><span class="coin-logo letter-logo sing-logo">S</span><span class="coin-name"><strong>SING</strong><small>SING / USDT</small></span><span class="price"><strong>$0.0196</strong><small class="down">−2.18%</small></span></button>
-              <button class="market-row market-row-wide" type="button" data-action="open-market-detail" data-symbol="BTC"><img class="coin-logo" src="assets/images/icon/BTC.png" alt="BTC"><span class="coin-name"><strong>Bitcoin</strong><small>BTC / USDT</small></span><span class="price"><strong>$116,842</strong><small class="up">+1.46%</small></span></button>
-              <button class="market-row market-row-wide" type="button" data-action="open-market-detail" data-symbol="ETH"><img class="coin-logo" src="assets/images/icon/ETH.png" alt="ETH"><span class="coin-name"><strong>Ethereum</strong><small>ETH / USDT</small></span><span class="price"><strong>$3,742.16</strong><small class="down">−0.62%</small></span></button>
+              <div class="market-table-head" role="row"><span class="market-head-icon" role="columnheader" aria-sort="none"><button class="market-sort" type="button" data-market-sort="symbol">币种<span class="sort-arrows" aria-hidden="true"><i></i><i></i></span></button></span><span class="market-head-volume" role="columnheader" aria-sort="none"><button class="market-sort" type="button" data-market-sort="volume">24h成交量<span class="sort-arrows" aria-hidden="true"><i></i><i></i></span></button></span><span class="market-head-price" role="columnheader" aria-sort="none"><button class="market-sort" type="button" data-market-sort="price">最新价<span class="sort-arrows" aria-hidden="true"><i></i><i></i></span></button></span><span aria-hidden="true"></span></div>
+              <div class="market-row-shell" data-market-symbol="FLON" data-market-name="FLON" data-market-category="fullon" data-market-volume="2840000" data-market-price="0.0842"><button class="market-row market-row-table" type="button" data-action="open-market-detail" data-symbol="FLON"><span class="market-icon"><span class="coin-logo letter-logo flon-logo">F</span></span><span class="coin-name market-volume-info"><strong>FLON</strong><small>Vol $2.84M</small></span><span class="market-price-stack"><strong class="market-latest-price">$0.0842</strong><span class="market-change-row"><span class="sparkline up-line" aria-hidden="true"><svg viewBox="0 0 72 28"><path d="M2 24c8-2 9-9 17-9s9 5 16 2 12-14 19-12 8 5 16-3"/></svg></span><small class="market-change up">+8.24%</small></span></span></button><button class="market-favorite" type="button" data-action="toggle-market-favorite" data-symbol="FLON" aria-label="收藏 FLON" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg></button></div>
+              <div class="market-row-shell" data-market-symbol="SING" data-market-name="SING" data-market-category="fullon" data-market-volume="640200" data-market-price="0.0196"><button class="market-row market-row-table" type="button" data-action="open-market-detail" data-symbol="SING"><span class="market-icon"><span class="coin-logo letter-logo sing-logo">S</span></span><span class="coin-name market-volume-info"><strong>SING</strong><small>Vol $640.20K</small></span><span class="market-price-stack"><strong class="market-latest-price">$0.0196</strong><span class="market-change-row"><span class="sparkline down-line" aria-hidden="true"><svg viewBox="0 0 72 28"><path d="M2 5c8 1 11 10 18 8s10-7 17-3 8 12 16 10 10-7 17 5"/></svg></span><small class="market-change down">−2.18%</small></span></span></button><button class="market-favorite" type="button" data-action="toggle-market-favorite" data-symbol="SING" aria-label="收藏 SING" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg></button></div>
+              <div class="market-row-shell" data-market-symbol="BTC" data-market-name="Bitcoin" data-market-category="mainstream" data-market-volume="1190000000" data-market-price="116842"><button class="market-row market-row-table" type="button" data-action="open-market-detail" data-symbol="BTC"><span class="market-icon"><img class="coin-logo" src="assets/images/icon/BTC.png" alt="BTC"></span><span class="coin-name market-volume-info"><strong>BTC</strong><small>Vol $1.19B</small></span><span class="market-price-stack"><strong class="market-latest-price">$116,842</strong><span class="market-change-row"><span class="sparkline up-line" aria-hidden="true"><svg viewBox="0 0 72 28"><path d="M2 18c8 0 10-3 18-2s10 4 17 2 11-5 17-4 10 2 16-1"/></svg></span><small class="market-change up">+1.46%</small></span></span></button><button class="market-favorite" type="button" data-action="toggle-market-favorite" data-symbol="BTC" aria-label="收藏 BTC" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg></button></div>
+              <div class="market-row-shell" data-market-symbol="ETH" data-market-name="Ethereum" data-market-category="mainstream" data-market-volume="668400000" data-market-price="3742.16"><button class="market-row market-row-table" type="button" data-action="open-market-detail" data-symbol="ETH"><span class="market-icon"><img class="coin-logo" src="assets/images/icon/ETH.png" alt="ETH"></span><span class="coin-name market-volume-info"><strong>ETH</strong><small>Vol $668.40M</small></span><span class="market-price-stack"><strong class="market-latest-price">$3,742.16</strong><span class="market-change-row"><span class="sparkline down-line" aria-hidden="true"><svg viewBox="0 0 72 28"><path d="M2 7c8 1 10 8 18 7s10-6 17-4 9 11 17 9 9-5 16 6"/></svg></span><small class="market-change down">−0.62%</small></span></span></button><button class="market-favorite" type="button" data-action="toggle-market-favorite" data-symbol="ETH" aria-label="收藏 ETH" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-star"></use></svg></button></div>
             </div>
+            <p class="market-search-empty" data-market-search-empty hidden>未找到相关币种，请尝试其他关键词</p>
           </section>
-          <aside class="data-note"><span>数据仅供参考，不构成投资建议</span><button type="button" data-action="toast" data-message="行情数据来源与更新时间说明">数据说明</button></aside>
         </div>
       </section>
 
@@ -268,25 +264,17 @@
           <button class="icon-button discover-history-button" type="button" aria-label="DApp 浏览历史" title="DApp 浏览历史" data-action="toast" data-message="打开 DApp 浏览历史"><svg class="icon"><use href="#i-history"></use></svg></button>
         </header>
         <div class="page-content discover-content">
-          <section class="featured-dapp" aria-label="FullOn 生态精选">
-            <span class="featured-kicker">FULLON 精选</span>
-            <h2>发现可信的<br>链上应用</h2>
-            <p>打开前核对域名、网络和权限范围</p>
-            <button type="button" data-action="open-dapp" data-dapp="FullSwap" data-domain="fullswap.flon.network" data-network="FullOn" data-logo="FS">探索 FullSwap<svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
-          </section>
           <div class="chain-chips" role="list" aria-label="公链筛选">
             <button class="is-active" type="button">全部</button><button type="button"><img src="assets/images/dapplogo/flon.png" alt="">FullOn</button><button type="button"><img src="assets/images/icon/ETH.png" alt="">Ethereum</button><button type="button"><span aria-hidden="true">◎</span>Solana</button>
           </div>
-          <section aria-labelledby="fullon-apps-title">
-            <div class="section-heading"><h2 id="fullon-apps-title">FullOn 生态</h2></div>
+          <section aria-label="DApp 列表">
             <div class="discover-grid">
-              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="FullSwap" data-domain="fullswap.flon.network" data-network="FullOn" data-logo="FS"><span class="dapp-logo logo-swap">FS</span><span><strong>FullSwap</strong><small>兑换 · 流动性</small></span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></button>
-              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="FullBridge" data-domain="fullbridge.flon.network" data-network="FullOn" data-logo="FB"><span class="dapp-logo logo-bridge">FB</span><span><strong>FullBridge</strong><small>跨链 · 资产桥</small></span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></button>
-              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="FullOn RWA" data-domain="rwa.flon.network" data-network="FullOn" data-logo="R"><span class="dapp-logo logo-rwa">R</span><span><strong>FullOn RWA</strong><small>RWA · 资产服务</small></span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></button>
-              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="Red Packet" data-domain="redpacket.flon.network" data-network="FullOn" data-logo="RP"><span class="dapp-logo logo-redpacket">RP</span><span><strong>Red Packet</strong><small>社交 · 数字红包</small></span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></button>
+              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="FullSwap" data-domain="fullswap.flon.network" data-network="FullOn" data-logo="FS" data-dapp-type="DeFi"><span class="dapp-logo logo-swap">FS</span><span><strong>FullSwap</strong><small>兑换 · 流动性</small></span><span class="dapp-card-meta"><span class="dapp-type-tag">DeFi</span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></span></button>
+              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="FullBridge" data-domain="fullbridge.flon.network" data-network="FullOn" data-logo="FB" data-dapp-type="DeFi"><span class="dapp-logo logo-bridge">FB</span><span><strong>FullBridge</strong><small>跨链 · 资产桥</small></span><span class="dapp-card-meta"><span class="dapp-type-tag">DeFi</span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></span></button>
+              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="FullOn RWA" data-domain="rwa.flon.network" data-network="FullOn" data-logo="R" data-dapp-type="NFT"><span class="dapp-logo logo-rwa">R</span><span><strong>FullOn RWA</strong><small>RWA · 资产服务</small></span><span class="dapp-card-meta"><span class="dapp-type-tag">NFT</span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></span></button>
+              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="Red Packet" data-domain="redpacket.flon.network" data-network="FullOn" data-logo="RP" data-dapp-type="日常工具"><span class="dapp-logo logo-redpacket">RP</span><span><strong>Red Packet</strong><small>社交 · 数字红包</small></span><span class="dapp-card-meta"><span class="dapp-type-tag">日常工具</span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></span></button>
             </div>
           </section>
-          <aside class="security-note"><svg class="icon"><use href="#i-lock"></use></svg><p><strong>打开前始终确认</strong><span>DApp 名称、目标域名、当前网络与风险提示。</span></p></aside>
         </div>
       </section>
 
@@ -294,7 +282,7 @@
       <section class="page-view profile-view" data-view="profile" aria-labelledby="profile-title" hidden>
         <header class="appbar profile-appbar">
           <button class="profile-identity" type="button" data-action="toast" data-message="查看社交与链上身份"><img src="assets/images/about_us/hufu.png" alt="Hufu 头像"><span><span class="eyebrow">PROFILE</span><strong id="profile-title">dragonmaster</strong></span></button>
-          <div class="appbar-actions"><button class="icon-button" type="button" aria-label="通知"><svg class="icon"><use href="#i-bell"></use></svg></button><button class="icon-button" type="button" aria-label="设置"><svg class="icon"><use href="#i-settings"></use></svg></button></div>
+          <div class="appbar-actions"><button class="icon-button" type="button" aria-label="通知"><svg class="icon"><use href="#i-bell"></use></svg></button><button class="icon-button" type="button" aria-label="设置" data-view-target="settings"><svg class="icon"><use href="#i-settings"></use></svg></button></div>
         </header>
         <div class="page-content profile-content">
           <section class="wallet-card" aria-labelledby="wallet-card-title">
@@ -313,6 +301,16 @@
             </div>
           </section>
 
+        </div>
+      </section>
+
+      <!-- ============ 设置 ============ -->
+      <section class="page-view settings-view" data-view="settings" aria-labelledby="settings-title" hidden>
+        <header class="appbar settings-appbar">
+          <button class="settings-back" type="button" data-view-target="profile" aria-label="返回我的"><svg class="icon"><use href="#i-back"></use></svg></button>
+          <h1 id="settings-title">设置</h1>
+        </header>
+        <div class="page-content settings-content">
           <section class="menu-group" aria-label="账户与钱包管理">
             <button class="menu-row" type="button" data-action="open-security"><span class="menu-icon shield-bg"><svg class="icon"><use href="#i-shield"></use></svg></span><span class="menu-copy"><strong>身份与安全</strong><small>RWID 已绑定 · 安全状态良好</small></span><span class="status-label success-label">安全</span><svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
             <button class="menu-row" type="button" data-action="open-wallet"><span class="menu-icon wallet-bg"><svg class="icon"><use href="#i-wallet"></use></svg></span><span class="menu-copy"><strong>钱包管理</strong><small>3 个多链钱包 · 本地昵称</small></span><svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
@@ -323,13 +321,29 @@
             <div class="menu-row aime-setting-row"><span class="menu-icon aime-bg"><svg class="icon"><use href="#i-spark"></use></svg></span><span class="menu-copy"><strong>Aime 智能助手</strong><small>页面解答 · DApp 导航 · 隐私设置</small></span><button class="switch is-on" type="button" role="switch" aria-checked="true" aria-label="开启或关闭 Aime" data-action="toggle-aime"><span></span></button></div>
             <button class="menu-row" type="button" data-action="toast" data-message="打开通用设置"><span class="menu-icon settings-bg"><svg class="icon"><use href="#i-settings"></use></svg></span><span class="menu-copy"><strong>通用设置</strong><small>语言、货币、网络、主题与通知</small></span><svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
           </section>
-
-          <div class="profile-footer"><img src="assets/images/about_us/hufu.png" alt=""><span>Hufu Wallet · v1 UI/UX</span></div>
         </div>
       </section>
     </main>
 
-    <button class="aime-fab is-collapsed" type="button" data-state="peek" aria-label="展开 Aime 智能助手" aria-description="点击可展开 Aime" title="点击展开 Aime">
+    <div class="social-drawer-layer canvas-fixed" data-social-drawer-layer hidden>
+      <button class="social-drawer-scrim" type="button" aria-label="关闭社交菜单" data-social-drawer-close></button>
+      <aside class="social-drawer" id="social-drawer" role="dialog" aria-modal="true" aria-labelledby="social-drawer-title">
+        <div class="social-drawer-header">
+          <button class="icon-button social-drawer-close" type="button" aria-label="关闭社交菜单" data-social-drawer-close><svg class="icon"><use href="#i-close"></use></svg></button>
+          <div class="social-drawer-avatar" role="img" aria-label="dragonmaster 的模拟用户头像"><span>DM</span></div>
+          <strong id="social-drawer-title">dragonmaster</strong>
+          <div class="social-drawer-user-meta"><span>@dragonmaster</span></div>
+        </div>
+        <nav class="social-drawer-actions" aria-label="社交操作">
+          <button type="button" data-social-drawer-item data-action="toast" data-message="打开添加好友"><span class="social-drawer-action-icon"><svg class="icon"><use href="#i-user-plus"></use></svg></span><span>添加好友</span><svg class="icon icon-sm social-drawer-chevron"><use href="#i-right"></use></svg></button>
+          <button type="button" data-social-drawer-item data-action="toast" data-message="打开创建群组"><span class="social-drawer-action-icon"><svg class="icon"><use href="#i-users"></use></svg></span><span>创建群组</span><svg class="icon icon-sm social-drawer-chevron"><use href="#i-right"></use></svg></button>
+          <button type="button" data-social-drawer-item data-action="toast" data-message="打开好友申请"><span class="social-drawer-action-icon"><svg class="icon"><use href="#i-user-check"></use></svg></span><span>好友申请</span><svg class="icon icon-sm social-drawer-chevron"><use href="#i-right"></use></svg></button>
+          <button type="button" data-social-drawer-item data-action="toast" data-message="打开账号切换"><span class="social-drawer-action-icon"><svg class="icon"><use href="#i-switch-account"></use></svg></span><span>切换账号</span><svg class="icon icon-sm social-drawer-chevron"><use href="#i-right"></use></svg></button>
+        </nav>
+      </aside>
+    </div>
+
+    <button class="aime-fab is-collapsed" type="button" data-state="peek2" aria-label="展开 Aime 智能助手" aria-description="点击可展开 Aime" title="点击展开 Aime">
       <span class="aime-fab-bubble"><span>问问 Aime</span></span>
       <span class="aime-fab-arrow" aria-hidden="true"></span>
       <span class="aime-pet-visual" aria-hidden="true"></span>
@@ -390,6 +404,7 @@
   <script src="assets/aime/components/aime_thinking.component.js?v=3"></script>
   <script src="assets/aime/components/aime_greeting.component.js?v=3"></script>
   <script src="assets/aime/components/aime_peek.component.js?v=3"></script>
-  <script src="ui.js?v=22"></script>
+  <script src="assets/aime/components/aime_peek2.component.js?v=2"></script>
+  <script src="ui.js?v=32"></script>
 </body>
 </html>

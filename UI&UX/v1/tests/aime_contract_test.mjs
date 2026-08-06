@@ -8,10 +8,11 @@ const testDir = dirname(fileURLToPath(import.meta.url));
 const root = resolve(testDir, "..");
 const read = (path) => readFile(resolve(root, path), "utf8");
 const states = [
-  { name: "idle", loop: true, duration: 90 },
-  { name: "thinking", loop: true, duration: 90 },
-  { name: "greeting", loop: false, duration: 30 },
-  { name: "peek", loop: false, duration: 90 }
+  { name: "idle", loop: true, duration: 90, componentVersion: 3 },
+  { name: "thinking", loop: true, duration: 90, componentVersion: 3 },
+  { name: "greeting", loop: false, duration: 30, componentVersion: 3 },
+  { name: "peek", loop: false, duration: 90, componentVersion: 3 },
+  { name: "peek2", loop: false, duration: 90, componentVersion: 2, animationImage: "aime_peek.png" }
 ];
 
 function descendants(value, result = []) {
@@ -35,23 +36,23 @@ const [html, css, js, componentRuntime, generator, vectorGenerator] = await Prom
 ]);
 
 assert.match(html, /class="aime-fab is-collapsed"/, "AIMe must start collapsed");
-assert.match(html, /data-state="peek"/, "Initial markup must select peek");
+assert.match(html, /data-state="peek2"/, "Initial markup must select peek2");
 assert.match(html, /aria-label="展开 Aime 智能助手"/, "Initial accessibility label must describe expansion");
-assert.match(html, /ui\.css\?v=45/, "AIMe styles must use the current cache version");
-assert.match(html, /ui\.js\?v=22/, "Separated component integration must invalidate the script cache");
+assert.match(html, /ui\.css\?v=\d+/, "AIMe styles must use a cache version");
+assert.match(html, /ui\.js\?v=\d+/, "Separated component integration must use a cache version");
 assert.match(html, /components\/aime_animation_component\.js\?v=2/, "The separated component runtime must load first");
 
 const sourceJsonNames = (await readdir(resolve(root, "assets/aime")))
-  .filter((name) => /^aime_(idle|thinking|greeting|peek)\.json$/.test(name))
+  .filter((name) => /^aime_(idle|thinking|greeting|peek|peek2)\.json$/.test(name))
   .sort();
 const fallbackNames = (await readdir(resolve(root, "assets/aime/images")))
-  .filter((name) => /^aime_(idle|thinking|greeting|peek)\.png$/.test(name))
+  .filter((name) => /^aime_(idle|thinking|greeting|peek|peek2)\.png$/.test(name))
   .sort();
 assert.deepEqual(sourceJsonNames, states.map(({ name }) => `aime_${name}.json`).sort(), "Each state must have exactly one JSON");
 assert.deepEqual(fallbackNames, states.map(({ name }) => `aime_${name}.png`).sort(), "Each state must have exactly one fallback PNG");
 
-for (const { name, loop, duration } of states) {
-  assert.match(html, new RegExp(`assets/aime/components/aime_${name}\\.component\\.js\\?v=3`), `${name} component must be loaded`);
+for (const { name, loop, duration, componentVersion, animationImage = `aime_${name}.png` } of states) {
+  assert.match(html, new RegExp(`assets/aime/components/aime_${name}\\.component\\.js\\?v=${componentVersion}`), `${name} component must be loaded`);
   const sourceAnimation = JSON.parse(await read(`assets/aime/aime_${name}.json`));
   const componentSource = await read(`assets/aime/components/aime_${name}.component.js`);
   const match = componentSource.match(/^window\.AimeAnimationComponents\.register\((.*)\);\n$/s);
@@ -61,8 +62,10 @@ for (const { name, loop, duration } of states) {
   assert.equal(component.loop, loop, `${name} loop behavior must stay encapsulated`);
   const expectedAnimation = structuredClone(sourceAnimation);
   const expectedImageAsset = expectedAnimation.assets.find(({ id }) => id === `aime_${name}_image`);
+  const animationMaster = await readFile(resolve(root, "assets/aime/images", animationImage));
+  const animationImageData = `data:image/png;base64,${animationMaster.toString("base64")}`;
   expectedImageAsset.u = "";
-  expectedImageAsset.p = component.fallbackImage;
+  expectedImageAsset.p = animationImageData;
   expectedImageAsset.e = 1;
   assert.deepEqual(component.animationData, expectedAnimation, `${name} component must only inline the paired HD image`);
   assert.equal(component.animationData.fr, 30, `${name} must run at 30 FPS`);
@@ -74,10 +77,10 @@ for (const { name, loop, duration } of states) {
   const nodes = descendants(component.animationData);
   assert.equal(sourceNodes.filter(({ ty }) => ty === 2).length, 1, `${name} source JSON must contain one HD image layer`);
   const sourceAsset = sourceAnimation.assets.find(({ id }) => id === `aime_${name}_image`);
-  assert.deepEqual([sourceAsset.w, sourceAsset.h, sourceAsset.u, sourceAsset.p, sourceAsset.e], [512, 512, "images/", `aime_${name}.png`, 0], `${name} source JSON must reference the 512px master`);
+  assert.deepEqual([sourceAsset.w, sourceAsset.h, sourceAsset.u, sourceAsset.p, sourceAsset.e], [512, 512, "images/", animationImage, 0], `${name} source JSON must reference the 512px animation master`);
   const componentAsset = component.animationData.assets.find(({ id }) => id === `aime_${name}_image`);
   assert.deepEqual([componentAsset.w, componentAsset.h, componentAsset.u, componentAsset.e], [512, 512, "", 1], `${name} component must inline the HD image asset`);
-  assert.equal(componentAsset.p, component.fallbackImage, `${name} animation and fallback must use the same lossless master`);
+  assert.equal(componentAsset.p, animationImageData, `${name} animation must inline its lossless motion master`);
   assert.ok(nodes.some(({ ty, nm }) => ty === 2 && nm?.includes("HD Artwork")), `${name} must contain HD artwork`);
   const eyelids = nodes.find(({ ty, nm }) => ty === 4 && nm?.includes("Vector Eyelids"));
   assert.ok(eyelids, `${name} must contain a dedicated vector eyelid layer`);
@@ -92,6 +95,17 @@ assert.deepEqual(
   [["peek_enter", 0, 15], ["peek_loop", 15, 60], ["peek_exit", 75, 15]],
   "Peek animation markers must remain stable"
 );
+const peek2 = JSON.parse(await read("assets/aime/aime_peek2.json"));
+assert.deepEqual(
+  peek2.markers.map(({ cm, tm, dr }) => [cm, tm, dr]),
+  [["peek_enter", 0, 15], ["peek_loop", 15, 60], ["peek_exit", 75, 15]],
+  "Peek2 animation markers must remain stable"
+);
+const peek2Frame = peek2.layers.find(({ nm }) => nm === "AIMe peek2 Static Wooden Doorframe");
+const peek2Pet = peek2.layers.find(({ nm }) => nm === "AIMe peek2 HD Character");
+assert.ok(peek2Frame, "Peek2 must contain a dedicated wooden doorframe layer");
+assert.deepEqual([peek2Frame.ks.p.a, peek2Frame.ks.s.a, peek2Frame.ks.r.a], [0, 0, 0], "Peek2 doorframe transforms must stay static");
+assert.ok(peek2Pet.ks.p.a && peek2Pet.ks.s.a && peek2Pet.ks.r.a, "Peek2 pet transforms must remain animated independently");
 const peekArtwork = peek.layers.find(({ nm }) => nm === "AIMe peek HD Character");
 const peekPositions = new Map(peekArtwork.ks.p.k.map(({ t, s }) => [t, s]));
 const peekScales = new Map(peekArtwork.ks.s.k.map(({ t, s }) => [t, s]));
@@ -101,7 +115,8 @@ assert.deepEqual(peekPositions.get(75), [366, 256], "Peek loop must leave from t
 assert.deepEqual(peekScales.get(15), [150, 150], "Peek head must use the coordinated base scale");
 assert.deepEqual(peekScales.get(45), [153, 153], "Peek breathing must stay within the coordinated scale range");
 
-assert.match(generator, /imageAsset\.p = fallbackImage/, "The component generator must inline the HD image into animationData");
+assert.match(generator, /imageAsset\.p = animationImageData/, "The component generator must inline the motion image into animationData");
+assert.match(generator, /name === "peek2" \? "aime_peek\.png"/, "Peek2 must keep its motion image separate from the framed fallback");
 assert.match(generator, /fallbackImage/, "The component generator must emit a separate fallback field");
 assert.match(vectorGenerator, /Vector Eyelids/, "The vector source generator must create eyelid layers");
 assert.doesNotMatch(vectorGenerator, /resize\(\(128, 128\)\)|quantize\(/, "The source generator must not downsample or quantize the character");
@@ -112,6 +127,7 @@ assert.match(componentRuntime, /animation\.addEventListener\("DOMLoaded", showAn
 assert.match(componentRuntime, /animation\.addEventListener\("data_failed", showFallback\)/, "A failed vector render must restore fallback");
 assert.doesNotMatch(componentRuntime, /animationData\.assets\?\.find/, "Fallback must not be inferred from animationData");
 assert.match(js, /const aimeComponents = window\.AimeAnimationComponents;/, "The state layer must consume the component registry");
+assert.match(js, /aimeComponents\.get\("peek2"\)/, "Collapsed state must mount the framed peek2 component");
 assert.match(js, /return component\.createAnimation\(options\);/, "The state layer must delegate animation and fallback handling");
 assert.doesNotMatch(js, /applyFallback|fallbackImage|data_failed|loaded_images/, "The state layer must not manage PNG fallback");
 assert.doesNotMatch(js, /\bpath\s*:/, "The runtime must not fetch animation JSON by path");

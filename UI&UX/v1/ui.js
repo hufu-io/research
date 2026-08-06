@@ -5,6 +5,7 @@
   const navItems = [...document.querySelectorAll("[data-nav]")];
   const aimeFab = document.querySelector(".aime-fab");
   const aimeStage = document.querySelector(".aime-pet-visual");
+  const bottomNav = document.querySelector(".bottom-nav");
   const aimeComponents = window.AimeAnimationComponents;
   const aimeStorage = {
     get(key) {
@@ -25,6 +26,16 @@
   const heroCarousel = document.querySelector("[data-hero-carousel]");
   const heroSlides = [...document.querySelectorAll("[data-hero-slide]")];
   const heroDots = [...document.querySelectorAll("[data-hero-dot]")];
+  const socialDrawerLayer = document.querySelector("[data-social-drawer-layer]");
+  const socialDrawer = document.querySelector(".social-drawer");
+  const socialDrawerTrigger = document.querySelector("[data-social-drawer-trigger]");
+  const marketAppbar = document.querySelector(".market-appbar");
+  const marketSearch = document.querySelector("[data-market-search]");
+  const marketSearchInput = document.querySelector("[data-market-search-input]");
+  const marketSearchClear = document.querySelector("[data-action='clear-market-search']");
+  const marketSearchEmpty = document.querySelector("[data-market-search-empty]");
+  const marketCard = document.querySelector(".market-card-flat");
+  const marketSearchTrigger = document.querySelector("[data-action='open-market-search']");
   let activeModal = null;
   let returnFocus = null;
   let assetsVisible = true;
@@ -42,6 +53,10 @@
   let heroIndex = 0;
   let heroTimer = null;
   let pendingDapp = null;
+  let marketSortKey = "";
+  let marketSortDirection = "none";
+  let marketFavorites = new Set();
+  let marketActiveCategory = "self";
 
   const toast = document.createElement("div");
   toast.className = "canvas-toast";
@@ -56,6 +71,146 @@
     toastTimer = window.setTimeout(() => {
       toast.hidden = true;
     }, 2200);
+  }
+
+  function getMarketRows() {
+    return [...document.querySelectorAll(".market-row-shell")];
+  }
+
+  function readMarketFavorites() {
+    try {
+      const stored = JSON.parse(aimeStorage.get("hufu-ui-market-favorites") || "[]");
+      marketFavorites = new Set(Array.isArray(stored) ? stored : []);
+    } catch {
+      marketFavorites = new Set();
+    }
+  }
+
+  function saveMarketFavorites() {
+    aimeStorage.set("hufu-ui-market-favorites", JSON.stringify([...marketFavorites]));
+  }
+
+  function updateMarketFavoriteButton(button, favorited) {
+    const symbol = button.dataset.symbol;
+    button.classList.toggle("is-favorite", favorited);
+    button.setAttribute("aria-pressed", String(favorited));
+    button.setAttribute("aria-label", `${favorited ? "取消收藏" : "收藏"} ${symbol}`);
+  }
+
+  function initializeMarketFavorites() {
+    readMarketFavorites();
+    document.querySelectorAll(".market-favorite").forEach((button) => {
+      updateMarketFavoriteButton(button, marketFavorites.has(button.dataset.symbol));
+    });
+  }
+
+  function applyMarketSearch() {
+    const query = marketSearchInput?.value.trim().toLocaleLowerCase() || "";
+    let visibleCount = 0;
+    getMarketRows().forEach((row) => {
+      const searchable = `${row.dataset.marketSymbol || ""} ${row.dataset.marketName || ""}`.toLocaleLowerCase();
+      const categoryMatches = marketActiveCategory === "self" || row.dataset.marketCategory === marketActiveCategory;
+      const queryMatches = !query || searchable.includes(query);
+      const visible = categoryMatches && queryMatches;
+      row.hidden = !visible;
+      if (visible) visibleCount += 1;
+    });
+    if (marketSearchClear) marketSearchClear.hidden = !query;
+    if (marketSearchEmpty) {
+      marketSearchEmpty.textContent = query ? "未找到相关币种，请尝试其他关键词" : "当前分类暂无行情";
+      marketSearchEmpty.hidden = visibleCount > 0;
+    }
+  }
+
+  function selectMarketCategory(tab, moveFocus = false) {
+    if (!tab) return;
+    marketActiveCategory = tab.dataset.marketCategory || "self";
+    document.querySelectorAll("[data-market-category]").forEach((item) => {
+      const active = item === tab;
+      item.classList.toggle("is-active", active);
+      item.setAttribute("aria-selected", String(active));
+      item.tabIndex = active ? 0 : -1;
+    });
+    applyMarketSearch();
+    if (moveFocus) tab.focus();
+  }
+
+  function getNextMarketTabIndex(currentIndex, tabCount, key) {
+    if (key === "Home") return 0;
+    if (key === "End") return tabCount - 1;
+    return (currentIndex + (key === "ArrowRight" ? 1 : -1) + tabCount) % tabCount;
+  }
+
+  function openMarketSearch() {
+    if (!marketSearch) return;
+    marketAppbar?.classList.add("is-searching");
+    marketSearch.hidden = false;
+    requestAnimationFrame(() => marketSearchInput?.focus());
+  }
+
+  function clearMarketSearch() {
+    if (!marketSearchInput) return;
+    marketSearchInput.value = "";
+    applyMarketSearch();
+    marketSearchInput.focus();
+  }
+
+  function closeMarketSearch() {
+    if (!marketSearch) return;
+    clearMarketSearch();
+    marketSearch.hidden = true;
+    marketAppbar?.classList.remove("is-searching");
+    marketSearchTrigger?.focus();
+  }
+
+  function sortMarketRows(button) {
+    if (!marketCard) return;
+    const key = button.dataset.marketSort;
+    marketSortDirection = marketSortKey === key && marketSortDirection === "ascending" ? "descending" : "ascending";
+    marketSortKey = key;
+    const direction = marketSortDirection === "ascending" ? 1 : -1;
+    const rows = getMarketRows().sort((first, second) => {
+      if (key === "symbol") return first.dataset.marketSymbol.localeCompare(second.dataset.marketSymbol) * direction;
+      return (Number(first.dataset[`market${key[0].toUpperCase()}${key.slice(1)}`]) - Number(second.dataset[`market${key[0].toUpperCase()}${key.slice(1)}`])) * direction;
+    });
+    rows.forEach((row) => marketCard.appendChild(row));
+    const labels = { symbol: "币种", volume: "24h成交量", price: "最新价" };
+    document.querySelectorAll("[data-market-sort]").forEach((sortButton) => {
+      const active = sortButton === button;
+      const state = active ? marketSortDirection : "none";
+      sortButton.dataset.direction = state;
+      sortButton.parentElement.setAttribute("aria-sort", state);
+      sortButton.setAttribute("aria-label", `${labels[sortButton.dataset.marketSort]}，${active ? (state === "ascending" ? "升序" : "降序") : "未排序"}`);
+    });
+  }
+
+  function closeSocialDrawer(restoreFocus = false) {
+    if (!socialDrawerLayer || socialDrawerLayer.hidden) return;
+    socialDrawerLayer.hidden = true;
+    socialDrawerTrigger.setAttribute("aria-expanded", "false");
+    if (restoreFocus) socialDrawerTrigger.focus();
+  }
+
+  function openSocialDrawer() {
+    if (!socialDrawerLayer) return;
+    socialDrawerLayer.hidden = false;
+    socialDrawerTrigger.setAttribute("aria-expanded", "true");
+    requestAnimationFrame(() => socialDrawer.querySelector("[data-social-drawer-close]")?.focus());
+  }
+
+  function trapSocialDrawerFocus(event) {
+    if (event.key !== "Tab" || socialDrawerLayer?.hidden) return;
+    const focusable = [...socialDrawer.querySelectorAll("button:not([disabled]), [href], [tabindex]:not([tabindex='-1'])")];
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
   }
 
   function showHeroSlide(index) {
@@ -76,18 +231,27 @@
   }
 
   function switchView(name) {
+    closeSocialDrawer();
     views.forEach((view) => {
       const active = view.dataset.view === name;
       view.hidden = !active;
       view.classList.toggle("is-active", active);
       if (active) view.scrollTo({ top: 0, behavior: "instant" });
     });
+    if (bottomNav) bottomNav.style.display = name === "settings" ? "none" : "";
     navItems.forEach((item) => {
       const active = item.dataset.nav === name;
       item.classList.toggle("is-active", active);
       if (active) item.setAttribute("aria-current", "page");
       else item.removeAttribute("aria-current");
     });
+    try {
+      if (history.replaceState) {
+        history.replaceState(null, "", `#page=${name}`);
+      } else {
+        location.hash = `#page=${name}`;
+      }
+    } catch {}
   }
 
   function openModal(name, trigger) {
@@ -168,8 +332,8 @@
   }
 
   function loadAimePeekAnimation(token) {
-    const component = aimeComponents.get("peek");
-    aimeFab.dataset.state = "peek";
+    const component = aimeComponents.get("peek2");
+    aimeFab.dataset.state = "peek2";
     aimeAnimation?.destroy();
     aimeAnimation = createAimeAnimation(component, {
       container: aimeStage,
@@ -295,6 +459,20 @@
   aimeFab.addEventListener("click", (event) => event.preventDefault());
 
   document.addEventListener("click", (event) => {
+    const socialDrawerButton = event.target.closest("[data-social-drawer-trigger]");
+    if (socialDrawerButton) {
+      openSocialDrawer();
+      return;
+    }
+
+    if (event.target.closest("[data-social-drawer-close]")) {
+      closeSocialDrawer(true);
+      return;
+    }
+
+    const socialDrawerItem = event.target.closest("[data-social-drawer-item]");
+    if (socialDrawerItem) closeSocialDrawer(true);
+
     const nav = event.target.closest("[data-nav]");
     if (nav) return switchView(nav.dataset.nav);
 
@@ -304,10 +482,20 @@
     const wallet = event.target.closest(".wallet-option");
     if (wallet) return updateWallet(wallet);
 
+    const marketSortButton = event.target.closest("[data-market-sort]");
+    if (marketSortButton) return sortMarketRows(marketSortButton);
+
+    const marketCategoryTab = event.target.closest("[data-market-category]");
+    if (marketCategoryTab) return selectMarketCategory(marketCategoryTab);
+
     const exclusive = event.target.closest(".segmented-control button, .asset-tabs button, .chain-chips button, .chart-range button, .record-filters button, .state-chips button");
     if (exclusive) {
-      [...exclusive.parentElement.children].forEach((item) => item.classList.remove("is-active"));
+      [...exclusive.parentElement.children].forEach((item) => {
+        item.classList.remove("is-active");
+        if (item.getAttribute("role") === "tab") item.setAttribute("aria-selected", "false");
+      });
       exclusive.classList.add("is-active");
+      if (exclusive.getAttribute("role") === "tab") exclusive.setAttribute("aria-selected", "true");
       return;
     }
 
@@ -333,6 +521,19 @@
     }
     if (action === "toggle-assets") return toggleAssets();
     if (action === "copy-address") return showToast("钱包地址已复制");
+    if (action === "open-market-search") return openMarketSearch();
+    if (action === "clear-market-search") return clearMarketSearch();
+    if (action === "close-market-search") return closeMarketSearch();
+    if (action === "toggle-market-favorite") {
+      const symbol = actionTarget.dataset.symbol;
+      const favorited = !marketFavorites.has(symbol);
+      if (favorited) marketFavorites.add(symbol);
+      else marketFavorites.delete(symbol);
+      saveMarketFavorites();
+      updateMarketFavoriteButton(actionTarget, favorited);
+      showToast(favorited ? `已收藏 ${symbol}` : `已取消收藏 ${symbol}`);
+      return;
+    }
     if (action === "fill-max") {
       const input = actionTarget.closest(".amount-input")?.querySelector("input");
       if (input) input.value = "185420.80";
@@ -357,17 +558,54 @@
     showToast("转账信息已保存，下一步将进行安全核对");
   });
 
+  marketSearch?.addEventListener("submit", (event) => event.preventDefault());
+  marketSearchInput?.addEventListener("input", applyMarketSearch);
+
   document.addEventListener("keydown", (event) => {
+    const marketCategoryTab = event.target.closest?.("[data-market-category]");
+    if (marketCategoryTab && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+      event.preventDefault();
+      const tabs = [...document.querySelectorAll("[data-market-category]")];
+      const currentIndex = tabs.indexOf(marketCategoryTab);
+      const nextIndex = getNextMarketTabIndex(currentIndex, tabs.length, event.key);
+      selectMarketCategory(tabs[nextIndex], true);
+      return;
+    }
+    if (event.key === "Escape" && marketSearch && !marketSearch.hidden) {
+      closeMarketSearch();
+      return;
+    }
+    if (event.key === "Escape" && socialDrawerLayer && !socialDrawerLayer.hidden) {
+      closeSocialDrawer(true);
+      return;
+    }
+    trapSocialDrawerFocus(event);
     if (event.key === "Escape") closeModal();
   });
 
   document.addEventListener("visibilitychange", () => document.hidden ? stopHeroCarousel() : startHeroCarousel());
 
   const aimeToggle = document.querySelector('[data-action="toggle-aime"]');
+  initializeMarketFavorites();
+  selectMarketCategory(document.querySelector("[data-market-category].is-active"));
   aimeToggle?.classList.toggle("is-on", aimeEnabled);
   aimeToggle?.setAttribute("aria-checked", String(aimeEnabled));
   aimeFab.hidden = !aimeEnabled;
   setAimeCollapsed(true);
   showHeroSlide(0);
   startHeroCarousel();
+
+  const initialPage = new URLSearchParams(location.hash.slice(1)).get("page");
+  const validViews = ["home", "social", "market", "discover", "profile", "settings"];
+  const startView = validViews.includes(initialPage) ? initialPage : "home";
+  switchView(startView);
+
+  window.addEventListener("hashchange", () => {
+    const page = new URLSearchParams(location.hash.slice(1)).get("page");
+    const activeView = document.querySelector("[data-view]:not([hidden])");
+    const current = activeView?.dataset.view;
+    if (page && validViews.includes(page) && page !== current) {
+      switchView(page);
+    }
+  });
 })();
