@@ -137,7 +137,7 @@ body {
 }
 
 .market-card-flat {
-  --market-data-columns: 64px repeat(2, minmax(0, 1fr));
+  --market-data-columns: 64px minmax(0, 1fr) 92px 52px;
   overflow: visible;
   border: 0;
   border-radius: 0;
@@ -152,7 +152,6 @@ body {
   color: var(--text-3);
   font-size: 10px;
   font-weight: 600;
-  border-bottom: 1px solid var(--divider);
 }
 
 .market-table-head > span {
@@ -187,6 +186,10 @@ body {
 }
 
 .market-table-head .market-head-price {
+  justify-content: center;
+}
+
+.market-table-head .market-head-trend {
   justify-content: center;
 }
 
@@ -262,21 +265,18 @@ body {
   font-family: "DIN", sans-serif;
 }
 
-.market-change-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  margin-top: 3px;
+.market-trend {
+  display: grid;
+  place-items: center;
+  min-width: 0;
 }
 
-.market-change-row .sparkline {
+.market-trend .sparkline {
   display: block;
-  flex: 0 0 30px;
-  width: 30px;
+  width: 40px;
 }
 
-.market-change-row .sparkline svg {
+.market-trend .sparkline svg {
   stroke-width: 2.4;
 }
 
@@ -295,7 +295,7 @@ body {
 }
 
 .market-change {
-  margin-top: 0;
+  margin-top: 3px;
   font-size: 11px;
   font-weight: 700;
   line-height: 1.2;
@@ -338,12 +338,11 @@ body {
 
 @media (max-width: 380px) {
   .market-card-flat {
-    --market-data-columns: 56px repeat(2, minmax(0, 1fr));
+    --market-data-columns: 56px minmax(0, 1fr) 78px 46px;
   }
 
-  .market-change-row .sparkline {
-    flex-basis: 26px;
-    width: 26px;
+  .market-trend .sparkline {
+    width: 34px;
   }
 }
 
@@ -738,8 +737,8 @@ body {
   min-height: 0;
   padding: 24px 22px 20px;
   background:
-    radial-gradient(circle at 90% -2%, rgba(180, 210, 255, 0.24), transparent 34%),
-    linear-gradient(145deg, #1e4ab8 0%, #2a5fd6 46%, #4aa3f5 100%);
+    radial-gradient(circle at 90% -2%, rgba(224, 243, 255, 0.28), transparent 36%),
+    linear-gradient(145deg, #3e78ff 0%, #3e78ff 48%, #56c7ff 130%);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 26px;
   box-shadow: 0 18px 38px rgba(33, 79, 181, 0.24);
@@ -1195,7 +1194,7 @@ body {
 .discover-header-search {
   flex: 1 1 auto;
   min-width: 0;
-  min-height: 48px;
+  min-height: 44px;
   overflow: hidden;
 }
 
@@ -1245,6 +1244,10 @@ body {
   min-width: 0;
 }
 
+.discover-card {
+  position: relative;
+}
+
 .featured-dapp {
   width: 100%;
 }
@@ -1267,7 +1270,7 @@ body {
   line-height: 1.45;
 }
 
-.discover-card > span:not(.dapp-logo):not(.verified-label) {
+.discover-card > span:not(.dapp-logo):not(.verified-label):not(.dapp-card-meta) {
   display: flex;
   flex-direction: column;
   gap: 3px;
@@ -1275,27 +1278,28 @@ body {
   min-width: 0;
 }
 
-.discover-card > span:not(.dapp-logo):not(.verified-label) strong,
-.discover-card > span:not(.dapp-logo):not(.verified-label) small {
+.discover-card > span:not(.dapp-logo):not(.verified-label):not(.dapp-card-meta) strong,
+.discover-card > span:not(.dapp-logo):not(.verified-label):not(.dapp-card-meta) small {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.discover-card > span:not(.dapp-logo):not(.verified-label) strong {
+.discover-card > span:not(.dapp-logo):not(.verified-label):not(.dapp-card-meta) strong {
   font-size: 14px;
 }
 
-.discover-card > span:not(.dapp-logo):not(.verified-label) small {
+.discover-card > span:not(.dapp-logo):not(.verified-label):not(.dapp-card-meta) small {
   color: var(--text-2);
   font-size: 11px;
 }
 
 .dapp-card-meta {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 8px;
   width: 100%;
   min-width: 0;
@@ -1303,9 +1307,12 @@ body {
 }
 
 .dapp-type-tag {
+  position: absolute;
+  top: 14px;
+  right: 14px;
   display: inline-flex;
   align-items: center;
-  max-width: calc(100% - 66px);
+  max-width: 72px;
   height: 22px;
   padding: 0 8px;
   overflow: hidden;
