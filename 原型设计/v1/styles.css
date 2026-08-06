@@ -989,7 +989,7 @@ img {
 
 .chart-range {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   gap: 4px;
 }
 
@@ -1045,12 +1045,63 @@ img {
 }
 
 .market-row-wide {
-  grid-template-columns: 42px minmax(70px, 1fr) minmax(60px, auto) 72px;
+  grid-template-columns: 42px minmax(70px, 1fr) auto minmax(60px, auto) 72px;
 }
 
 .market-row-wide .price:nth-last-child(2) {
   align-items: flex-end;
   color: var(--text-2);
+}
+
+.news-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.news-body {
+  display: none;
+}
+
+.news-card.is-expanded .news-body {
+  display: block;
+}
+
+.news-card.is-expanded .news-body p {
+  color: var(--text-2);
+}
+
+.market-empty,
+.market-failed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 34px 18px;
+  text-align: center;
+}
+
+.market-empty .state-illustration,
+.market-failed .state-illustration {
+  color: var(--text-2);
+}
+
+.market-empty strong,
+.market-failed strong {
+  font-size: 15px;
+}
+
+.market-empty small,
+.market-failed small {
+  max-width: 220px;
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.market-failed {
+  margin-top: 16px;
 }
 
 .chain-chips {

@@ -7,6 +7,10 @@
 :root {
   --canvas-w: 420px;
   --canvas-inset: max(0px, calc((100% - var(--canvas-w)) / 2));
+  --page-gutter: 24px;
+  --appbar-gutter: 24px;
+  --section-gap: 24px;
+  --content-bottom-gap: 24px;
 }
 
 html,
@@ -25,6 +29,26 @@ body {
   margin: 0 auto;
   overflow: hidden;
   background: var(--surface);
+}
+
+.appbar {
+  padding-right: var(--appbar-gutter);
+  padding-left: var(--appbar-gutter);
+}
+
+.page-content {
+  padding-right: var(--page-gutter);
+  padding-bottom: calc(var(--nav-h) + var(--safe-bottom) + var(--content-bottom-gap));
+  padding-left: var(--page-gutter);
+}
+
+.quick-section,
+.page-content > section {
+  margin-top: var(--section-gap);
+}
+
+.dapp-scroller {
+  padding-bottom: 8px;
 }
 
 .news-list {
@@ -769,5 +793,12 @@ body {
 
   .quick-action {
     transition: none;
+  }
+}
+
+@media (max-width: 359px) {
+  :root {
+    --page-gutter: 18px;
+    --appbar-gutter: 14px;
   }
 }

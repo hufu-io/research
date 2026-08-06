@@ -79,7 +79,10 @@
     discoverType: "all",
     bridgeStatus: "ready",
     transfer: { amount: "280.00", asset: "FLON", recipient: "flon4A…y7W9" },
-    toastTimer: null
+    toastTimer: null,
+    marketCategory: "all",
+    chartRange: "1d",
+    marketSort: "default"
   };
 
   const viewNames = { home: "Hufu 首页", social: "社交", market: "市场", discover: "发现", profile: "我的" };
@@ -122,6 +125,13 @@
     });
     state.currentView = view;
     document.querySelectorAll("[data-aime-context]").forEach((target) => target.textContent = viewNames[view]);
+    try {
+      if (history.replaceState) {
+        history.replaceState(null, "", `#page=${view}`);
+      } else {
+        location.hash = `#page=${view}`;
+      }
+    } catch {}
   }
 
   function getModal(name) {
@@ -429,10 +439,85 @@
     const change = document.querySelector("[data-market-change]");
     change.textContent = data.change;
     change.className = data.change.startsWith("+") ? "up" : "down";
+    const latest = document.querySelector("[data-market-latest]");
+    if (latest) latest.textContent = data.price;
     document.querySelector("[data-market-high]").textContent = data.high;
     document.querySelector("[data-market-low]").textContent = data.low;
     document.querySelector("[data-market-volume]").textContent = data.volume;
     openModal("market-detail", document.activeElement);
+  }
+
+  function filterMarket(category) {
+    state.marketCategory = category;
+    document.querySelectorAll("[data-market-category]").forEach((button) => {
+      const isActive = button.dataset.marketCategory === category;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-selected", String(isActive));
+    });
+
+    const list = document.querySelector("[data-market-list]");
+    if (!list) return;
+    const majorNetworks = ["Bitcoin", "Ethereum", "Solana", "BSC", "Tron"];
+    const rows = list.querySelectorAll(".market-row");
+    let visibleCount = 0;
+    rows.forEach((row) => {
+      const network = row.dataset.marketNetwork || "all";
+      const show = category === "watchlist" || category === "all" || network === category || (category === "major" && majorNetworks.includes(network));
+      row.hidden = !show;
+      if (show) visibleCount++;
+    });
+    const empty = document.querySelector("[data-market-empty]");
+    if (empty) empty.hidden = visibleCount > 0;
+
+    const heroPair = document.querySelector(".market-hero .coin-pair");
+    const heroPrice = document.querySelector(".market-hero h2");
+    const heroChange = document.querySelector(".market-hero .market-hero-top .up, .market-hero .market-hero-top .down");
+    const heroChartLabel = document.querySelector(".large-chart");
+    if (category === "major") {
+      const data = marketData.BTC;
+      if (heroPair) heroPair.textContent = "BTC / USDT";
+      if (heroPrice) heroPrice.textContent = data.price;
+      if (heroChange) {
+        heroChange.textContent = data.change;
+        heroChange.className = data.change.startsWith("+") ? "up" : "down";
+      }
+      if (heroChartLabel) heroChartLabel.setAttribute("aria-label", "BTC 今日价格呈上升趋势");
+    } else {
+      const data = marketData.FLON;
+      if (heroPair) heroPair.textContent = "FLON / USDT";
+      if (heroPrice) heroPrice.textContent = data.price;
+      if (heroChange) {
+        heroChange.textContent = data.change;
+        heroChange.className = data.change.startsWith("+") ? "up" : "down";
+      }
+      if (heroChartLabel) heroChartLabel.setAttribute("aria-label", "FLON 今日价格呈上升趋势");
+    }
+  }
+
+  function resetMarketCategory() {
+    filterMarket("all");
+  }
+
+  function setChartRange(range) {
+    state.chartRange = range;
+    document.querySelectorAll("[data-chart-range]").forEach((button) => {
+      button.classList.toggle("is-active", button.dataset.chartRange === range);
+    });
+    showToast(`已切换至 ${range.toUpperCase()} 周期`);
+  }
+
+  function toggleMarketSort() {
+    const sorts = ["default", "change-desc", "change-asc", "volume"];
+    const current = sorts.indexOf(state.marketSort);
+    state.marketSort = sorts[(current + 1) % sorts.length];
+    const labels = { default: "默认排序", "change-desc": "涨幅最高", "change-asc": "涨幅最低", volume: "成交量优先" };
+    showToast(`行情列表：${labels[state.marketSort]}`);
+  }
+
+  function toggleNews(card) {
+    const body = card.querySelector(".news-body");
+    if (!body) return;
+    card.classList.toggle("is-expanded");
   }
 
   function addAimeMessage(text, user = false, pending = false) {
@@ -525,7 +610,12 @@
     const aimePrompt = event.target.closest("[data-aime-prompt]");
     if (aimePrompt) return answerAime(aimePrompt.dataset.aimePrompt);
     const exclusiveButton = event.target.closest(".segmented-control button, .asset-tabs button, .chain-chips button, .chart-range button, .record-filters button, .state-chips button");
-    if (exclusiveButton) return setExclusiveActive(exclusiveButton);
+    if (exclusiveButton) {
+      setExclusiveActive(exclusiveButton);
+      if (exclusiveButton.dataset.marketCategory) filterMarket(exclusiveButton.dataset.marketCategory);
+      if (exclusiveButton.dataset.chartRange) setChartRange(exclusiveButton.dataset.chartRange);
+      return;
+    }
     if (event.target.closest("[data-close-modal]") || event.target === overlay) return closeModal();
     const actionTarget = event.target.closest("[data-action]");
     if (!actionTarget) return;
@@ -543,6 +633,15 @@
       showToast(state.walletFlowMode === "recover" ? "RWID 恢复演示完成，已换绑至新公钥" : "钱包流程演示完成，已进入首页");
     }
     if (action === "reset-discover") resetDiscover();
+    if (action === "market-search") showToast("搜索币种名称、代码或网络");
+    if (action === "market-sort") toggleMarketSort();
+    if (action === "market-more-news") showToast("已加载更多市场快讯");
+    if (action === "market-retry") {
+      document.querySelector("[data-market-failed]").hidden = true;
+      showToast("行情与快讯已重新加载");
+    }
+    if (action === "market-reset-category") resetMarketCategory();
+    if (action === "toggle-news") toggleNews(actionTarget);
     if (action === "toast") showToast(actionTarget.dataset.message || "操作已记录");
     if (action === "copy-address") copyAddress();
     if (action === "open-dapp") prepareDapp(actionTarget);
@@ -683,5 +782,17 @@
   renderWalletDetail();
   renderHomeMarkets(currentWallet());
   filterDiscover();
-  switchView("home");
+  filterMarket(state.marketCategory);
+  setChartRange(state.chartRange);
+
+  const initialPage = new URLSearchParams(location.hash.slice(1)).get("page");
+  const startView = viewNames[initialPage] ? initialPage : "home";
+  switchView(startView);
+
+  window.addEventListener("hashchange", () => {
+    const page = new URLSearchParams(location.hash.slice(1)).get("page");
+    if (page && viewNames[page] && page !== state.currentView) {
+      switchView(page);
+    }
+  });
 })();

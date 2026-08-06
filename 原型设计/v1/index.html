@@ -209,29 +209,86 @@
       <section class="page-view" data-view="market" aria-labelledby="market-title" hidden>
         <header class="appbar">
           <div><span class="eyebrow">公开市场数据</span><h1 id="market-title">市场</h1></div>
-          <button class="icon-button" type="button" aria-label="搜索币种"><svg class="icon"><use href="#i-search"></use></svg></button>
+          <div class="appbar-actions">
+            <button class="icon-button" type="button" aria-label="搜索币种" data-action="market-search"><svg class="icon"><use href="#i-search"></use></svg></button>
+            <button class="icon-button" type="button" aria-label="排序" data-action="market-sort"><svg class="icon"><use href="#i-chevron"></use></svg></button>
+          </div>
         </header>
         <div class="page-content market-content">
           <div class="segmented-control" role="tablist" aria-label="行情分类">
-            <button class="is-active" type="button" role="tab" aria-selected="true">自选</button>
-            <button type="button" role="tab" aria-selected="false">FullOn</button>
-            <button type="button" role="tab" aria-selected="false">主流币</button>
+            <button class="is-active" type="button" role="tab" aria-selected="true" data-market-category="watchlist">自选</button>
+            <button type="button" role="tab" aria-selected="false" data-market-category="FullOn">FullOn</button>
+            <button type="button" role="tab" aria-selected="false" data-market-category="major">主流币</button>
           </div>
+
           <section class="market-hero" aria-labelledby="flon-market-title">
             <div class="market-hero-top"><div><span class="coin-pair">FLON / USDT</span><h2 id="flon-market-title">$0.0842</h2><span class="up">+8.24% 今日</span></div><span class="live-pill"><span></span>实时</span></div>
             <svg class="large-chart" viewBox="0 0 340 112" role="img" aria-label="FLON 今日价格呈上升趋势"><defs><linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#42d4b9" stop-opacity=".3"/><stop offset="1" stop-color="#42d4b9" stop-opacity="0"/></linearGradient></defs><path class="chart-area" d="M0 92C25 84 36 89 56 71s31-10 51-19 30-32 54-21 37 16 60 3 29-6 49-15 37-3 70-19V112H0Z"/><path class="chart-line" d="M0 92C25 84 36 89 56 71s31-10 51-19 30-32 54-21 37 16 60 3 29-6 49-15 37-3 70-19"/></svg>
-            <div class="chart-range"><button type="button">1H</button><button class="is-active" type="button">1D</button><button type="button">1W</button><button type="button">1M</button><button type="button">1Y</button></div>
+            <div class="chart-range">
+              <button type="button" data-chart-range="1m">1m</button>
+              <button type="button" data-chart-range="5m">5m</button>
+              <button type="button" data-chart-range="1h">1h</button>
+              <button class="is-active" type="button" data-chart-range="1d">1D</button>
+              <button type="button" data-chart-range="1w">1W</button>
+              <button type="button" data-chart-range="1M">1M</button>
+              <button type="button" data-chart-range="1y">1Y</button>
+            </div>
             <button class="secondary-button market-cta" type="button" data-action="open-dapp" data-dapp="FullSwap" data-domain="fullswap.flon.network" data-network="FullOn">前往 FullSwap 市场<svg class="icon icon-sm"><use href="#i-external"></use></svg></button>
           </section>
+
+
+
           <section aria-labelledby="market-list-title">
             <div class="section-heading compact-heading"><h2 id="market-list-title">行情列表</h2><span class="section-meta">更新于 13:42</span></div>
-            <div class="market-card market-card-flat">
-              <button class="market-row market-row-wide" type="button" data-action="open-market-detail" data-symbol="FLON"><img class="coin-logo" src="assets/images/dapplogo/flon.png" alt="FLON"><span class="coin-name"><strong>FLON</strong><small>FLON / USDT</small></span><span class="price"><strong>$0.0842</strong><small class="up">+8.24%</small></span></button>
-              <button class="market-row market-row-wide" type="button" data-action="open-market-detail" data-symbol="SING"><span class="coin-logo letter-logo sing-logo">S</span><span class="coin-name"><strong>SING</strong><small>SING / USDT</small></span><span class="price"><strong>$0.0196</strong><small class="down">−2.18%</small></span></button>
-              <button class="market-row market-row-wide" type="button" data-action="open-market-detail" data-symbol="BTC"><img class="coin-logo" src="assets/images/icon/BTC.png" alt="BTC"><span class="coin-name"><strong>Bitcoin</strong><small>BTC / USDT</small></span><span class="price"><strong>$116,842</strong><small class="up">+1.46%</small></span></button>
-              <button class="market-row market-row-wide" type="button" data-action="open-market-detail" data-symbol="ETH"><img class="coin-logo" src="assets/images/icon/ETH.png" alt="ETH"><span class="coin-name"><strong>Ethereum</strong><small>ETH / USDT</small></span><span class="price"><strong>$3,742.16</strong><small class="down">−0.62%</small></span></button>
+            <div class="market-card market-card-flat" data-market-list>
+              <button class="market-row market-row-wide" type="button" data-action="open-market-detail" data-symbol="FLON" data-market-network="FullOn"><img class="coin-logo" src="assets/images/dapplogo/flon.png" alt="FLON"><span class="coin-name"><strong>FLON</strong><small>FLON / USDT</small></span><span class="sparkline up-line" aria-hidden="true"><svg viewBox="0 0 72 28"><path d="M2 24c8-2 9-9 17-9s9 5 16 2 12-14 19-12 8 5 16-3"/></svg></span><span class="price"><strong>$0.0842</strong><small class="up">+8.24%</small></span></button>
+              <button class="market-row market-row-wide" type="button" data-action="open-market-detail" data-symbol="SING" data-market-network="FullOn"><span class="coin-logo letter-logo sing-logo">S</span><span class="coin-name"><strong>SING</strong><small>SING / USDT</small></span><span class="sparkline down-line" aria-hidden="true"><svg viewBox="0 0 72 28"><path d="M2 5c8 1 11 10 18 8s10-7 17-3 8 12 16 10 10-7 17 5"/></svg></span><span class="price"><strong>$0.0196</strong><small class="down">−2.18%</small></span></button>
+              <button class="market-row market-row-wide" type="button" data-action="open-market-detail" data-symbol="BTC" data-market-network="Bitcoin"><img class="coin-logo" src="assets/images/icon/BTC.png" alt="BTC"><span class="coin-name"><strong>Bitcoin</strong><small>BTC / USDT</small></span><span class="sparkline up-line" aria-hidden="true"><svg viewBox="0 0 72 28"><path d="M2 24c8-2 9-9 17-9s9 5 16 2 12-14 19-12 8 5 16-3"/></svg></span><span class="price"><strong>$116,842</strong><small class="up">+1.46%</small></span></button>
+              <button class="market-row market-row-wide" type="button" data-action="open-market-detail" data-symbol="ETH" data-market-network="Ethereum"><img class="coin-logo" src="assets/images/icon/ETH.png" alt="ETH"><span class="coin-name"><strong>Ethereum</strong><small>ETH / USDT</small></span><span class="sparkline down-line" aria-hidden="true"><svg viewBox="0 0 72 28"><path d="M2 5c8 1 11 10 18 8s10-7 17-3 8 12 16 10 10-7 17 5"/></svg></span><span class="price"><strong>$3,742.16</strong><small class="down">−0.62%</small></span></button>
+              <button class="market-row market-row-wide" type="button" data-action="open-market-detail" data-symbol="SOL" data-market-network="Solana"><span class="coin-logo letter-logo" style="background:linear-gradient(135deg,#14f195,#9945ff);">S</span><span class="coin-name"><strong>Solana</strong><small>SOL / USDT</small></span><span class="sparkline up-line" aria-hidden="true"><svg viewBox="0 0 72 28"><path d="M2 24c8-2 9-9 17-9s9 5 16 2 12-14 19-12 8 5 16-3"/></svg></span><span class="price"><strong>$178.42</strong><small class="up">+3.21%</small></span></button>
+              <button class="market-row market-row-wide" type="button" data-action="open-market-detail" data-symbol="BNB" data-market-network="BSC"><span class="coin-logo letter-logo" style="background:linear-gradient(135deg,#f3ba2f,#f0b90b);">B</span><span class="coin-name"><strong>BNB</strong><small>BNB / USDT</small></span><span class="sparkline down-line" aria-hidden="true"><svg viewBox="0 0 72 28"><path d="M2 5c8 1 11 10 18 8s10-7 17-3 8 12 16 10 10-7 17 5"/></svg></span><span class="price"><strong>$614.28</strong><small class="down">−0.85%</small></span></button>
+              <button class="market-row market-row-wide" type="button" data-action="open-market-detail" data-symbol="TRX" data-market-network="Tron"><span class="coin-logo letter-logo" style="background:linear-gradient(135deg,#ff0015,#ff4d4d);">T</span><span class="coin-name"><strong>TRON</strong><small>TRX / USDT</small></span><span class="sparkline up-line" aria-hidden="true"><svg viewBox="0 0 72 28"><path d="M2 24c8-2 9-9 17-9s9 5 16 2 12-14 19-12 8 5 16-3"/></svg></span><span class="price"><strong>$0.2416</strong><small class="up">+0.54%</small></span></button>
+            </div>
+            <div class="market-empty" data-market-empty hidden>
+              <span class="state-illustration"><svg class="icon icon-lg"><use href="#i-search"></use></svg></span>
+              <strong>该分类下暂无行情数据</strong>
+              <small>尝试切换其他分类。</small>
+              <button class="ghost-button" type="button" data-action="market-reset-category">重置筛选</button>
             </div>
           </section>
+
+          <section aria-labelledby="market-news-title">
+            <div class="section-heading"><div><span class="eyebrow">保持知情</span><h2 id="market-news-title">市场快讯</h2></div><button class="icon-button icon-button-soft" type="button" aria-label="查看更多快讯" data-action="market-more-news"><svg class="icon"><use href="#i-more"></use></svg></button></div>
+            <div class="news-list" data-market-news>
+              <article class="news-card" data-action="toggle-news">
+                <span class="news-tag">生态</span>
+                <h3>FullOn Network 升级 v2.4.0</h3>
+                <div class="news-body"><p>网络延迟降低 18%，新增轻节点同步优化。本次升级包含轻节点同步协议优化、P2P 握手减少和状态根缓存机制，预计可将全节点资源占用降低约 15%。</p></div>
+                <time>2 小时前</time>
+              </article>
+              <article class="news-card" data-action="toggle-news">
+                <span class="news-tag">FullSwap</span>
+                <h3>FLON/USDT 流动性池突破 12M</h3>
+                <div class="news-body"><p>过去 24 小时交易量增长 32%。流动性提供者年化收益维持在 8.2%–12.5% 区间，协议手续费自动复投。</p></div>
+                <time>5 小时前</time>
+              </article>
+              <article class="news-card" data-action="toggle-news">
+                <span class="news-tag">市场</span>
+                <h3>比特币 ETF 单周净流入创新高</h3>
+                <div class="news-body"><p>机构持仓持续增加，市场情绪偏向乐观。加密基金连续三周保持正向流入，法币入金通道使用率上升。</p></div>
+                <time>8 小时前</time>
+              </article>
+            </div>
+          </section>
+
+          <div class="market-failed" data-market-failed hidden>
+            <span class="state-illustration"><svg class="icon icon-lg"><use href="#i-shield"></use></svg></span>
+            <strong>行情与快讯暂时无法加载</strong>
+            <small>资产和钱包操作不受影响，请检查网络后重试信息模块。</small>
+            <button class="primary-button" type="button" data-action="market-retry">重新加载</button>
+            <button class="ghost-button" type="button" data-action="toast" data-message="网络诊断功能演示">网络诊断</button>
+          </div>
+
           <aside class="data-note"><span>数据仅供参考，不构成投资建议</span><button type="button" data-action="toast" data-message="行情数据来源与更新时间说明">数据说明</button></aside>
         </div>
       </section>
@@ -454,7 +511,7 @@
     <section class="bottom-sheet canvas-fixed" data-modal="market-detail" role="dialog" aria-modal="true" aria-labelledby="market-detail-title" hidden>
       <div class="sheet-handle" aria-hidden="true"></div>
       <div class="sheet-header"><div><span class="eyebrow">公开链上行情</span><h2 id="market-detail-title"><span data-market-symbol>FLON</span> / USDT</h2></div><button class="icon-button" type="button" data-close-modal aria-label="关闭"><svg class="icon"><use href="#i-close"></use></svg></button></div>
-      <div class="sheet-content"><div class="market-detail-price"><strong data-market-price>$0.0842</strong><span class="up" data-market-change>+8.24% 今日</span></div><div class="trade-stats"><div><span>24h 最高</span><strong data-market-high>$0.0891</strong></div><div><span>24h 最低</span><strong data-market-low>$0.0762</strong></div><div><span>24h 成交量</span><strong data-market-volume>8.42M</strong></div></div><div class="section-heading compact-heading"><h3>近期成交</h3><span class="section-meta">模拟公开数据</span></div><div class="recent-trades"><span><b>价格</b><b>数量</b><b>时间</b></span><span><em class="up">0.0842</em><em>12,840</em><em>14:02</em></span><span><em class="down">0.0840</em><em>8,120</em><em>14:01</em></span><span><em class="up">0.0841</em><em>21,500</em><em>13:59</em></span></div><button class="secondary-button full-width" type="button" data-action="open-dapp" data-dapp="FullSwap" data-domain="fullswap.flon.network" data-network="FullOn">前往 FullSwap<svg class="icon icon-sm"><use href="#i-external"></use></svg></button><p class="data-note">行情仅供参考，不构成投资建议。</p></div>
+      <div class="sheet-content">            <div class="market-detail-price"><strong data-market-price>$0.0842</strong><span class="up" data-market-change>+8.24% 今日</span></div><div class="trade-stats"><div><span>最新成交</span><strong data-market-latest>$0.0842</strong></div><div><span>24h 最高</span><strong data-market-high>$0.0891</strong></div><div><span>24h 最低</span><strong data-market-low>$0.0762</strong></div><div><span>24h 成交量</span><strong data-market-volume>8.42M</strong></div></div><div class="section-heading compact-heading"><h3>近期成交</h3><span class="section-meta">模拟公开数据</span></div><div class="recent-trades"><span><b>价格</b><b>数量</b><b>时间</b></span><span><em class="up">0.0842</em><em>12,840</em><em>14:02</em></span><span><em class="down">0.0840</em><em>8,120</em><em>14:01</em></span><span><em class="up">0.0841</em><em>21,500</em><em>13:59</em></span></div><button class="secondary-button full-width" type="button" data-action="open-dapp" data-dapp="FullSwap" data-domain="fullswap.flon.network" data-network="FullOn">前往 FullSwap<svg class="icon icon-sm"><use href="#i-external"></use></svg></button><p class="data-note">行情仅供参考，不构成投资建议。</p></div>
     </section>
 
     <section class="bottom-sheet canvas-fixed" data-modal="bridge" role="dialog" aria-modal="true" aria-labelledby="bridge-title" hidden>
