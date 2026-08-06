@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#ffffff">
   <meta name="description" content="Hufu Wallet · UI/UX v1 正式视觉设计稿">
   <title>Hufu Wallet · UI/UX v1</title>
-  <link rel="stylesheet" href="ui.css?v=85">
+  <link rel="stylesheet" href="ui.css?v=92">
 </head>
 <body>
   <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -279,9 +279,9 @@
       </section>
 
       <!-- ============ 我的 ============ -->
-      <section class="page-view profile-view" data-view="profile" aria-labelledby="profile-title" hidden>
+      <section class="page-view profile-view" data-view="profile" aria-label="我的" hidden>
         <header class="appbar profile-appbar">
-          <button class="profile-identity" type="button" data-action="toast" data-message="查看社交与链上身份"><img src="assets/images/about_us/hufu.png" alt="Hufu 头像"><span><span class="eyebrow">PROFILE</span><strong id="profile-title">dragonmaster</strong></span></button>
+          <button class="profile-identity" type="button" data-action="toast" data-message="查看节点与网络状态"><img src="assets/images/about_us/hufu.png" alt="Hufu 头像"><span><span class="eyebrow node-speed" aria-label="节点速率 36毫秒"><i class="node-speed-dot" aria-hidden="true"></i>36ms</span></span></button>
           <div class="appbar-actions"><button class="icon-button" type="button" aria-label="通知"><svg class="icon"><use href="#i-bell"></use></svg></button><button class="icon-button" type="button" aria-label="设置" data-view-target="settings"><svg class="icon"><use href="#i-settings"></use></svg></button></div>
         </header>
         <div class="page-content profile-content">
@@ -289,7 +289,7 @@
             <div class="wallet-card-glow" aria-hidden="true"></div>
             <div class="wallet-card-top"><div class="wallet-value-label"><span id="wallet-card-title">总资产估值</span><button type="button" aria-label="隐藏或显示资产" data-action="toggle-assets"><svg class="icon icon-sm asset-eye"><use href="#i-eye"></use></svg></button></div><button class="wallet-switch" type="button" data-action="open-wallet"><span class="network-dot light-dot"></span><span class="wallet-network">FullOn</span><svg class="icon icon-xs"><use href="#i-chevron"></use></svg></button></div>
             <div class="wallet-value"><strong class="asset-value">$24,860.42</strong><small class="asset-subvalue">≈ 24,856.90 USDT</small></div>
-            <div class="wallet-card-footer"><div class="wallet-chain-account"><span><small class="wallet-account-meta"><span class="wallet-context-tag wallet-name">日常钱包</span><span aria-hidden="true">·</span><span class="context-label">dragonmaster</span></small><strong class="wallet-address">flon8Q…p6K2</strong></span><button type="button" aria-label="复制当前钱包地址" data-action="copy-address"><svg class="icon icon-sm"><use href="#i-copy"></use></svg></button></div><button class="wallet-detail-button" type="button" data-action="toast" data-message="进入钱包详情：资产卡、快捷功能与完整资产列表">钱包详情<svg class="icon icon-sm"><use href="#i-right"></use></svg></button></div>
+            <div class="wallet-card-footer"><div class="wallet-chain-account"><span><small class="wallet-account-name wallet-name">日常钱包</small><strong class="wallet-identity-line"><span class="context-label">dragonmaster</span><span aria-hidden="true"> · </span><span class="wallet-address">flon8Q…p6K2</span></strong></span><button type="button" aria-label="复制当前钱包地址" data-action="copy-address"><svg class="icon icon-sm"><use href="#i-copy"></use></svg></button></div><button class="wallet-detail-button" type="button" data-action="toast" data-message="进入钱包详情：资产卡、快捷功能与完整资产列表">钱包详情<svg class="icon icon-sm"><use href="#i-right"></use></svg></button></div>
           </section>
 
           <section class="profile-section" aria-labelledby="asset-preview-title">
@@ -405,6 +405,6 @@
   <script src="assets/aime/components/aime_greeting.component.js?v=3"></script>
   <script src="assets/aime/components/aime_peek.component.js?v=3"></script>
   <script src="assets/aime/components/aime_peek2.component.js?v=2"></script>
-  <script src="ui.js?v=32"></script>
+  <script src="ui.js?v=33"></script>
 </body>
 </html>

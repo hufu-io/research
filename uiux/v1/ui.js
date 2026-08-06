@@ -125,6 +125,7 @@
   function selectMarketCategory(tab, moveFocus = false) {
     if (!tab) return;
     marketActiveCategory = tab.dataset.marketCategory || "self";
+    marketCard?.classList.toggle("is-self-category", marketActiveCategory === "self");
     document.querySelectorAll("[data-market-category]").forEach((item) => {
       const active = item === tab;
       item.classList.toggle("is-active", active);

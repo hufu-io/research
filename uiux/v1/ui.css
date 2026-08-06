@@ -236,6 +236,19 @@ body {
   align-items: center;
 }
 
+.market-card-flat.is-self-category .market-table-head {
+  grid-template-columns: var(--market-data-columns);
+}
+
+.market-card-flat.is-self-category .market-row-shell {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.market-card-flat.is-self-category .market-table-head > :last-child,
+.market-card-flat.is-self-category .market-favorite {
+  display: none;
+}
+
 .market-row-shell .market-row-table {
   grid-template-columns: var(--market-data-columns);
   column-gap: 4px;
@@ -705,6 +718,22 @@ body {
   line-height: 1.3;
 }
 
+.profile-identity .node-speed {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  letter-spacing: 0.2px;
+  text-transform: none;
+}
+
+.profile-identity .node-speed-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--success);
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(66, 212, 185, 0.15);
+}
+
 .account-address-copy {
   position: relative;
   z-index: 1;
@@ -845,7 +874,7 @@ body {
 .profile-content .wallet-chain-account {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 44px;
-  align-items: center;
+  align-items: end;
   gap: 2px;
   min-width: 0;
   margin: 0;
@@ -868,37 +897,14 @@ body {
   white-space: nowrap;
 }
 
-.profile-content .wallet-account-meta {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  min-width: 0;
+.profile-content .wallet-account-name {
+  display: block;
+  color: rgba(255, 255, 255, 0.92);
   letter-spacing: 0;
 }
 
-.profile-content .wallet-context-tag {
-  display: inline-block;
-  flex: 0 0 auto;
-  max-width: 88px;
-  padding: 2px 5px;
-  overflow: hidden;
-  color: rgba(255, 255, 255, 0.92);
-  background: rgba(255, 255, 255, 0.13);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 999px;
-  font-size: 9px;
-  font-weight: 700;
-  line-height: 1.35;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.profile-content .wallet-account-meta .context-label {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.profile-content .wallet-chain-account strong {
+.profile-content .wallet-identity-line {
+  display: block;
   overflow: hidden;
   color: rgba(255, 255, 255, 0.9);
   font-size: 10px;
@@ -907,11 +913,24 @@ body {
   white-space: nowrap;
 }
 
+.profile-content .wallet-identity-line .context-label {
+  color: inherit;
+  font-size: inherit;
+}
+
 .profile-content .wallet-chain-account button {
+  position: relative;
   width: 44px;
-  height: 44px;
+  height: 20px;
   color: rgba(255, 255, 255, 0.82);
   background: transparent;
+  transform: translateY(3px);
+}
+
+.profile-content .wallet-chain-account button::before {
+  position: absolute;
+  inset: -12px 0;
+  content: "";
 }
 
 .profile-content .wallet-detail-button {
