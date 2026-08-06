@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AIMe 四状态验收</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; padding: 32px; color: #0f152f; background: #eef2f9; font-family: Arial, sans-serif; }
+    main { display: grid; grid-template-columns: repeat(4, 180px); gap: 20px; justify-content: center; }
+    article { padding: 12px; background: #fff; border: 1px solid #dfe5f0; border-radius: 16px; text-align: center; }
+    h2 { margin: 0 0 8px; font-size: 14px; }
+    .pet { width: 156px; height: 156px; background: center / contain no-repeat var(--aime-fallback-image, none); }
+    .pet.is-lottie-ready { background-image: none; }
+  </style>
+</head>
+<body>
+  <main>
+    <article><h2>idle</h2><div class="pet" data-state="idle"></div></article>
+    <article><h2>thinking</h2><div class="pet" data-state="thinking"></div></article>
+    <article><h2>greeting</h2><div class="pet" data-state="greeting"></div></article>
+    <article><h2>peek</h2><div class="pet" data-state="peek"></div></article>
+  </main>
+  <script src="../vendor/lottie.min.js"></script>
+  <script src="../components/aime_animation_component.js?v=2"></script>
+  <script src="../assets/aime/components/aime_idle.component.js?v=3"></script>
+  <script src="../assets/aime/components/aime_thinking.component.js?v=3"></script>
+  <script src="../assets/aime/components/aime_greeting.component.js?v=3"></script>
+  <script src="../assets/aime/components/aime_peek.component.js?v=3"></script>
+  <script>
+    document.querySelectorAll("[data-state]").forEach((container) => {
+      const state = container.dataset.state;
+      const component = window.AimeAnimationComponents.get(state);
+      const animation = component.createAnimation({ container, loop: state !== "greeting", autoplay: state !== "peek" });
+      if (state === "peek" && animation) {
+        animation.addEventListener("DOMLoaded", () => animation.playSegments(component.segment("peek_loop"), true));
+      }
+    });
+  </script>
+</body>
+</html>

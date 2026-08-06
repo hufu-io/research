@@ -144,33 +144,8 @@
     return openModal("dapp-confirm", button);
   }
 
-  function prepareAimeFallback() {
-    aimeStage.classList.remove("is-lottie-ready");
-  }
-
-  function createAimeAnimation(component, options, token) {
-    prepareAimeFallback();
-    component.applyFallback(aimeStage);
-    try {
-      let assetFailed = false;
-      const handleImageError = () => {
-        assetFailed = true;
-        aimeStage.removeEventListener("error", handleImageError, true);
-        if (token === aimeAnimationToken) aimeStage.classList.remove("is-lottie-ready");
-      };
-      aimeStage.addEventListener("error", handleImageError, { capture: true, once: true });
-      const animation = component.createAnimation(options);
-      if (!animation) return null;
-      animation.addEventListener("data_failed", handleImageError);
-      animation.addEventListener("loaded_images", () => {
-        aimeStage.removeEventListener("error", handleImageError, true);
-        if (token === aimeAnimationToken && !assetFailed) aimeStage.classList.add("is-lottie-ready");
-      });
-      return animation;
-    } catch (error) {
-      console.warn("AIMe animation fallback active", error);
-      return null;
-    }
+  function createAimeAnimation(component, options) {
+    return component.createAnimation(options);
   }
 
   function playAimeState(state, onComplete) {
@@ -184,7 +159,7 @@
       loop: component.loop,
       autoplay: true,
       rendererSettings: { preserveAspectRatio: "xMidYMid meet" }
-    }, token);
+    });
     if (onComplete && aimeAnimation) {
       aimeAnimation.addEventListener("complete", () => {
         if (token === aimeAnimationToken) onComplete();
@@ -202,7 +177,7 @@
       loop: false,
       autoplay: false,
       rendererSettings: { preserveAspectRatio: "xMidYMid meet" }
-    }, token);
+    });
     return { animation: aimeAnimation, component, token };
   }
 

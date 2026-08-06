@@ -73,6 +73,11 @@
     assetsVisible: true,
     demoState: "ready",
     pendingDapp: null,
+    walletFlowMode: "create",
+    walletFlowStep: 1,
+    discoverNetwork: "all",
+    discoverType: "all",
+    bridgeStatus: "ready",
     transfer: { amount: "280.00", asset: "FLON", recipient: "flon4A…y7W9" },
     toastTimer: null
   };
@@ -220,6 +225,95 @@
     }).join("");
   }
 
+  function renderWalletDetail() {
+    const wallet = currentWallet();
+    document.querySelector("[data-wallet-detail-total]").textContent = wallet.total;
+    document.querySelector("[data-wallet-detail-converted]").textContent = wallet.converted;
+    document.querySelector("[data-wallet-detail-assets]").innerHTML = wallet.assets.map((asset) => {
+      const logo = asset.image ? `<img src="${asset.image}" alt="${asset.symbol}">` : `<span class="coin-logo letter-logo sing-logo">${asset.letter}</span>`;
+      return `<button class="asset-row" type="button" data-action="open-market-detail" data-symbol="${asset.symbol}">${logo}<span><strong>${asset.symbol}</strong><small>${asset.network}</small></span><span><strong>${asset.balance}</strong><small>${asset.value}</small></span></button>`;
+    }).join("");
+  }
+
+  function updateWalletFlow() {
+    const mode = state.walletFlowMode;
+    const step = state.walletFlowStep;
+    const configs = {
+      create: { kicker: "本地自托管钱包", title: "创建钱包", stepTitle: "生成本地钱包与账户", stepCopy: "密钥只在当前设备生成。本原型不生成、显示或收集真实助记词和私钥。", method: "新建本地密钥", resultTitle: "钱包已准备好", resultCopy: "已生成 FullOn 账户并保存本地昵称，可以进入首页继续体验。", warning: "请离线备份真实钱包的助记词和私钥。" },
+      import: { kicker: "仅在设备内处理", title: "导入钱包", stepTitle: "导入已有本地钱包", stepCopy: "本原型只说明导入步骤，不请求真实助记词或私钥。正式产品应在安全输入环境中本地处理。", method: "演示导入，不收集密钥", resultTitle: "钱包已导入", resultCopy: "演示账户已加入当前设备，本地昵称不会从其他设备自动恢复。", warning: "确认来源可信，并避免在聊天或网页中输入助记词。" },
+      recover: { kicker: "RWID 账户恢复", title: "恢复账户控制权", stepTitle: "验证 RWID 并准备新公钥", stepCopy: "新设备先生成本地新密钥，再通过已绑定手机号验证并授权账户换绑。", method: "新密钥 + RWID 验证", resultTitle: "账户控制权已恢复", resultCopy: "账户已换绑至新公钥；旧私钥不会被找回或导出。", warning: "正式换绑需要验证码限频、异常设备识别、冷静期和旧设备通知。" }
+    };
+    const config = configs[mode];
+    document.querySelector("[data-onboarding-kicker]").textContent = config.kicker;
+    document.querySelector("[data-onboarding-title]").textContent = config.title;
+    document.querySelector("[data-onboarding-step-title]").textContent = config.stepTitle;
+    document.querySelector("[data-onboarding-step-copy]").textContent = config.stepCopy;
+    document.querySelector("[data-onboarding-method]").textContent = config.method;
+    document.querySelector("[data-onboarding-result-title]").textContent = config.resultTitle;
+    document.querySelector("[data-onboarding-result-copy]").textContent = config.resultCopy;
+    document.querySelector("[data-flow-warning]").textContent = config.warning;
+    document.querySelector("[data-recovery-field]").hidden = mode !== "recover";
+    document.querySelector("[data-recovery-safety]").hidden = mode !== "recover";
+    document.querySelector("[data-rwid-choice]").hidden = mode === "recover";
+    document.querySelectorAll("[data-flow-step]").forEach((panel) => panel.hidden = Number(panel.dataset.flowStep) !== step);
+    document.querySelectorAll("[data-flow-indicator]").forEach((indicator) => indicator.classList.toggle("is-active", Number(indicator.dataset.flowIndicator) <= step));
+  }
+
+  function openWalletFlow(mode, trigger) {
+    state.walletFlowMode = mode;
+    state.walletFlowStep = 1;
+    updateWalletFlow();
+    openModal("wallet-onboarding", trigger);
+  }
+
+  function setWalletFlowStep(step) {
+    state.walletFlowStep = Math.max(1, Math.min(3, step));
+    if (state.walletFlowStep === 3) {
+      const nickname = document.querySelector('[name="onboardingNickname"]').value.trim() || "新钱包";
+      document.querySelector("[data-onboarding-result-nickname]").textContent = nickname;
+    }
+    updateWalletFlow();
+  }
+
+  function filterDiscover() {
+    let visible = 0;
+    document.querySelectorAll("[data-discover-grid] .discover-card").forEach((card) => {
+      const networkMatch = state.discoverNetwork === "all" || card.dataset.discoverNetwork === state.discoverNetwork;
+      const typeMatch = state.discoverType === "all" || card.dataset.discoverType === state.discoverType;
+      card.hidden = !(networkMatch && typeMatch);
+      if (!card.hidden) visible += 1;
+    });
+    document.querySelector("[data-discover-empty]").hidden = visible > 0;
+    const featured = document.querySelector(".featured-dapp");
+    featured.hidden = !((state.discoverNetwork === "all" || state.discoverNetwork === "FullOn") && (state.discoverType === "all" || state.discoverType === "trade"));
+  }
+
+  function resetDiscover() {
+    state.discoverNetwork = "all";
+    state.discoverType = "all";
+    document.querySelectorAll(".chain-chips [data-discover-network]").forEach((button) => button.classList.toggle("is-active", button.dataset.discoverNetwork === "all"));
+    document.querySelectorAll(".type-chips [data-discover-type]").forEach((button) => button.classList.toggle("is-active", button.dataset.discoverType === "all"));
+    filterDiscover();
+  }
+
+  function renderBridgeStatus(status) {
+    const configs = {
+      ready: { title: "跨链参数已准备", copy: "源链确认、桥接处理、目标链到账会分别记录状态。本原型未提交真实交易。", timeline: [["参数核对完成", "当前步骤", true], ["源链确认", "等待签名后开始", false], ["目标链到账", "预计 8–15 分钟", false]], recovery: false },
+      failed: { title: "源链确认失败", copy: "交易未进入桥接处理，资产仍在源链账户中。请核对网络费用后重试。", timeline: [["参数核对完成", "已完成", true], ["源链确认", "网络费用不足", false], ["目标链到账", "尚未开始", false]], recovery: true },
+      timeout: { title: "目标链到账超时", copy: "源链交易已确认，FullBridge 正在继续追踪。请勿重复提交同一笔跨链。", timeline: [["参数核对完成", "已完成", true], ["源链确认", "已完成", true], ["目标链到账", "超过预计时间", false]], recovery: true },
+      unsupported: { title: "当前资产暂不支持", copy: "所选资产或目标网络不在 FullBridge 当前支持范围内，请返回修改参数。", timeline: [["支持范围检查", "未通过", false], ["源链确认", "未开始", false], ["目标链到账", "未开始", false]], recovery: true }
+    };
+    state.bridgeStatus = status;
+    const config = configs[status];
+    document.querySelector("[data-bridge-status-title]").textContent = config.title;
+    document.querySelector("[data-bridge-status-copy]").textContent = config.copy;
+    document.querySelector("[data-bridge-timeline]").innerHTML = config.timeline.map(([title, copy, done]) => `<span class="${done ? "is-done" : ""}"><i></i><strong>${title}</strong><small>${copy}</small></span>`).join("");
+    document.querySelector("[data-bridge-recovery]").hidden = !config.recovery;
+    document.querySelector("[data-bridge-complete]").hidden = config.recovery;
+    document.querySelector("[data-bridge-history]").hidden = config.recovery;
+    document.querySelectorAll("[data-bridge-status]").forEach((button) => button.classList.toggle("is-active", button.dataset.bridgeStatus === status));
+  }
+
   function renderHomeMarkets(wallet) {
     const list = document.querySelector(".home-content .market-card");
     list.innerHTML = wallet.markets.map((market) => {
@@ -241,6 +335,7 @@
     document.querySelector(".wallet-value .asset-value").textContent = state.assetsVisible ? wallet.total : "••••••";
     document.querySelector(".wallet-value .asset-subvalue").textContent = state.assetsVisible ? wallet.converted : "••••••";
     renderAssets(wallet);
+    renderWalletDetail();
     renderHomeMarkets(wallet);
     closeModal(false);
     showToast(`已切换至 ${wallet.network} · ${state.currentWallet}，页面上下文已同步`);
@@ -273,6 +368,7 @@
     document.querySelector("[data-dapp-name]").textContent = name;
     document.querySelector("[data-dapp-domain]").textContent = domain;
     document.querySelector("[data-dapp-network]").textContent = network;
+    document.querySelector("[data-dapp-executor]").textContent = name === "FullSwap" ? "FullSwap 智能合约" : `${name} 外部应用`;
     const logo = document.querySelector("[data-dapp-logo]");
     logo.textContent = name === "FullBridge" ? "FB" : "FS";
     logo.classList.toggle("logo-bridge", name === "FullBridge");
@@ -304,7 +400,7 @@
     const wallet = currentWallet();
     card.hidden = nextState === "ready";
     const configs = {
-      none: { kicker: "首次使用", title: "创建你的第一个钱包", copy: "创建、导入钱包，或通过 RWID 恢复账户控制权。", actions: ["创建钱包", "导入钱包", "恢复演示钱包"] },
+      none: { kicker: "首次使用", title: "创建你的第一个钱包", copy: "创建、导入钱包，或通过 RWID 恢复账户控制权。", actions: ["创建钱包", "导入钱包", "通过 RWID 恢复"] },
       empty: { kicker: `${wallet.network} · ${state.currentWallet}`, title: "钱包已经准备好", copy: "当前账户还没有资产。你可以先收款，或了解网络与资产安全知识。", actions: ["立即收款", "安全指南"] },
       error: { kicker: "本地钱包功能正常", title: "行情与快讯暂时无法加载", copy: "资产和钱包操作不受影响，请检查网络后重试信息模块。", actions: ["重新加载", "网络诊断"] }
     };
@@ -313,7 +409,7 @@
       card.querySelector("[data-state-kicker]").textContent = config.kicker;
       card.querySelector("[data-state-title]").textContent = config.title;
       card.querySelector("[data-state-copy]").textContent = config.copy;
-      card.querySelector("[data-state-actions]").innerHTML = config.actions.map((label, index) => `<button class="${index ? "secondary-button" : "primary-button"}" type="button" ${label === "恢复演示钱包" ? 'data-demo-state="ready"' : `data-state-cta="${label}"`}>${label}</button>`).join("");
+      card.querySelector("[data-state-actions]").innerHTML = config.actions.map((label, index) => `<button class="${index ? "secondary-button" : "primary-button"}" type="button" data-state-cta="${label}">${label}</button>`).join("");
     }
     if (nextState === "empty") {
       document.querySelector(".wallet-value .asset-value").textContent = "$0.00";
@@ -368,7 +464,18 @@
     const pending = addAimeMessage("正在结合当前页面整理…", false, true);
     window.setTimeout(() => {
       pending.remove();
-      addAimeMessage(answers[question] || "我已整理操作路径。原型只提供说明，不会替你连接钱包、签名或发起交易。", false);
+      const answer = addAimeMessage(answers[question] || "我已整理操作路径。原型只提供说明，不会替你连接钱包、签名或发起交易。", false);
+      if (question === "FullSwap 是什么？") {
+        const action = document.createElement("button");
+        action.type = "button";
+        action.className = "aime-message-action";
+        action.dataset.action = "open-dapp";
+        action.dataset.dapp = "FullSwap";
+        action.dataset.domain = "fullswap.flon.network";
+        action.dataset.network = "FullOn";
+        action.textContent = "查看 FullSwap 访问确认";
+        answer.appendChild(action);
+      }
     }, 520);
   }
 
@@ -388,13 +495,31 @@
     if (viewTarget) return switchView(viewTarget.dataset.viewTarget);
     const walletOption = event.target.closest(".wallet-option");
     if (walletOption) return updateWallet(walletOption);
-    const demoState = event.target.closest("[data-demo-state]");
+    const discoverNetwork = event.target.closest(".chain-chips [data-discover-network]");
+    if (discoverNetwork) {
+      state.discoverNetwork = discoverNetwork.dataset.discoverNetwork;
+      setExclusiveActive(discoverNetwork);
+      filterDiscover();
+      return;
+    }
+    const discoverType = event.target.closest(".type-chips [data-discover-type]");
+    if (discoverType) {
+      state.discoverType = discoverType.dataset.discoverType;
+      setExclusiveActive(discoverType);
+      filterDiscover();
+      return;
+    }
+    const bridgeState = event.target.closest("[data-bridge-status]");
+    if (bridgeState) return renderBridgeStatus(bridgeState.dataset.bridgeStatus);
+    const demoState = event.target.closest("button[data-demo-state]");
     if (demoState) return setDemoState(demoState.dataset.demoState);
     const stateCta = event.target.closest("[data-state-cta]");
     if (stateCta) {
       if (stateCta.dataset.stateCta === "立即收款") return openModal("receive", stateCta);
       if (stateCta.dataset.stateCta === "重新加载") return setDemoState("ready");
-      if (stateCta.dataset.stateCta === "恢复演示钱包") return setDemoState("ready");
+      if (stateCta.dataset.stateCta === "创建钱包") return openWalletFlow("create", stateCta);
+      if (stateCta.dataset.stateCta === "导入钱包") return openWalletFlow("import", stateCta);
+      if (stateCta.dataset.stateCta === "通过 RWID 恢复") return openWalletFlow("recover", stateCta);
       return showToast(`${stateCta.dataset.stateCta}流程将在独立安全页面完成`);
     }
     const aimePrompt = event.target.closest("[data-aime-prompt]");
@@ -406,6 +531,18 @@
     if (!actionTarget) return;
     const action = actionTarget.dataset.action;
     if (action === "open-wallet") openModal("wallet", actionTarget);
+    if (action === "open-wallet-detail") {
+      renderWalletDetail();
+      openModal("wallet-detail", actionTarget);
+    }
+    if (action === "next-wallet-flow") setWalletFlowStep(state.walletFlowStep + 1);
+    if (action === "prev-wallet-flow") setWalletFlowStep(state.walletFlowStep - 1);
+    if (action === "complete-wallet-flow") {
+      closeModal(false);
+      setDemoState("ready");
+      showToast(state.walletFlowMode === "recover" ? "RWID 恢复演示完成，已换绑至新公钥" : "钱包流程演示完成，已进入首页");
+    }
+    if (action === "reset-discover") resetDiscover();
     if (action === "toast") showToast(actionTarget.dataset.message || "操作已记录");
     if (action === "copy-address") copyAddress();
     if (action === "open-dapp") prepareDapp(actionTarget);
@@ -435,6 +572,8 @@
       form.elements.amount.value = state.currentWallet === "日常钱包" ? "185420.80" : "2.8042";
     }
     if (action === "fill-bridge-max") document.querySelector("[data-bridge-form]").elements.amount.value = "8240.20";
+    if (action === "retry-bridge") renderBridgeStatus("ready");
+    if (action === "return-bridge") openModal("bridge", actionTarget);
     if (action === "open-aime") {
       if (suppressAimeClick) {
         suppressAimeClick = false;
@@ -475,6 +614,7 @@
 
   document.querySelector("[data-bridge-form]").addEventListener("submit", (event) => {
     event.preventDefault();
+    renderBridgeStatus("ready");
     openModal("bridge-result", event.currentTarget.querySelector("button[type='submit']"));
   });
 
@@ -540,6 +680,8 @@
   setAimeEnabled(state.aimeEnabled, false);
   setAimeCollapsed(state.aimeCollapsed, false);
   renderAssets(currentWallet());
+  renderWalletDetail();
   renderHomeMarkets(currentWallet());
+  filterDiscover();
   switchView("home");
 })();

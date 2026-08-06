@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#ffffff">
   <meta name="description" content="Hufu Wallet · UI/UX v1 正式视觉设计稿">
   <title>Hufu Wallet · UI/UX v1</title>
-  <link rel="stylesheet" href="ui.css?v=31">
+  <link rel="stylesheet" href="ui.css?v=45">
 </head>
 <body>
   <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -299,9 +299,9 @@
         <div class="page-content profile-content">
           <section class="wallet-card" aria-labelledby="wallet-card-title">
             <div class="wallet-card-glow" aria-hidden="true"></div>
-            <div class="wallet-card-top"><div><span>当前钱包</span><h2 id="wallet-card-title" class="wallet-name">日常钱包</h2></div><button class="wallet-switch" type="button" data-action="open-wallet"><span class="network-dot light-dot"></span><span class="wallet-network">FullOn</span><svg class="icon icon-xs"><use href="#i-chevron"></use></svg></button></div>
-            <div class="wallet-value"><div class="wallet-value-label"><span>总资产估值</span><button type="button" aria-label="隐藏或显示资产" data-action="toggle-assets"><svg class="icon icon-sm asset-eye"><use href="#i-eye"></use></svg></button></div><strong class="asset-value">$24,860.42</strong><small class="asset-subvalue">≈ 24,856.90 USDT</small></div>
-            <div class="wallet-card-footer"><div class="wallet-chain-account"><span><small>当前账户 · dragonmaster</small><strong class="wallet-address">flon8Q…p6K2</strong></span><button type="button" aria-label="复制当前钱包地址" data-action="copy-address"><svg class="icon icon-sm"><use href="#i-copy"></use></svg></button></div><button class="wallet-detail-button" type="button" data-action="toast" data-message="进入钱包详情：资产卡、快捷功能与完整资产列表">钱包详情<svg class="icon icon-sm"><use href="#i-right"></use></svg></button></div>
+            <div class="wallet-card-top"><div class="wallet-value-label"><span id="wallet-card-title">总资产估值</span><button type="button" aria-label="隐藏或显示资产" data-action="toggle-assets"><svg class="icon icon-sm asset-eye"><use href="#i-eye"></use></svg></button></div><button class="wallet-switch" type="button" data-action="open-wallet"><span class="network-dot light-dot"></span><span class="wallet-network">FullOn</span><svg class="icon icon-xs"><use href="#i-chevron"></use></svg></button></div>
+            <div class="wallet-value"><strong class="asset-value">$24,860.42</strong><small class="asset-subvalue">≈ 24,856.90 USDT</small></div>
+            <div class="wallet-card-footer"><div class="wallet-chain-account"><span><small class="wallet-account-meta"><span class="wallet-context-tag wallet-name">日常钱包</span><span aria-hidden="true">·</span><span class="context-label">dragonmaster</span></small><strong class="wallet-address">flon8Q…p6K2</strong></span><button type="button" aria-label="复制当前钱包地址" data-action="copy-address"><svg class="icon icon-sm"><use href="#i-copy"></use></svg></button></div><button class="wallet-detail-button" type="button" data-action="toast" data-message="进入钱包详情：资产卡、快捷功能与完整资产列表">钱包详情<svg class="icon icon-sm"><use href="#i-right"></use></svg></button></div>
           </section>
 
           <section class="profile-section" aria-labelledby="asset-preview-title">
@@ -330,7 +330,7 @@
     </main>
 
     <button class="aime-fab is-collapsed" type="button" data-state="peek" aria-label="展开 Aime 智能助手" aria-description="点击可展开 Aime" title="点击展开 Aime">
-      <span class="aime-fab-bubble"><svg class="icon" aria-hidden="true"><use href="#i-spark"></use></svg><span>问问 Aime</span></span>
+      <span class="aime-fab-bubble"><span>问问 Aime</span></span>
       <span class="aime-fab-arrow" aria-hidden="true"></span>
       <span class="aime-pet-visual" aria-hidden="true"></span>
     </button>
@@ -385,11 +385,11 @@
   </div>
 
   <script src="vendor/lottie.min.js"></script>
-  <script src="components/aime_animation_component.js?v=1"></script>
-  <script src="assets/aime/components/aime_idle.component.js?v=1"></script>
-  <script src="assets/aime/components/aime_thinking.component.js?v=1"></script>
-  <script src="assets/aime/components/aime_greeting.component.js?v=1"></script>
-  <script src="assets/aime/components/aime_peek.component.js?v=1"></script>
-  <script src="ui.js?v=21"></script>
+  <script src="components/aime_animation_component.js?v=2"></script>
+  <script src="assets/aime/components/aime_idle.component.js?v=3"></script>
+  <script src="assets/aime/components/aime_thinking.component.js?v=3"></script>
+  <script src="assets/aime/components/aime_greeting.component.js?v=3"></script>
+  <script src="assets/aime/components/aime_peek.component.js?v=3"></script>
+  <script src="ui.js?v=22"></script>
 </body>
 </html>

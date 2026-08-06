@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#ffffff">
   <title>Hufu Wallet 改版交互原型</title>
-  <link rel="stylesheet" href="styles.css?v=8">
+  <link rel="icon" href="assets/images/about_us/hufu.png">
+  <link rel="stylesheet" href="styles.css?v=20260806-2">
 </head>
 <body>
   <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -240,7 +241,10 @@
         <div class="page-content discover-content">
           <button class="search-field" type="button" data-action="toast" data-message="搜索 DApp 名称、类型或域名"><svg class="icon icon-sm"><use href="#i-search"></use></svg><span>搜索 DApp 名称、类型或域名</span></button>
           <div class="chain-chips" role="list" aria-label="公链筛选">
-            <button class="is-active" type="button">全部</button><button type="button"><img src="assets/images/icon/FLON.png" alt="">FullOn</button><button type="button"><img src="assets/images/icon/ETH.png" alt="">Ethereum</button><button type="button"><img src="assets/images/icon/SOLANA.png" alt="">Solana</button>
+            <button class="is-active" type="button" data-discover-network="all">全部</button><button type="button" data-discover-network="FullOn"><img src="assets/images/icon/FLON.png" alt="">FullOn</button><button type="button" data-discover-network="Bitcoin"><img src="assets/images/icon/BTC.png" alt="">Bitcoin</button><button type="button" data-discover-network="Ethereum"><img src="assets/images/icon/ETH.png" alt="">Ethereum</button><button type="button" data-discover-network="Solana"><img src="assets/images/icon/SOLANA.png" alt="">Solana</button><button type="button" data-discover-network="BSC">BSC</button><button type="button" data-discover-network="Tron">Tron</button>
+          </div>
+          <div class="type-chips" role="list" aria-label="应用类型筛选">
+            <button class="is-active" type="button" data-discover-type="all">全部类型</button><button type="button" data-discover-type="trade">交易</button><button type="button" data-discover-type="bridge">跨链</button><button type="button" data-discover-type="social">红包</button><button type="button" data-discover-type="finance">借贷与质押</button><button type="button" data-discover-type="rwa">RWA</button>
           </div>
           <section class="featured-dapp" aria-label="FullOn 生态精选">
             <span class="featured-kicker">FULLON 精选</span>
@@ -250,12 +254,18 @@
           </section>
           <section aria-labelledby="fullon-apps-title">
             <div class="section-heading"><div><span class="eyebrow">VERIFIED DAPPS</span><h2 id="fullon-apps-title">FullOn 生态</h2></div><span class="section-meta">官方域名已核验</span></div>
-            <div class="discover-grid">
-              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="FullSwap" data-domain="fullswap.flon.network" data-network="FullOn"><span class="dapp-logo logo-swap">FS</span><span><strong>FullSwap</strong><small>兑换 · 流动性</small></span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></button>
-              <button class="discover-card" type="button" data-action="open-bridge"><span class="dapp-logo logo-bridge">FB</span><span><strong>FullBridge</strong><small>跨链 · 资产桥</small></span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></button>
-              <button class="discover-card" type="button" data-action="toast" data-message="打开 FullOn RWA 详情"><span class="dapp-logo logo-rwa">R</span><span><strong>FullOn RWA</strong><small>RWA · 资产服务</small></span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></button>
-              <button class="discover-card" type="button" data-action="toast" data-message="打开 Digital Red Packet 详情"><span class="dapp-logo logo-redpacket">RP</span><span><strong>Red Packet</strong><small>社交 · 数字红包</small></span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></button>
+            <div class="discover-grid" data-discover-grid>
+              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="FullSwap" data-domain="fullswap.flon.network" data-network="FullOn" data-discover-network="FullOn" data-discover-type="trade"><span class="dapp-logo logo-swap">FS</span><span><strong>FullSwap</strong><small>FullOn · 兑换与流动性</small></span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></button>
+              <button class="discover-card" type="button" data-action="open-bridge" data-discover-network="FullOn" data-discover-type="bridge"><span class="dapp-logo logo-bridge">FB</span><span><strong>FullBridge</strong><small>FullOn · 多链资产桥</small></span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></button>
+              <button class="discover-card" type="button" data-action="toast" data-message="打开 FullOn RWA 详情" data-discover-network="FullOn" data-discover-type="rwa"><span class="dapp-logo logo-rwa">R</span><span><strong>FullOn RWA</strong><small>FullOn · RWA 资产服务</small></span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></button>
+              <button class="discover-card" type="button" data-action="toast" data-message="打开 Digital Red Packet 详情" data-discover-network="FullOn" data-discover-type="social"><span class="dapp-logo logo-redpacket">RP</span><span><strong>Red Packet</strong><small>FullOn · 数字红包</small></span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></button>
+              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="Ethereum DeFi" data-domain="defi.example.eth" data-network="Ethereum" data-discover-network="Ethereum" data-discover-type="finance"><span class="dapp-logo chain-letter">E</span><span><strong>Ethereum DeFi</strong><small>Ethereum · 借贷与质押</small></span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>演示</span></button>
+              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="Solana Stake" data-domain="stake.example.sol" data-network="Solana" data-discover-network="Solana" data-discover-type="finance"><span class="dapp-logo chain-letter">S</span><span><strong>Solana Stake</strong><small>Solana · 质押</small></span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>演示</span></button>
+              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="Bitcoin Bridge" data-domain="bridge.example.btc" data-network="Bitcoin" data-discover-network="Bitcoin" data-discover-type="bridge"><span class="dapp-logo chain-letter">B</span><span><strong>Bitcoin Bridge</strong><small>Bitcoin · 跨链</small></span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>演示</span></button>
+              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="BSC Lending" data-domain="lend.example.bsc" data-network="BSC" data-discover-network="BSC" data-discover-type="finance"><span class="dapp-logo chain-letter">B</span><span><strong>BSC Lending</strong><small>BSC · 借贷</small></span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>演示</span></button>
+              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="Tron RWA" data-domain="rwa.example.tron" data-network="Tron" data-discover-network="Tron" data-discover-type="rwa"><span class="dapp-logo chain-letter">T</span><span><strong>Tron RWA</strong><small>Tron · RWA</small></span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>演示</span></button>
             </div>
+            <div class="discover-empty" data-discover-empty hidden><span class="state-illustration"><svg class="icon icon-lg"><use href="#i-search"></use></svg></span><strong>暂无匹配的 DApp</strong><small>尝试切换网络或应用类型。</small><button class="ghost-button" type="button" data-action="reset-discover">重置筛选</button></div>
           </section>
           <aside class="security-note"><svg class="icon"><use href="#i-lock"></use></svg><p><strong>打开前始终确认</strong><span>DApp 名称、目标域名、当前网络与风险提示。</span></p></aside>
         </div>
@@ -272,11 +282,11 @@
             <div class="wallet-card-top"><div><span>当前钱包</span><h2 id="wallet-card-title" class="wallet-name">日常钱包</h2></div><button class="wallet-switch" type="button" data-action="open-wallet"><span class="network-dot light-dot"></span><span class="wallet-network">FullOn</span><svg class="icon icon-xs"><use href="#i-chevron"></use></svg></button></div>
             <div class="wallet-chain-account"><span>dragonmaster · <span class="wallet-address">flon8Q…p6K2</span></span><button type="button" aria-label="复制当前钱包地址" data-action="copy-address"><svg class="icon icon-sm"><use href="#i-copy"></use></svg></button></div>
             <div class="wallet-value"><span>总资产估值</span><button type="button" aria-label="隐藏或显示资产" data-action="toggle-assets"><svg class="icon icon-sm asset-eye"><use href="#i-eye"></use></svg></button><strong class="asset-value">$24,860.42</strong><small class="asset-subvalue">≈ 24,856.90 USDT</small></div>
-            <button class="wallet-detail-button" type="button" data-action="toast" data-message="进入钱包详情：资产卡、快捷功能与完整资产列表">钱包详情<svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
+            <button class="wallet-detail-button" type="button" data-action="open-wallet-detail">钱包详情<svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
           </section>
 
           <section class="profile-section" aria-labelledby="asset-preview-title">
-            <div class="section-heading compact-heading"><h2 id="asset-preview-title">资产预览</h2><div class="asset-tabs"><button class="is-active" type="button">代币</button><button type="button">NFT</button><button type="button" data-action="toast" data-message="进入完整资产列表">全部</button></div></div>
+            <div class="section-heading compact-heading"><h2 id="asset-preview-title">资产预览</h2><div class="asset-tabs"><button class="is-active" type="button">代币</button><button type="button">NFT</button><button type="button" data-action="open-wallet-detail">全部</button></div></div>
             <div class="asset-list">
             <button class="asset-row" type="button"><img src="assets/images/dapplogo/flon.png" alt="FLON"><span><strong>FLON</strong><small>FullOn Network</small></span><span><strong>185,420.80</strong><small>$15,615.94</small></span></button>
               <button class="asset-row" type="button"><img src="assets/images/icon/USDT.png" alt="USDT"><span><strong>USDT</strong><small>FullOn Network</small></span><span><strong>8,240.20</strong><small>$8,241.85</small></span></button>
@@ -336,6 +346,53 @@
         </div>
         <button class="ghost-button full-width" type="button" data-action="open-nickname">编辑当前钱包昵称</button>
         <button class="secondary-button full-width" type="button" data-action="toast" data-message="进入钱包管理"><svg class="icon icon-sm"><use href="#i-plus"></use></svg>管理或添加钱包</button>
+      </div>
+    </section>
+
+    <section class="bottom-sheet canvas-fixed flow-sheet" data-modal="wallet-onboarding" role="dialog" aria-modal="true" aria-labelledby="wallet-onboarding-title" hidden>
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <div class="sheet-header"><div><span class="eyebrow" data-onboarding-kicker>本地自托管钱包</span><h2 id="wallet-onboarding-title" data-onboarding-title>创建钱包</h2></div><button class="icon-button" type="button" data-close-modal aria-label="关闭"><svg class="icon"><use href="#i-close"></use></svg></button></div>
+      <div class="sheet-content">
+        <div class="flow-progress" aria-label="流程进度"><span class="is-active" data-flow-indicator="1">1<i>方式</i></span><span data-flow-indicator="2">2<i>安全</i></span><span data-flow-indicator="3">3<i>完成</i></span></div>
+        <section class="flow-step" data-flow-step="1">
+          <div class="flow-intro"><span class="result-icon"><svg class="icon icon-lg"><use href="#i-wallet"></use></svg></span><h3 data-onboarding-step-title>生成本地钱包与账户</h3><p data-onboarding-step-copy>密钥只在当前设备生成。本原型不生成、显示或收集真实助记词和私钥。</p></div>
+          <div class="context-summary"><span><span class="network-dot"></span><strong>FullOn Network</strong></span><small data-onboarding-method>新建本地密钥</small></div>
+          <label class="form-field" data-recovery-field hidden><span class="field-label">已绑定 RWID 的演示手机号</span><input value="138 **** 6208" readonly><small>正式流程需验证码、设备识别和换绑冷静期。</small></label>
+          <button class="primary-button full-width" type="button" data-action="next-wallet-flow">继续</button>
+        </section>
+        <section class="flow-step" data-flow-step="2" hidden>
+          <label class="form-field"><span class="field-label">本地钱包昵称</span><input name="onboardingNickname" value="新钱包" maxlength="16"><small>仅保存在当前设备，同一设备内必须唯一。</small></label>
+          <div class="security-list compact-security-list">
+            <span><strong>密钥由用户保管</strong><small>HuFu 不保存、不索取助记词或私钥</small></span>
+            <span data-rwid-choice><strong>RWID 手机绑定</strong><small>可选择稍后绑定，用于恢复账户控制权</small></span>
+            <span data-recovery-safety hidden><strong>公钥换绑保护</strong><small>验证码限频、异常设备识别、冷静期与旧设备通知</small></span>
+          </div>
+          <div class="warning-box"><svg class="icon"><use href="#i-lock"></use></svg><p><strong>敏感凭证不会出现在原型中</strong><span data-flow-warning>请离线备份真实钱包的助记词和私钥。</span></p></div>
+          <div class="dual-actions"><button class="ghost-button" type="button" data-action="prev-wallet-flow">上一步</button><button class="primary-button" type="button" data-action="next-wallet-flow">确认安全规则</button></div>
+        </section>
+        <section class="flow-step" data-flow-step="3" hidden>
+          <div class="result-content compact-result"><span class="result-icon"><svg class="icon icon-lg"><use href="#i-shield"></use></svg></span><span class="eyebrow">原型模拟完成</span><h3 data-onboarding-result-title>钱包已准备好</h3><p data-onboarding-result-copy>已生成 FullOn 账户并保存本地昵称，可以进入首页继续体验。</p></div>
+          <dl class="confirm-list"><div><dt>网络</dt><dd>FullOn</dd></div><div><dt>账户</dt><dd>dragonmaster · flon8Q…p6K2</dd></div><div><dt>本地昵称</dt><dd data-onboarding-result-nickname>新钱包</dd></div></dl>
+          <button class="primary-button full-width" type="button" data-action="complete-wallet-flow">进入首页</button>
+        </section>
+      </div>
+    </section>
+
+    <section class="bottom-sheet canvas-fixed wallet-detail-sheet" data-modal="wallet-detail" role="dialog" aria-modal="true" aria-labelledby="wallet-detail-title" hidden>
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <div class="sheet-header"><div><span class="eyebrow">完整资产上下文</span><h2 id="wallet-detail-title">钱包详情</h2></div><button class="icon-button" type="button" data-close-modal aria-label="关闭"><svg class="icon"><use href="#i-close"></use></svg></button></div>
+      <div class="sheet-content">
+        <div class="wallet-detail-summary"><div><span class="wallet-network">FullOn</span><strong class="wallet-name">日常钱包</strong><small><span class="context-label">dragonmaster</span> · <span class="wallet-address">flon8Q…p6K2</span></small></div><button type="button" data-action="open-wallet">切换</button></div>
+        <div class="wallet-detail-value"><span>总资产估值</span><strong data-wallet-detail-total>$24,860.42</strong><small data-wallet-detail-converted>≈ 24,856.90 USDT</small></div>
+        <div class="quick-grid detail-quick-grid" aria-label="钱包详情快捷功能">
+          <button class="quick-action" type="button" data-action="open-transfer"><span class="quick-icon quick-blue"><svg class="icon icon-lg"><use href="#i-send"></use></svg></span><span>转账</span></button>
+          <button class="quick-action" type="button" data-action="open-receive"><span class="quick-icon quick-cyan"><svg class="icon icon-lg"><use href="#i-receive"></use></svg></span><span>收款</span></button>
+          <button class="quick-action" type="button" data-action="open-history"><span class="quick-icon quick-purple"><svg class="icon icon-lg"><use href="#i-history"></use></svg></span><span>记录</span></button>
+          <button class="quick-action" type="button" data-action="open-scan"><span class="quick-icon quick-green"><svg class="icon icon-lg"><use href="#i-scan"></use></svg></span><span>扫一扫</span></button>
+        </div>
+        <div class="section-heading compact-heading"><h3>完整资产</h3><div class="asset-tabs"><button class="is-active" type="button">代币</button><button type="button">NFT</button><button type="button" data-action="toast" data-message="打开添加代币原型">添加</button></div></div>
+        <div class="asset-list" data-wallet-detail-assets></div>
+        <button class="ghost-button full-width" type="button" data-action="open-nickname">编辑本地昵称</button>
       </div>
     </section>
 
@@ -407,7 +464,7 @@
     </section>
 
     <section class="bottom-sheet canvas-fixed result-sheet" data-modal="bridge-result" role="dialog" aria-modal="true" aria-labelledby="bridge-result-title" hidden>
-      <div class="sheet-handle" aria-hidden="true"></div><div class="sheet-content result-content"><span class="result-icon"><svg class="icon icon-lg"><use href="#i-history"></use></svg></span><span class="eyebrow">FULLBRIDGE 状态追踪</span><h2 id="bridge-result-title">跨链参数已准备</h2><p>源链确认、桥接处理、目标链到账会分别记录状态。本原型未提交真实交易。</p><div class="status-timeline"><span class="is-done"><i></i><strong>参数核对完成</strong><small>当前步骤</small></span><span><i></i><strong>源链确认</strong><small>等待签名后开始</small></span><span><i></i><strong>目标链到账</strong><small>预计 8–15 分钟</small></span></div><button class="primary-button full-width" type="button" data-close-modal>完成</button><button class="ghost-button full-width" type="button" data-action="open-history">查看跨链记录</button></div>
+      <div class="sheet-handle" aria-hidden="true"></div><div class="sheet-content result-content"><span class="result-icon" data-bridge-status-icon><svg class="icon icon-lg"><use href="#i-history"></use></svg></span><span class="eyebrow">FULLBRIDGE 状态追踪</span><h2 id="bridge-result-title" data-bridge-status-title>跨链参数已准备</h2><p data-bridge-status-copy>源链确认、桥接处理、目标链到账会分别记录状态。本原型未提交真实交易。</p><div class="state-chips bridge-state-chips" role="group" aria-label="跨链状态演示"><button class="is-active" type="button" data-bridge-status="ready">正常</button><button type="button" data-bridge-status="failed">失败</button><button type="button" data-bridge-status="timeout">超时</button><button type="button" data-bridge-status="unsupported">不支持</button></div><div class="status-timeline" data-bridge-timeline><span class="is-done"><i></i><strong>参数核对完成</strong><small>当前步骤</small></span><span><i></i><strong>源链确认</strong><small>等待签名后开始</small></span><span><i></i><strong>目标链到账</strong><small>预计 8–15 分钟</small></span></div><div class="bridge-recovery-actions" data-bridge-recovery hidden><button class="secondary-button full-width" type="button" data-action="retry-bridge">重试当前步骤</button><button class="ghost-button full-width" type="button" data-action="open-history">查看链上记录</button><button class="ghost-button full-width" type="button" data-action="return-bridge">返回修改参数</button></div><button class="primary-button full-width" type="button" data-bridge-complete data-close-modal>完成</button><button class="ghost-button full-width" type="button" data-bridge-history data-action="open-history">查看跨链记录</button></div>
     </section>
 
     <section class="bottom-sheet canvas-fixed" data-modal="security" role="dialog" aria-modal="true" aria-labelledby="security-title" hidden>
@@ -427,6 +484,7 @@
           <div><dt>目标域名</dt><dd data-dapp-domain>fullswap.flon.network</dd></div>
           <div><dt>所需网络</dt><dd data-dapp-network>FullOn</dd></div>
           <div><dt>当前账户</dt><dd><span class="wallet-name">日常钱包</span> · <span class="wallet-address">flon8Q…p6K2</span></dd></div>
+          <div><dt>交易执行方</dt><dd data-dapp-executor>FullSwap 智能合约</dd></div>
           <div><dt>即将执行</dt><dd>仅打开应用，不连接钱包</dd></div>
         </dl>
         <div class="warning-box"><svg class="icon"><use href="#i-shield"></use></svg><p><strong>后续操作仍需你的确认</strong><span>连接、授权、签名和交易不会自动执行。</span></p></div>
@@ -465,6 +523,6 @@
 
     <div class="toast canvas-toast" role="status" aria-live="polite" aria-atomic="true" hidden><svg class="icon icon-sm"><use href="#i-shield"></use></svg><span data-toast-text></span></div>
   </div>
-  <script src="app.js?v=5"></script>
+  <script src="app.js?v=20260806-1"></script>
 </body>
 </html>

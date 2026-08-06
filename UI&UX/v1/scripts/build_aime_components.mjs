@@ -14,23 +14,22 @@ const states = [
   { name: "peek", loop: false }
 ];
 
-function componentSource({ name, loop, animationData }) {
-  return `window.AimeAnimationComponents.register(${JSON.stringify({ name, loop, animationData })});\n`;
+function componentSource({ name, loop, animationData, fallbackImage }) {
+  return `window.AimeAnimationComponents.register(${JSON.stringify({ name, loop, animationData, fallbackImage })});\n`;
 }
 
 async function buildState({ name, loop }) {
   const jsonPath = resolve(sourceDir, `aime_${name}.json`);
   const animationData = JSON.parse(await readFile(jsonPath, "utf8"));
-  for (const asset of animationData.assets || []) {
-    if (!asset.p || asset.e === 1) continue;
-    const imagePath = resolve(sourceDir, asset.u || "", asset.p);
-    const image = await readFile(imagePath);
-    asset.u = "";
-    asset.p = `data:image/png;base64,${image.toString("base64")}`;
-    asset.e = 1;
-  }
+  const image = await readFile(resolve(sourceDir, "images", `aime_${name}.png`));
+  const fallbackImage = `data:image/png;base64,${image.toString("base64")}`;
+  const imageAsset = animationData.assets?.find(({ id }) => id === `aime_${name}_image`);
+  if (!imageAsset) throw new Error(`Missing AIMe image asset: ${jsonPath}`);
+  imageAsset.u = "";
+  imageAsset.p = fallbackImage;
+  imageAsset.e = 1;
   const outputPath = resolve(outputDir, `aime_${name}.component.js`);
-  const expected = componentSource({ name, loop, animationData });
+  const expected = componentSource({ name, loop, animationData, fallbackImage });
   if (checkOnly) {
     const actual = await readFile(outputPath, "utf8");
     if (actual !== expected) throw new Error(`Outdated AIMe component: ${outputPath}`);

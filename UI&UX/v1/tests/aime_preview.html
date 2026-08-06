@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AIMe 动画验收</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { display: grid; min-height: 100vh; margin: 0; place-items: center; color: #0f152f; background: #eef2f8; font-family: system-ui, sans-serif; }
+    main { width: min(92vw, 520px); padding: 24px; background: #fff; border: 1px solid #e1e5ef; border-radius: 24px; }
+    h1 { margin: 0 0 16px; font-size: 20px; }
+    #aime-preview-stage { width: 100%; aspect-ratio: 1; background: center / contain no-repeat var(--aime-fallback-image, none); }
+    #aime-preview-stage.is-lottie-ready { background-image: none; }
+    nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 16px; }
+    button { min-height: 44px; color: #354180; background: #f3f5ff; border: 1px solid #d8e2ff; border-radius: 12px; font-weight: 700; }
+    button[aria-pressed="true"] { color: #fff; background: #3e78ff; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>AIMe 独立 JSON 动画验收</h1>
+    <div id="aime-preview-stage" aria-label="AIMe 动画预览"></div>
+    <nav aria-label="动画状态">
+      <button type="button" data-state="idle" aria-pressed="true">Idle</button>
+      <button type="button" data-state="thinking" aria-pressed="false">Thinking</button>
+      <button type="button" data-state="greeting" aria-pressed="false">Greeting</button>
+      <button type="button" data-state="peek" aria-pressed="false">Peek</button>
+    </nav>
+  </main>
+  <script src="../vendor/lottie.min.js"></script>
+  <script src="../components/aime_animation_component.js?v=2"></script>
+  <script src="../assets/aime/components/aime_idle.component.js?v=2"></script>
+  <script src="../assets/aime/components/aime_thinking.component.js?v=2"></script>
+  <script src="../assets/aime/components/aime_greeting.component.js?v=2"></script>
+  <script src="../assets/aime/components/aime_peek.component.js?v=2"></script>
+  <script src="aime_preview.js?v=1"></script>
+</body>
+</html>
