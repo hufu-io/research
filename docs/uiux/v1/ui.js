@@ -184,7 +184,7 @@
     const query = socialSearchInput?.value.trim().toLocaleLowerCase() || "";
     let visibleCount = 0;
     getSocialChatRows().forEach((row) => {
-      const categoryMatches = socialActiveFilter === "all" || row.dataset.chatKind === socialActiveFilter;
+      const categoryMatches = socialActiveFilter === "all" || row.dataset.chatCategory === socialActiveFilter;
       const searchable = row.dataset.chatSearch?.toLocaleLowerCase() || "";
       const queryMatches = !query || searchable.includes(query);
       const visible = categoryMatches && queryMatches;

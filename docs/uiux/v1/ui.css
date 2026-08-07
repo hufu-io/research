@@ -689,12 +689,12 @@ body {
 .social-filter-tabs {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  min-height: 50px;
-  margin: 12px 16px 6px;
-  padding: 3px;
+  min-height: 46px;
+  margin: 10px 16px 4px;
+  padding: 0;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 14px;
 }
 
 .social-filter-tabs button {
