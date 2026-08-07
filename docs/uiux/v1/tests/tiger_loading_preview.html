@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>AIMe 白虎过渡 Loading</title>
+  <style>
+    :root {
+      --canvas-w: 420px;
+      --brand-primary: #3e78ff;
+      --brand-deep: #354180;
+      --page-background: #f5f6f7;
+      --surface: #fff;
+      --border: #e1e5ef;
+      --text-primary: #0f152f;
+      --text-secondary: #7b7d8c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background: var(--page-background);
+      color: var(--text-primary);
+      font-family: Manrope, "PingFang SC", "Noto Sans CJK SC", sans-serif;
+    }
+
+    #app-frame {
+      width: 100%;
+      max-width: var(--canvas-w);
+      min-height: 100dvh;
+      margin: 0 auto;
+      padding: 56px 20px 32px;
+      background: var(--surface);
+    }
+
+    header {
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.35;
+    }
+
+    p {
+      margin: 8px 0 0;
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .preview-card {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      aspect-ratio: 1;
+      margin-top: 28px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 50% 46%, rgba(62, 120, 255, .1), transparent 47%),
+        var(--surface);
+    }
+
+    #tiger-loading {
+      width: min(88vw, 360px);
+      height: min(88vw, 360px);
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 20px;
+      color: var(--brand-deep);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .status::before {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brand-primary);
+      content: "";
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #tiger-loading {
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main id="app-frame">
+    <header>
+      <h1>AIMe 页面过渡 Loading</h1>
+      <p>4 个腿部姿态 · 0.8 秒循环 · 30 FPS · 自包含 JSON</p>
+    </header>
+    <section class="preview-card" aria-label="AIMe 白虎奔跑动画预览">
+      <div id="tiger-loading"></div>
+    </section>
+    <div class="status" id="status">动画载入中</div>
+  </main>
+  <script src="../vendor/lottie.min.js"></script>
+  <script>
+    const status = document.querySelector("#status");
+    const animation = lottie.loadAnimation({
+      container: document.querySelector("#tiger-loading"),
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      path: "../assets/loading/tiger_loading.json",
+      rendererSettings: { preserveAspectRatio: "xMidYMid meet" }
+    });
+
+    animation.addEventListener("DOMLoaded", () => {
+      status.textContent = "动画播放正常";
+      document.documentElement.dataset.animationReady = "true";
+    });
+
+    animation.addEventListener("data_failed", () => {
+      status.textContent = "动画加载失败";
+      document.documentElement.dataset.animationReady = "false";
+    });
+  </script>
+</body>
+</html>

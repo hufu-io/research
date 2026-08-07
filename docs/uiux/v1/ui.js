@@ -81,6 +81,45 @@
   let marketActiveView = "quotes";
   let socialActiveFilter = "all";
   const marketViewScroll = { quotes: 0, news: 0 };
+  const launchLoading = document.querySelector("[data-launch-loading]");
+  const launchLoadingStage = document.querySelector("[data-launch-loading-animation]");
+  let launchLoadingAnimation = null;
+
+  function initializeLaunchLoading() {
+    if (!launchLoading) return;
+    frame.setAttribute("aria-busy", "true");
+    document.documentElement.dataset.launchState = "loading";
+    if (window.lottie?.loadAnimation && window.TigerLoadingAnimationData && launchLoadingStage) {
+      try {
+        launchLoadingAnimation = window.lottie.loadAnimation({
+          container: launchLoadingStage,
+          renderer: "svg",
+          loop: true,
+          autoplay: !reducedMotionQuery.matches,
+          animationData: window.TigerLoadingAnimationData,
+          rendererSettings: { preserveAspectRatio: "xMidYMid meet" }
+        });
+        if (reducedMotionQuery.matches) launchLoadingAnimation.goToAndStop(0, true);
+      } catch {
+        launchLoadingAnimation = null;
+      }
+    }
+
+    const finish = () => {
+      launchLoading.hidden = true;
+      frame.setAttribute("aria-busy", "false");
+      document.documentElement.dataset.launchState = "ready";
+      launchLoadingAnimation?.destroy();
+      launchLoadingAnimation = null;
+    };
+
+    window.setTimeout(() => {
+      document.documentElement.dataset.launchState = "leaving";
+      launchLoading.classList.add("is-leaving");
+      launchLoading.addEventListener("transitionend", finish, { once: true });
+      window.setTimeout(finish, 240);
+    }, 1000);
+  }
 
   const toast = document.createElement("div");
   toast.className = "canvas-toast";
@@ -853,6 +892,7 @@
   });
 
   const aimeToggle = document.querySelector('[data-action="toggle-aime"]');
+  initializeLaunchLoading();
   initializeMarketFavorites();
   selectMarketView(document.querySelector("[data-market-view-tab].is-active"));
   selectMarketCategory(document.querySelector('[role="tab"][data-market-category].is-active'));

@@ -31,6 +31,39 @@ body {
   background: var(--grouped);
 }
 
+.app-launch-loading {
+  position: fixed;
+  z-index: 5000;
+  top: 0;
+  right: var(--canvas-inset);
+  bottom: 0;
+  left: var(--canvas-inset);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(62, 120, 255, 0.1), transparent 38%),
+    var(--surface);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 200ms ease, visibility 0s linear 200ms;
+}
+
+.app-launch-loading.is-leaving {
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.app-launch-loading[hidden] {
+  display: none;
+}
+
+.app-launch-loading-visual {
+  width: min(64vw, 240px);
+  height: min(64vw, 240px);
+}
+
 .page-view[data-view="social"],
 .page-view[data-view="market"],
 .page-view[data-view="discover"],
@@ -2344,6 +2377,10 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .app-launch-loading {
+    transition-duration: 1ms;
+  }
+
   .hero-slide {
     transition: none;
   }
