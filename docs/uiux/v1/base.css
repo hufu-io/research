@@ -1577,9 +1577,16 @@ img {
   grid-template-columns: repeat(5, 1fr);
   height: calc(var(--nav-h) + var(--safe-bottom));
   padding: 5px 6px var(--safe-bottom);
-  background: rgba(255, 255, 255, 0.96);
-  border-top: 1px solid var(--divider);
-  backdrop-filter: blur(18px);
+  background: rgba(249, 249, 249, 0.82);
+  border-top: 1px solid rgba(60, 60, 67, 0.16);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  backdrop-filter: blur(24px) saturate(170%);
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .bottom-nav {
+    background: rgba(249, 249, 249, 0.96);
+  }
 }
 
 .nav-item {
@@ -1598,13 +1605,44 @@ img {
   font-weight: 700;
 }
 
-.nav-item .icon {
+.nav-icon-state {
+  display: block;
   width: 23px;
   height: 23px;
+  transition: transform 180ms ease;
+}
+
+.nav-icon {
+  display: block;
+  width: 23px;
+  height: 23px;
+  object-fit: contain;
+}
+
+.nav-icon-active {
+  display: none;
 }
 
 .nav-item.is-active {
   color: var(--brand);
+}
+
+.nav-item.is-active .nav-icon-state {
+  transform: translateY(-1px);
+}
+
+.nav-item.is-active .nav-icon-default {
+  display: none;
+}
+
+.nav-item.is-active .nav-icon-active {
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-icon-state {
+    transition: none;
+  }
 }
 
 .nav-icon-wrap {

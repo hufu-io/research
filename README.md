@@ -15,7 +15,7 @@ HuFu 连接 FullOn 生态中的 FullSwap、FullBridge、FullVest 等 DApp。其�
 | [HuFu 现有版本功能介绍](./docs/current-version.md) | 当前版本的产品定位、五个底部 Tab、钱包、社交、市场、Aime、DApp 与 RWID 能力 |
 | [HuFu App 改版设计](./docs/ui-redesign.md) | 新版首页、“我的（Profile）”、全局 Aime、本地钱包昵称及关键用户流程设计 |
 | [Hufu Wallet UI 设计规范](./.ui-design/DESIGN.md) | 移动端颜色、排版、组件、状态、安全体验与 HTML 固定画布规范 |
-| [移动端交互原型 v1](./原型设计/v1/index.html) | 五个主 Tab、钱包上下文、快捷功能、行情、DApp、跨链、安全与 Aime 交互演示 |
+| [移动端 UI/UX v1](./docs/uiux/v1/index.html) | 五个主 Tab、钱包上下文、快捷功能、行情、DApp、跨链、安全与 Aime 交互演示 |
 
 ## 文档边界
 

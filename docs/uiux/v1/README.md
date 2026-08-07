@@ -1,6 +1,6 @@
 # Hufu Wallet UI/UX v1
 
-独立高保真 HTML 设计稿，设计基准为 `390 × 844`，遵循 [`.ui-design/.html-ui-design`](../../.ui-design/.html-ui-design) 的 `mobile` 模式和项目级 [`DESIGN.md`](../../.ui-design/DESIGN.md)。
+独立高保真 HTML 设计稿，设计基准为 `390 × 844`，遵循 [`.ui-design/.html-ui-design`](../../../.ui-design/.html-ui-design) 的 `mobile` 模式和项目级 [`DESIGN.md`](../../../.ui-design/DESIGN.md)。
 
 本版本的字体、品牌图片、币种图标和 Aime 动效统一放在当前目录的 `assets/` 中；移动画布、滚动容器、底部导航和弹层等基础结构复用交互原型的画布样式，再由 `ui.css` 覆盖 UI/UX v1 的独立视觉。
 
@@ -22,7 +22,7 @@
 
 ## 预览
 
-直接双击 `index.html` 即可预览，AIMe 动画组件使用内嵌高清图片图层、矢量眼睑关键帧和独立 PNG fallback，不依赖 HTTP、XHR 或 CDN。也可以从仓库根目录启动本地 HTTP 服务后访问 `UI&UX/v1/`。页面使用与交互原型一致的单一居中移动画布，不再使用“左侧设计说明 + 右侧设备模型”的桌面展示布局；通过底部导航切换页面。
+直接双击 `index.html` 即可预览，AIMe 动画组件使用内嵌高清图片图层、矢量眼睑关键帧和独立 PNG fallback，不依赖 HTTP、XHR 或 CDN。也可以从仓库根目录启动本地 HTTP 服务后访问 `docs/uiux/v1/`。页面使用与交互原型一致的单一居中移动画布，不再使用“左侧设计说明 + 右侧设备模型”的桌面展示布局；通过底部导航切换页面。
 
 发现页把 DApp 搜索入口放在 sticky Header 内，右侧提供独立的浏览历史图标；内容区不重复显示搜索框。
 
