@@ -7,7 +7,7 @@
   <meta name="description" content="Hufu Wallet · UI/UX v1 正式视觉设计稿">
   <link rel="icon" href="data:,">
   <title>Hufu Wallet · UI/UX v1</title>
-  <link rel="stylesheet" href="ui.css?v=131">
+  <link rel="stylesheet" href="ui.css?v=132">
 </head>
 <body>
   <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -39,6 +39,8 @@
     <symbol id="i-minimize" viewBox="0 0 24 24"><path d="M6 12h12"/></symbol>
     <symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 4H4v5M15 4h5v5M20 15v5h-5M4 15v5h5"/></symbol>
     <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="m9 4 6 0-1 5 3 3v2H7v-2l3-3zM12 14v7"/></symbol>
+    <symbol id="i-muted" viewBox="0 0 24 24"><path d="m4 4 16 16M9.5 6.5 7 9H4v6h3l5 4v-5.5M15.5 9.5a4 4 0 0 1 .5 2.5c0 .7-.2 1.4-.5 2"/></symbol>
   </svg>
 
   <div id="app-frame">
@@ -195,27 +197,63 @@
           <h1 id="social-title">社交</h1>
         </header>
         <div class="page-content social-content">
-          <section aria-label="消息列表">
-            <div class="chat-list">
-              <button class="chat-row" type="button" data-action="toast" data-message="打开 FullOn Builder 群聊">
-                <span class="chat-avatar group-avatar">FO<span class="online-dot"></span></span>
-                <span class="chat-copy"><span><strong>FullOn Builder</strong><time>12:48</time></span><small>Leo：新的跨链状态页已经上线</small></span>
-                <span class="unread-badge">2</span>
-              </button>
-              <button class="chat-row" type="button" data-action="toast" data-message="打开 Alice 的会话">
+          <section class="social-chat-panel" aria-label="消息列表">
+            <form class="social-search" role="search" data-social-search>
+              <svg class="icon icon-sm" aria-hidden="true"><use href="#i-search"></use></svg>
+              <label class="sr-only" for="social-search-input">搜索会话</label>
+              <input id="social-search-input" type="search" inputmode="search" autocomplete="off" placeholder="搜索联系人、群组或消息" data-social-search-input>
+              <button class="social-search-clear" type="button" aria-label="清除搜索" data-action="clear-social-search" hidden><svg class="icon icon-sm" aria-hidden="true"><use href="#i-close"></use></svg></button>
+            </form>
+            <div class="social-filter-tabs" role="tablist" aria-label="会话分类">
+              <button class="is-active" type="button" role="tab" aria-selected="true" tabindex="0" data-social-filter="all">全部</button>
+              <button type="button" role="tab" aria-selected="false" tabindex="-1" data-social-filter="friend">好友<span>3</span></button>
+              <button type="button" role="tab" aria-selected="false" tabindex="-1" data-social-filter="group">群组<span>3</span></button>
+            </div>
+            <div class="chat-list social-chat-list" data-social-chat-list>
+              <button class="chat-row is-pinned" type="button" data-chat-row data-chat-kind="friend" data-chat-search="Alice.flon 好的 晚点把交易哈希发你" data-action="toast" data-message="打开 Alice 的会话">
                 <span class="chat-avatar alice-avatar">A<span class="online-dot"></span></span>
-                <span class="chat-copy"><span><strong>Alice.flon</strong><time>昨天</time></span><small>收到了，感谢！</small></span>
-                <span class="unread-badge">1</span>
+                <span class="chat-copy">
+                  <span class="chat-heading"><span class="chat-name"><strong>Alice.flon</strong></span><time datetime="2026-08-07T14:21:00+08:00">14:21</time></span>
+                  <span class="chat-preview"><small>好的，晚点把交易哈希发你</small><span class="chat-states"><span class="pin-state" role="img" aria-label="已置顶"><svg class="icon"><use href="#i-pin"></use></svg></span></span></span>
+                </span>
               </button>
-              <button class="chat-row" type="button" data-action="toast" data-message="打开 Web3 安全课堂">
+              <button class="chat-row is-pinned" type="button" data-chat-row data-chat-kind="group" data-chat-search="FullOn Builder Leo 新的跨链状态页已经上线" data-action="toast" data-message="打开 FullOn Builder 群聊">
+                <span class="chat-avatar group-avatar">FO</span>
+                <span class="chat-copy">
+                  <span class="chat-heading"><span class="chat-name"><strong>FullOn Builder</strong><span class="muted-state" role="img" aria-label="已静音"><svg class="icon"><use href="#i-muted"></use></svg></span></span><time datetime="2026-08-07T12:48:00+08:00">12:48</time></span>
+                  <span class="chat-preview"><small>新的跨链状态页已经上线</small><span class="chat-states"><span class="pin-state" role="img" aria-label="已置顶"><svg class="icon"><use href="#i-pin"></use></svg></span></span></span>
+                </span>
+              </button>
+              <button class="chat-row" type="button" data-chat-row data-chat-kind="friend" data-chat-search="Aaron.eth 图片 已发送" data-action="toast" data-message="打开 Aaron 的会话">
+                <span class="chat-avatar aaron-avatar">AE<span class="online-dot"></span></span>
+                <span class="chat-copy">
+                  <span class="chat-heading"><span class="chat-name"><strong>Aaron.eth</strong></span><time datetime="2026-08-06">昨天</time></span>
+                  <span class="chat-preview"><small>[图片]</small><span class="chat-states"><span class="unread-badge" aria-label="1 条未读消息">1</span></span></span>
+                </span>
+              </button>
+              <button class="chat-row" type="button" data-chat-row data-chat-kind="group" data-chat-search="Web3 安全课堂 官方 不要向任何人分享助记词" data-action="toast" data-message="打开 Web3 安全课堂">
                 <span class="chat-avatar safety-avatar"><svg class="icon"><use href="#i-shield"></use></svg></span>
-                <span class="chat-copy"><span><strong>Web3 安全课堂</strong><time>周一</time></span><small>不要向任何人分享助记词</small></span>
+                <span class="chat-copy">
+                  <span class="chat-heading"><span class="chat-name"><strong>Web3 安全课堂</strong><span class="muted-state" role="img" aria-label="已静音"><svg class="icon"><use href="#i-muted"></use></svg></span></span><time datetime="2026-08-07T10:32:00+08:00">10:32</time></span>
+                  <span class="chat-preview"><small>不要向任何人分享助记词</small></span>
+                </span>
               </button>
-              <button class="chat-row" type="button" data-action="toast" data-message="打开 Bob 的会话">
+              <button class="chat-row" type="button" data-chat-row data-chat-kind="friend" data-chat-search="Bob.sol DApp 卡片 FullSwap" data-action="toast" data-message="打开 Bob 的会话">
                 <span class="chat-avatar bob-avatar">B</span>
-                <span class="chat-copy"><span><strong>Bob.sol</strong><time>8月2日</time></span><small>[DApp 卡片] FullSwap</small></span>
+                <span class="chat-copy">
+                  <span class="chat-heading"><span class="chat-name"><strong>Bob.sol</strong></span><time datetime="2026-08-05">周二</time></span>
+                  <span class="chat-preview"><small>[DApp 卡片] FullSwap</small></span>
+                </span>
+              </button>
+              <button class="chat-row" type="button" data-chat-row data-chat-kind="group" data-chat-search="FullOn 社区 Linda 本周社区语音将在周五举行" data-action="toast" data-message="打开 FullOn 社区">
+                <span class="chat-avatar community-avatar">FC</span>
+                <span class="chat-copy">
+                  <span class="chat-heading"><span class="chat-name"><strong>FullOn 社区</strong></span><time datetime="2026-08-04">周一</time></span>
+                  <span class="chat-preview"><small>本周社区语音将在周五举行</small><span class="chat-states"><span class="unread-badge" aria-label="3 条未读消息">3</span></span></span>
+                </span>
               </button>
             </div>
+            <p class="social-chat-empty" data-social-chat-empty hidden>没有找到相关会话，试试其他关键词</p>
           </section>
         </div>
       </section>

@@ -33,6 +33,11 @@
   const socialDrawerLayer = document.querySelector("[data-social-drawer-layer]");
   const socialDrawer = document.querySelector(".social-drawer");
   const socialDrawerTrigger = document.querySelector("[data-social-drawer-trigger]");
+  const socialSearch = document.querySelector("[data-social-search]");
+  const socialSearchInput = document.querySelector("[data-social-search-input]");
+  const socialSearchClear = document.querySelector("[data-action='clear-social-search']");
+  const socialFilterTabs = [...document.querySelectorAll("[data-social-filter]")];
+  const socialChatEmpty = document.querySelector("[data-social-chat-empty]");
   const marketAppbar = document.querySelector(".market-appbar");
   const marketSearch = document.querySelector("[data-market-search]");
   const marketSearchInput = document.querySelector("[data-market-search-input]");
@@ -74,6 +79,7 @@
   let marketFavorites = new Set();
   let marketActiveCategory = "self";
   let marketActiveView = "quotes";
+  let socialActiveFilter = "all";
   const marketViewScroll = { quotes: 0, news: 0 };
 
   const toast = document.createElement("div");
@@ -168,6 +174,45 @@
     updateMarketFavoriteButtons();
     applyMarketSearch();
     if (moveFocus) tab.focus();
+  }
+
+  function getSocialChatRows() {
+    return [...document.querySelectorAll("[data-chat-row]")];
+  }
+
+  function applySocialChatFilter() {
+    const query = socialSearchInput?.value.trim().toLocaleLowerCase() || "";
+    let visibleCount = 0;
+    getSocialChatRows().forEach((row) => {
+      const categoryMatches = socialActiveFilter === "all" || row.dataset.chatKind === socialActiveFilter;
+      const searchable = row.dataset.chatSearch?.toLocaleLowerCase() || "";
+      const queryMatches = !query || searchable.includes(query);
+      const visible = categoryMatches && queryMatches;
+      row.hidden = !visible;
+      if (visible) visibleCount += 1;
+    });
+    if (socialSearchClear) socialSearchClear.hidden = !query;
+    if (socialChatEmpty) socialChatEmpty.hidden = visibleCount > 0;
+  }
+
+  function selectSocialFilter(tab, moveFocus = false) {
+    if (!tab) return;
+    socialActiveFilter = tab.dataset.socialFilter || "all";
+    socialFilterTabs.forEach((item) => {
+      const active = item === tab;
+      item.classList.toggle("is-active", active);
+      item.setAttribute("aria-selected", String(active));
+      item.tabIndex = active ? 0 : -1;
+    });
+    applySocialChatFilter();
+    if (moveFocus) tab.focus();
+  }
+
+  function clearSocialSearch() {
+    if (!socialSearchInput) return;
+    socialSearchInput.value = "";
+    applySocialChatFilter();
+    socialSearchInput.focus();
   }
 
   function toggleMarketFavorite(button) {
@@ -681,6 +726,9 @@
     const marketCategoryTab = event.target.closest('[role="tab"][data-market-category]');
     if (marketCategoryTab) return selectMarketCategory(marketCategoryTab);
 
+    const socialFilterTab = event.target.closest("[data-social-filter]");
+    if (socialFilterTab) return selectSocialFilter(socialFilterTab);
+
     const exclusive = event.target.closest(".segmented-control button, .asset-tabs button, .chain-chips button, .chart-range button, .record-filters button, .state-chips button");
     if (exclusive) {
       [...exclusive.parentElement.children].forEach((item) => {
@@ -717,6 +765,7 @@
     if (action === "open-market-search") return openMarketSearch();
     if (action === "clear-market-search") return clearMarketSearch();
     if (action === "close-market-search") return closeMarketSearch();
+    if (action === "clear-social-search") return clearSocialSearch();
     if (action === "toggle-market-favorite") return toggleMarketFavorite(actionTarget);
     if (action === "fill-max") {
       const input = actionTarget.closest(".amount-input")?.querySelector("input");
@@ -744,6 +793,8 @@
 
   marketSearch?.addEventListener("submit", (event) => event.preventDefault());
   marketSearchInput?.addEventListener("input", applyMarketSearch);
+  socialSearch?.addEventListener("submit", (event) => event.preventDefault());
+  socialSearchInput?.addEventListener("input", applySocialChatFilter);
   marketViewTabs.forEach((tab) => tab.addEventListener("click", () => selectMarketView(tab)));
 
   document.addEventListener("keydown", (event) => {
@@ -762,6 +813,14 @@
       const currentIndex = tabs.indexOf(marketCategoryTab);
       const nextIndex = getNextMarketTabIndex(currentIndex, tabs.length, event.key);
       selectMarketCategory(tabs[nextIndex], true);
+      return;
+    }
+    const socialFilterTab = event.target.closest?.("[data-social-filter]");
+    if (socialFilterTab && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+      event.preventDefault();
+      const currentIndex = socialFilterTabs.indexOf(socialFilterTab);
+      const nextIndex = getNextMarketTabIndex(currentIndex, socialFilterTabs.length, event.key);
+      selectSocialFilter(socialFilterTabs[nextIndex], true);
       return;
     }
     if (event.key === "Escape" && marketSearch && !marketSearch.hidden) {
@@ -797,6 +856,7 @@
   initializeMarketFavorites();
   selectMarketView(document.querySelector("[data-market-view-tab].is-active"));
   selectMarketCategory(document.querySelector('[role="tab"][data-market-category].is-active'));
+  selectSocialFilter(document.querySelector("[data-social-filter].is-active"));
   aimeToggle?.classList.toggle("is-on", aimeEnabled);
   aimeToggle?.setAttribute("aria-checked", String(aimeEnabled));
   aimeFab.hidden = !aimeEnabled;
