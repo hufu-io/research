@@ -137,7 +137,7 @@ body {
 }
 
 .market-card-flat {
-  --market-data-columns: 64px minmax(0, 1fr) 92px 52px;
+  --market-data-columns: 64px 104px minmax(0, 1fr) 52px;
   overflow: visible;
   border: 0;
   border-radius: 0;
@@ -351,11 +351,17 @@ body {
 
 @media (max-width: 380px) {
   .market-card-flat {
-    --market-data-columns: 56px minmax(0, 1fr) 78px 46px;
+    --market-data-columns: 56px 96px minmax(0, 1fr) 46px;
   }
 
   .market-trend .sparkline {
     width: 34px;
+  }
+}
+
+@media (max-width: 340px) {
+  .market-card-flat {
+    --market-data-columns: 44px 80px minmax(0, 1fr) 43px;
   }
 }
 
