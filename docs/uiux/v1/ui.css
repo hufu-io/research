@@ -764,6 +764,7 @@ body {
 .profile-content .wallet-card {
   isolation: isolate;
   min-height: 0;
+  margin-top: 8px;
   padding: 24px 22px 20px;
   background:
     radial-gradient(circle at 90% -2%, rgba(224, 243, 255, 0.28), transparent 36%),
@@ -791,6 +792,11 @@ body {
   width: 220px;
   height: 220px;
   background: radial-gradient(circle, rgba(255, 255, 255, 0.08), transparent 64%);
+}
+
+.profile-content .asset-tabs {
+  padding: 0;
+  border-radius: 12px;
 }
 
 .profile-content .wallet-card-top {
