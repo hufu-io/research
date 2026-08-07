@@ -494,8 +494,8 @@ body {
 
 .social-drawer-actions button {
   display: grid;
-  grid-template-columns: 40px minmax(0, 1fr) 20px;
-  gap: 12px;
+  grid-template-columns: 28px minmax(0, 1fr) 20px;
+  gap: 8px;
   align-items: center;
   width: 100%;
   min-height: 56px;
@@ -523,16 +523,14 @@ body {
 .social-drawer-action-icon {
   display: grid;
   place-items: center;
-  width: 40px;
+  width: 28px;
   height: 40px;
-  color: var(--brand);
-  background: var(--brand-soft);
-  border-radius: 12px;
 }
 
-.social-drawer-action-icon .icon {
-  width: 21px;
-  height: 21px;
+.social-drawer-action-icon img {
+  display: block;
+  width: 24px;
+  height: 24px;
 }
 
 .social-drawer-chevron {

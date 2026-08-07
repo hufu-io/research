@@ -1578,7 +1578,6 @@ img {
   height: calc(var(--nav-h) + var(--safe-bottom));
   padding: 5px 6px var(--safe-bottom);
   background: rgba(249, 249, 249, 0.82);
-  border-top: 1px solid rgba(60, 60, 67, 0.16);
   -webkit-backdrop-filter: blur(24px) saturate(170%);
   backdrop-filter: blur(24px) saturate(170%);
 }
