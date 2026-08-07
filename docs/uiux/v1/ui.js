@@ -527,13 +527,26 @@
     renderAimePosition(position.left, position.top);
   }
 
+  function getAimeTargetWidth(collapsed) {
+    const property = collapsed ? "--aime-collapsed-width" : "--aime-expanded-width";
+    const width = Number.parseFloat(window.getComputedStyle(aimeFab).getPropertyValue(property));
+    return Number.isFinite(width) ? width : aimeFab.getBoundingClientRect().width;
+  }
+
   function snapAimeToRightEdge() {
     const frameRect = frame.getBoundingClientRect();
     const bounds = getAimeDragBounds();
     const rect = aimeFab.getBoundingClientRect();
-    const dockWidth = aimeCollapsed ? aimeStage.getBoundingClientRect().width : rect.width;
+    const targetWidth = getAimeTargetWidth(aimeCollapsed);
+    const targetLeft = aimeCollapsed ? frameRect.right - targetWidth : frameRect.right - targetWidth - 12;
     const top = Math.max(bounds.minTop, Math.min(bounds.maxTop, rect.top));
-    renderAimePosition(frameRect.right - dockWidth, top);
+    renderAimePosition(Math.max(bounds.minLeft, targetLeft), top);
+  }
+
+  function settleAimeRight() {
+    aimeDockedRight = true;
+    setAimeCollapsed(false);
+    snapAimeToRightEdge();
   }
 
   function dockAimeRight() {
@@ -591,6 +604,7 @@
     if (wasLongPressed) return;
     if (wasDragging) {
       if (shouldDockRight) dockAimeRight();
+      else settleAimeRight();
       return;
     }
     if (aimeCollapsed) {
@@ -611,6 +625,7 @@
     aimePointerId = null;
     aimeRightBoundaryExceeded = false;
     if (shouldDockRight) dockAimeRight();
+    else settleAimeRight();
     if (aimeCollapsed) playAimePeek();
     else playAimeState("idle");
   });

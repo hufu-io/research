@@ -143,7 +143,7 @@ assert.match(js, /const aimeStorage = \{/, "File previews must use storage-safe 
 assert.doesNotMatch(js, /(?<!window\.)localStorage\./, "Runtime must not use unguarded localStorage access");
 
 const collapsedCss = css.match(/\.aime-fab\.is-collapsed \{[\s\S]*?\n\}/)?.[0] ?? "";
-assert.match(collapsedCss, /width:\s*108px/, "Collapsed hit area must retain pet width");
+assert.match(collapsedCss, /width:\s*var\(--aime-collapsed-width\)/, "Collapsed hit area must use the stable collapsed width token");
 assert.match(collapsedCss, /right:\s*var\(--canvas-inset\)/, "Collapsed pet must align with the canvas right edge without clipping");
 assert.match(css, /\.aime-fab:not\(\.is-collapsed\) \.aime-pet-visual \{\s*transform:\s*translateX\(22px\);/, "Expanded pet must sit close to the canvas right edge");
 assert.match(css, /\.aime-fab:not\(\.is-collapsed\) \.aime-fab-bubble \{\s*transform:\s*translate\(18px, -18px\);/, "Expanded bubble must keep a clear gap above the three-circle trail");
@@ -160,14 +160,16 @@ assert.match(js, /const distanceY = event\.clientY - aimePointerStartY;/, "Dragg
 assert.match(js, /const rawLeft = aimeDragOriginLeft \+ distanceX;\s*aimeRightBoundaryExceeded = rawLeft > getAimeDragBounds\(\)\.maxLeft;/, "Dragging must retain whether the raw position exceeds the right boundary");
 assert.match(js, /setAimePosition\(rawLeft, aimeDragOriginTop \+ distanceY\);/, "Dragging must update both visible coordinates after boundary intent is captured");
 assert.match(js, /navigationTop - fabRect\.height - 12/, "Dragging must stay above the bottom navigation");
-assert.match(js, /const dockWidth = aimeCollapsed \? aimeStage\.getBoundingClientRect\(\)\.width : rect\.width;[\s\S]*?renderAimePosition\(frameRect\.right - dockWidth, top\);/, "AIMe docking must target the stable collapsed width instead of producing a second position correction");
+assert.match(css, /--aime-expanded-width:\s*132px;[\s\S]*?--aime-collapsed-width:\s*108px;/, "AIMe must expose stable target widths for one-step right alignment");
+assert.match(js, /const targetWidth = getAimeTargetWidth\(aimeCollapsed\);\s*const targetLeft = aimeCollapsed \? frameRect\.right - targetWidth : frameRect\.right - targetWidth - 12;[\s\S]*?renderAimePosition\(Math\.max\(bounds\.minLeft, targetLeft\), top\);/, "AIMe must calculate stable collapsed and expanded right-side targets without a second correction");
 assert.match(js, /function dockAimeRight\(\) \{\s*aimeDockedRight = true;\s*setAimeCollapsed\(true\);\s*snapAimeToRightEdge\(\);/, "Docking must enter the collapsed state before calculating its final right-edge position");
+assert.match(js, /function settleAimeRight\(\) \{\s*aimeDockedRight = true;\s*setAimeCollapsed\(false\);\s*snapAimeToRightEdge\(\);/, "A normal drag release must remain expanded and settle near the right edge");
 assert.match(js, /aimeFab\.addEventListener\("transitionend", \(event\) => \{\s*if \(event\.target !== aimeFab \|\| event\.propertyName !== "width" \|\| !aimePositioned \|\| !aimeDockedRight\) return;\s*snapAimeToRightEdge\(\);/, "AIMe must recalibrate the right edge after its collapse width transition");
 assert.doesNotMatch(js, /bounds\.minLeft\s*:\s*bounds\.maxLeft|is-snapped-left|aimeSnappedSide/, "AIMe must not select or retain a left edge");
 const pointerMoveHandler = js.match(/aimeFab\.addEventListener\("pointermove",[\s\S]*?\n  \}\);/)?.[0] ?? "";
 assert.doesNotMatch(pointerMoveHandler, /snapAimeToRightEdge/, "Dragging must stay free until the pointer is released");
-assert.match(js, /const shouldDockRight = aimeRightBoundaryExceeded;[\s\S]*?if \(wasDragging\) \{\s*if \(shouldDockRight\) dockAimeRight\(\);\s*return;/, "Pointer release must dock only when the right boundary was exceeded");
-assert.match(js, /if \(shouldDockRight\) dockAimeRight\(\);/, "Pointer cancellation must dock only after right-boundary overflow");
+assert.match(js, /const shouldDockRight = aimeRightBoundaryExceeded;[\s\S]*?if \(wasDragging\) \{\s*if \(shouldDockRight\) dockAimeRight\(\);\s*else settleAimeRight\(\);\s*return;/, "Pointer release must collapse after overflow and otherwise settle expanded near the right edge");
+assert.match(js, /if \(shouldDockRight\) dockAimeRight\(\);\s*else settleAimeRight\(\);/, "Pointer cancellation must also resolve to the right-side collapsed or expanded state");
 assert.match(css, /\.aime-fab\.is-dragging \{[\s\S]*?transition:\s*none;/, "Dragging must remain pointer-synchronous");
 assert.doesNotMatch(css, /is-snapped-left/, "Styles must not expose a left-edge state");
 
