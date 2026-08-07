@@ -643,6 +643,19 @@ body {
   margin-top: 16px;
 }
 
+.home-content > .ecosystem-section .section-heading,
+.home-content > .holding-section .section-heading,
+.home-content > .news-section .section-heading {
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.home-content > .ecosystem-section .section-heading h2,
+.home-content > .holding-section .section-heading h2,
+.home-content > .news-section .section-heading h2 {
+  margin-top: 0;
+}
+
 .dapp-scroller {
   padding-bottom: 8px;
 }
