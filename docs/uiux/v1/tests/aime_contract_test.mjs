@@ -12,7 +12,7 @@ const states = [
   { name: "thinking", loop: true, duration: 90, componentVersion: 3 },
   { name: "greeting", loop: false, duration: 30, componentVersion: 3 },
   { name: "peek", loop: false, duration: 90, componentVersion: 3 },
-  { name: "peek2", loop: false, duration: 90, componentVersion: 2, animationImage: "aime_peek.png" }
+  { name: "peek2", loop: false, duration: 90, componentVersion: 3, animationImage: "aime_peek.png" }
 ];
 
 function descendants(value, result = []) {
@@ -106,6 +106,12 @@ const peek2Pet = peek2.layers.find(({ nm }) => nm === "AIMe peek2 HD Character")
 assert.ok(peek2Frame, "Peek2 must contain a dedicated wooden doorframe layer");
 assert.deepEqual([peek2Frame.ks.p.a, peek2Frame.ks.s.a, peek2Frame.ks.r.a], [0, 0, 0], "Peek2 doorframe transforms must stay static");
 assert.ok(peek2Pet.ks.p.a && peek2Pet.ks.s.a && peek2Pet.ks.r.a, "Peek2 pet transforms must remain animated independently");
+const peek2Positions = new Map(peek2Pet.ks.p.k.map(({ t, s }) => [t, s]));
+const peek2Scales = new Map(peek2Pet.ks.s.k.map(({ t, s }) => [t, s]));
+assert.deepEqual(peek2Positions.get(15), [378, 256], "Peek2 pet must sit deeper behind the right doorframe");
+assert.deepEqual(peek2Positions.get(45), [376, 254], "Peek2 breathing must keep the paw aligned with the doorframe");
+assert.deepEqual(peek2Scales.get(15), [132, 132], "Peek2 head must use the reduced base scale");
+assert.deepEqual(peek2Scales.get(45), [135, 135], "Peek2 breathing must stay within the reduced scale range");
 const peekArtwork = peek.layers.find(({ nm }) => nm === "AIMe peek HD Character");
 const peekPositions = new Map(peekArtwork.ks.p.k.map(({ t, s }) => [t, s]));
 const peekScales = new Map(peekArtwork.ks.s.k.map(({ t, s }) => [t, s]));
