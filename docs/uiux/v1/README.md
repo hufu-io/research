@@ -38,7 +38,7 @@
 - 气泡由 HTML/CSS 独立绘制，不包含在 Lottie 内，且只有一个向下尖角。
 - AIMe 每次进入原型默认以右贴边姿态显示，点击宠物可展开；拖拽或长按可再次贴边。只有“我的 → Aime 智能助手”设置开关可真正隐藏宠物，并保存用户的主动选择。
 - 每个组件同时封装高清 `animationData`、独立 PNG `fallbackImage`、循环配置和 marker；JSON 首次渲染成功后隐藏兜底，Lottie 缺失、创建失败或 `data_failed` 时只显示 PNG。
-- 向右拖动或长按可贴边收起；贴边后只显示宠物，点击即可展开。
+- 宠物可在画布与底部导航之间自由拖动；拖动超过右侧最大边界并松手后自动吸附右边并收起，未越界松手时保留当前位置；长按同样右贴边收起，贴边后点击即可展开。
 - 贴边状态禁止回退成圆形 AI 图标：`.aime-pet-visual` 必须保持显示，气泡与箭头隐藏，并播放 `aime_peek.json`。
 - Lottie Web 已放在 `vendor/lottie.min.js`，本地预览不依赖 CDN。
 - 可运行 `node tests/aime_contract_test.mjs` 检查一组 JSON + PNG、512px 高清内联图层、独立 fallback、眨眼关键帧、故障注入、peek marker 和分段播放协议。

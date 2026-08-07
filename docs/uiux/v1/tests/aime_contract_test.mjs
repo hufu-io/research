@@ -155,7 +155,21 @@ assert.match(js, /component\.segment\("peek_loop"\)/, "Runtime must play peek_lo
 assert.doesNotMatch(js, /component\.segment\("peek_exit"\)/, "Expanding must replace peek directly without an exit segment");
 assert.match(js, /aimeFab\.classList\.remove\("is-transitioning"\);\s*playAimeState\("idle"\);/, "Expanding must mount idle immediately");
 assert.match(js, /window\.setTimeout\(\(\) => \{\s*if \(!aimeDragging && !aimeCollapsed\) playAimeState\("thinking"\);\s*\}, 160\)/, "Holding an expanded pet must mount thinking");
-assert.match(js, /aimeLongPressTimer = window\.setTimeout\(\(\) => \{\s*aimeLongPressed = true;\s*setAimeCollapsed\(true\);\s*\}, 620\)/, "Long press must collapse to peek");
+assert.match(js, /aimeLongPressTimer = window\.setTimeout\(\(\) => \{\s*aimeLongPressed = true;\s*dockAimeRight\(\);\s*\}, 620\)/, "Long press must dock and collapse to the right edge");
+assert.match(js, /const distanceY = event\.clientY - aimePointerStartY;/, "Dragging must track vertical pointer movement");
+assert.match(js, /const rawLeft = aimeDragOriginLeft \+ distanceX;\s*aimeRightBoundaryExceeded = rawLeft > getAimeDragBounds\(\)\.maxLeft;/, "Dragging must retain whether the raw position exceeds the right boundary");
+assert.match(js, /setAimePosition\(rawLeft, aimeDragOriginTop \+ distanceY\);/, "Dragging must update both visible coordinates after boundary intent is captured");
+assert.match(js, /navigationTop - fabRect\.height - 12/, "Dragging must stay above the bottom navigation");
+assert.match(js, /const dockWidth = aimeCollapsed \? aimeStage\.getBoundingClientRect\(\)\.width : rect\.width;[\s\S]*?renderAimePosition\(frameRect\.right - dockWidth, top\);/, "AIMe docking must target the stable collapsed width instead of producing a second position correction");
+assert.match(js, /function dockAimeRight\(\) \{\s*aimeDockedRight = true;\s*setAimeCollapsed\(true\);\s*snapAimeToRightEdge\(\);/, "Docking must enter the collapsed state before calculating its final right-edge position");
+assert.match(js, /aimeFab\.addEventListener\("transitionend", \(event\) => \{\s*if \(event\.target !== aimeFab \|\| event\.propertyName !== "width" \|\| !aimePositioned \|\| !aimeDockedRight\) return;\s*snapAimeToRightEdge\(\);/, "AIMe must recalibrate the right edge after its collapse width transition");
+assert.doesNotMatch(js, /bounds\.minLeft\s*:\s*bounds\.maxLeft|is-snapped-left|aimeSnappedSide/, "AIMe must not select or retain a left edge");
+const pointerMoveHandler = js.match(/aimeFab\.addEventListener\("pointermove",[\s\S]*?\n  \}\);/)?.[0] ?? "";
+assert.doesNotMatch(pointerMoveHandler, /snapAimeToRightEdge/, "Dragging must stay free until the pointer is released");
+assert.match(js, /const shouldDockRight = aimeRightBoundaryExceeded;[\s\S]*?if \(wasDragging\) \{\s*if \(shouldDockRight\) dockAimeRight\(\);\s*return;/, "Pointer release must dock only when the right boundary was exceeded");
+assert.match(js, /if \(shouldDockRight\) dockAimeRight\(\);/, "Pointer cancellation must dock only after right-boundary overflow");
+assert.match(css, /\.aime-fab\.is-dragging \{[\s\S]*?transition:\s*none;/, "Dragging must remain pointer-synchronous");
+assert.doesNotMatch(css, /is-snapped-left/, "Styles must not expose a left-edge state");
 
 const runtimeContext = { window: {} };
 vm.runInNewContext(componentRuntime, runtimeContext);

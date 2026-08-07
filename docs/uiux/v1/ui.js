@@ -26,6 +26,10 @@
   const heroCarousel = document.querySelector("[data-hero-carousel]");
   const heroSlides = [...document.querySelectorAll("[data-hero-slide]")];
   const heroDots = [...document.querySelectorAll("[data-hero-dot]")];
+  const homeNotice = document.querySelector("[data-home-notice]");
+  const homeNoticeTrack = document.querySelector("[data-home-notice-track]");
+  const homeNoticeItems = [...document.querySelectorAll("[data-home-notice-item]")];
+  const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   const socialDrawerLayer = document.querySelector("[data-social-drawer-layer]");
   const socialDrawer = document.querySelector(".social-drawer");
   const socialDrawerTrigger = document.querySelector("[data-social-drawer-trigger]");
@@ -36,6 +40,9 @@
   const marketSearchEmpty = document.querySelector("[data-market-search-empty]");
   const marketCard = document.querySelector(".market-card-flat");
   const marketSearchTrigger = document.querySelector("[data-action='open-market-search']");
+  const marketViewTabs = [...document.querySelectorAll("[data-market-view-tab]")];
+  const marketViewPanels = [...document.querySelectorAll("[data-market-view-panel]")];
+  const marketPage = document.querySelector('[data-view="market"]');
   let activeModal = null;
   let returnFocus = null;
   let assetsVisible = true;
@@ -46,17 +53,28 @@
   let aimeEnabled = aimeStorage.get("hufu-ui-aime-enabled") !== "false";
   let aimePointerId = null;
   let aimePointerStartX = 0;
+  let aimePointerStartY = 0;
+  let aimeDragOriginLeft = 0;
+  let aimeDragOriginTop = 0;
   let aimeDragging = false;
   let aimeLongPressed = false;
+  let aimePositioned = false;
+  let aimeDockedRight = true;
+  let aimeRightBoundaryExceeded = false;
   let aimeThinkingTimer = null;
   let aimeLongPressTimer = null;
   let heroIndex = 0;
   let heroTimer = null;
+  let homeNoticeIndex = 0;
+  let homeNoticeVisualIndex = 0;
+  let homeNoticeTimer = null;
   let pendingDapp = null;
   let marketSortKey = "";
   let marketSortDirection = "none";
   let marketFavorites = new Set();
   let marketActiveCategory = "self";
+  let marketActiveView = "quotes";
+  const marketViewScroll = { quotes: 0, news: 0 };
 
   const toast = document.createElement("div");
   toast.className = "canvas-toast";
@@ -78,8 +96,14 @@
   }
 
   function readMarketFavorites() {
+    const storedValue = aimeStorage.get("hufu-ui-market-favorites");
+    if (storedValue == null) {
+      marketFavorites = new Set(getMarketRows().map((row) => row.dataset.marketSymbol).filter(Boolean));
+      saveMarketFavorites();
+      return;
+    }
     try {
-      const stored = JSON.parse(aimeStorage.get("hufu-ui-market-favorites") || "[]");
+      const stored = JSON.parse(storedValue);
       marketFavorites = new Set(Array.isArray(stored) ? stored : []);
     } catch {
       marketFavorites = new Set();
@@ -92,16 +116,20 @@
 
   function updateMarketFavoriteButton(button, favorited) {
     const symbol = button.dataset.symbol;
-    button.classList.toggle("is-favorite", favorited);
+    button.classList.toggle("is-favorite", favorited && marketActiveCategory === "self");
     button.setAttribute("aria-pressed", String(favorited));
     button.setAttribute("aria-label", `${favorited ? "取消收藏" : "收藏"} ${symbol}`);
   }
 
-  function initializeMarketFavorites() {
-    readMarketFavorites();
+  function updateMarketFavoriteButtons() {
     document.querySelectorAll(".market-favorite").forEach((button) => {
       updateMarketFavoriteButton(button, marketFavorites.has(button.dataset.symbol));
     });
+  }
+
+  function initializeMarketFavorites() {
+    readMarketFavorites();
+    updateMarketFavoriteButtons();
   }
 
   function applyMarketSearch() {
@@ -109,7 +137,9 @@
     let visibleCount = 0;
     getMarketRows().forEach((row) => {
       const searchable = `${row.dataset.marketSymbol || ""} ${row.dataset.marketName || ""}`.toLocaleLowerCase();
-      const categoryMatches = marketActiveCategory === "self" || row.dataset.marketCategory === marketActiveCategory;
+      const categoryMatches = marketActiveCategory === "self"
+        ? marketFavorites.has(row.dataset.marketSymbol)
+        : row.dataset.marketCategory === marketActiveCategory;
       const queryMatches = !query || searchable.includes(query);
       const visible = categoryMatches && queryMatches;
       row.hidden = !visible;
@@ -117,7 +147,11 @@
     });
     if (marketSearchClear) marketSearchClear.hidden = !query;
     if (marketSearchEmpty) {
-      marketSearchEmpty.textContent = query ? "未找到相关币种，请尝试其他关键词" : "当前分类暂无行情";
+      marketSearchEmpty.textContent = query
+        ? "未找到相关币种，请尝试其他关键词"
+        : marketActiveCategory === "self"
+          ? "暂无自选币种，可前往 FullOn 或主流币添加"
+          : "当前分类暂无行情";
       marketSearchEmpty.hidden = visibleCount > 0;
     }
   }
@@ -125,15 +159,26 @@
   function selectMarketCategory(tab, moveFocus = false) {
     if (!tab) return;
     marketActiveCategory = tab.dataset.marketCategory || "self";
-    marketCard?.classList.toggle("is-self-category", marketActiveCategory === "self");
-    document.querySelectorAll("[data-market-category]").forEach((item) => {
+    document.querySelectorAll('[role="tab"][data-market-category]').forEach((item) => {
       const active = item === tab;
       item.classList.toggle("is-active", active);
       item.setAttribute("aria-selected", String(active));
       item.tabIndex = active ? 0 : -1;
     });
+    updateMarketFavoriteButtons();
     applyMarketSearch();
     if (moveFocus) tab.focus();
+  }
+
+  function toggleMarketFavorite(button) {
+    const symbol = button.dataset.symbol;
+    const favorited = !marketFavorites.has(symbol);
+    if (favorited) marketFavorites.add(symbol);
+    else marketFavorites.delete(symbol);
+    saveMarketFavorites();
+    updateMarketFavoriteButton(button, favorited);
+    applyMarketSearch();
+    showToast(favorited ? `已收藏 ${symbol}` : `已取消收藏 ${symbol}`);
   }
 
   function getNextMarketTabIndex(currentIndex, tabCount, key) {
@@ -142,26 +187,48 @@
     return (currentIndex + (key === "ArrowRight" ? 1 : -1) + tabCount) % tabCount;
   }
 
+  function selectMarketView(tab, moveFocus = false) {
+    if (!tab) return;
+    const nextView = tab.dataset.marketViewTab || "quotes";
+    if (marketPage) marketViewScroll[marketActiveView] = marketPage.scrollTop;
+    if (nextView === "news" && marketSearch && !marketSearch.hidden) closeMarketSearch(false);
+    marketViewTabs.forEach((item) => {
+      const active = item === tab;
+      item.classList.toggle("is-active", active);
+      item.setAttribute("aria-selected", String(active));
+      item.tabIndex = active ? 0 : -1;
+    });
+    marketViewPanels.forEach((panel) => {
+      panel.hidden = panel.dataset.marketViewPanel !== nextView;
+    });
+    marketActiveView = nextView;
+    marketAppbar?.classList.toggle("is-news-view", nextView === "news");
+    requestAnimationFrame(() => {
+      if (marketPage) marketPage.scrollTop = marketViewScroll[nextView] || 0;
+    });
+    if (moveFocus) tab.focus();
+  }
+
   function openMarketSearch() {
-    if (!marketSearch) return;
+    if (!marketSearch || marketActiveView !== "quotes") return;
     marketAppbar?.classList.add("is-searching");
     marketSearch.hidden = false;
     requestAnimationFrame(() => marketSearchInput?.focus());
   }
 
-  function clearMarketSearch() {
+  function clearMarketSearch(focusInput = true) {
     if (!marketSearchInput) return;
     marketSearchInput.value = "";
     applyMarketSearch();
-    marketSearchInput.focus();
+    if (focusInput) marketSearchInput.focus();
   }
 
-  function closeMarketSearch() {
+  function closeMarketSearch(restoreFocus = true) {
     if (!marketSearch) return;
-    clearMarketSearch();
+    clearMarketSearch(false);
     marketSearch.hidden = true;
     marketAppbar?.classList.remove("is-searching");
-    marketSearchTrigger?.focus();
+    if (restoreFocus) marketSearchTrigger?.focus();
   }
 
   function sortMarketRows(button) {
@@ -231,6 +298,38 @@
     heroTimer = window.setInterval(() => showHeroSlide(heroIndex + 1), 4500);
   }
 
+  function showHomeNotice(index) {
+    if (!homeNotice || !homeNoticeTrack || !homeNoticeItems.length) return;
+    const nextIndex = (index + homeNoticeItems.length) % homeNoticeItems.length;
+    const loopsToStart = homeNoticeIndex === homeNoticeItems.length - 1 && nextIndex === 0 && index > homeNoticeIndex;
+    homeNoticeIndex = nextIndex;
+    homeNoticeVisualIndex = loopsToStart ? homeNoticeItems.length : homeNoticeIndex;
+    homeNoticeTrack.style.setProperty("--notice-index", homeNoticeVisualIndex);
+    const message = homeNoticeItems[homeNoticeIndex].textContent.trim();
+    homeNotice.setAttribute("aria-label", `查看通知：${message}`);
+  }
+
+  function resetHomeNoticeTrack() {
+    if (!homeNoticeTrack || homeNoticeVisualIndex !== homeNoticeItems.length) return;
+    homeNoticeTrack.classList.add("is-resetting");
+    homeNoticeVisualIndex = 0;
+    homeNoticeTrack.style.setProperty("--notice-index", homeNoticeVisualIndex);
+    requestAnimationFrame(() => requestAnimationFrame(() => homeNoticeTrack.classList.remove("is-resetting")));
+  }
+
+  function stopHomeNoticeTicker() {
+    window.clearInterval(homeNoticeTimer);
+    homeNoticeTimer = null;
+    resetHomeNoticeTrack();
+  }
+
+  function startHomeNoticeTicker() {
+    stopHomeNoticeTicker();
+    const homeView = document.querySelector('[data-view="home"]');
+    if (!homeNotice || homeNoticeItems.length < 2 || document.hidden || homeView?.hidden || reducedMotionQuery.matches) return;
+    homeNoticeTimer = window.setInterval(() => showHomeNotice(homeNoticeIndex + 1), 3000);
+  }
+
   function switchView(name) {
     closeSocialDrawer();
     views.forEach((view) => {
@@ -246,6 +345,8 @@
       if (active) item.setAttribute("aria-current", "page");
       else item.removeAttribute("aria-current");
     });
+    if (name === "home") startHomeNoticeTicker();
+    else stopHomeNoticeTicker();
     try {
       if (history.replaceState) {
         history.replaceState(null, "", `#page=${name}`);
@@ -371,6 +472,7 @@
     aimeCollapsed = collapsed;
     aimeFab.classList.toggle("is-collapsed", collapsed);
     aimeFab.setAttribute("aria-label", collapsed ? "展开 Aime 智能助手" : "打开 Aime 智能助手");
+    if (aimePositioned && aimeDockedRight) window.requestAnimationFrame(snapAimeToRightEdge);
     if (!stateChanged) {
       aimeFab.classList.remove("is-transitioning");
       if (collapsed) playAimePeek();
@@ -392,12 +494,65 @@
     window.clearTimeout(aimeLongPressTimer);
   }
 
+  function getAimeDragBounds() {
+    const frameRect = frame.getBoundingClientRect();
+    const fabRect = aimeFab.getBoundingClientRect();
+    const navigationTop = bottomNav?.getBoundingClientRect().top || frameRect.bottom;
+    const minLeft = frameRect.left + 12;
+    const maxLeft = Math.max(minLeft, frameRect.right - fabRect.width - 12);
+    const minTop = frameRect.top + 12;
+    const maxTop = Math.max(minTop, navigationTop - fabRect.height - 12);
+    return { minLeft, maxLeft, minTop, maxTop };
+  }
+
+  function clampAimePosition(left, top) {
+    const bounds = getAimeDragBounds();
+    return {
+      left: Math.max(bounds.minLeft, Math.min(bounds.maxLeft, left)),
+      top: Math.max(bounds.minTop, Math.min(bounds.maxTop, top))
+    };
+  }
+
+  function renderAimePosition(left, top) {
+    aimePositioned = true;
+    aimeFab.classList.add("is-positioned");
+    aimeFab.style.left = `${left}px`;
+    aimeFab.style.top = `${top}px`;
+    aimeFab.style.right = "auto";
+    aimeFab.style.bottom = "auto";
+  }
+
+  function setAimePosition(left, top) {
+    const position = clampAimePosition(left, top);
+    renderAimePosition(position.left, position.top);
+  }
+
+  function snapAimeToRightEdge() {
+    const frameRect = frame.getBoundingClientRect();
+    const bounds = getAimeDragBounds();
+    const rect = aimeFab.getBoundingClientRect();
+    const dockWidth = aimeCollapsed ? aimeStage.getBoundingClientRect().width : rect.width;
+    const top = Math.max(bounds.minTop, Math.min(bounds.maxTop, rect.top));
+    renderAimePosition(frameRect.right - dockWidth, top);
+  }
+
+  function dockAimeRight() {
+    aimeDockedRight = true;
+    setAimeCollapsed(true);
+    snapAimeToRightEdge();
+  }
+
   aimeFab.addEventListener("pointerdown", (event) => {
     if (!event.isPrimary || event.button > 0 || aimePointerId !== null) return;
     aimePointerId = event.pointerId;
     aimePointerStartX = event.clientX;
+    aimePointerStartY = event.clientY;
+    const rect = aimeFab.getBoundingClientRect();
+    aimeDragOriginLeft = rect.left;
+    aimeDragOriginTop = rect.top;
     aimeDragging = false;
     aimeLongPressed = false;
+    aimeRightBoundaryExceeded = false;
     aimeFab.setPointerCapture(event.pointerId);
     aimeFab.classList.add("is-dragging");
     aimeThinkingTimer = window.setTimeout(() => {
@@ -405,36 +560,37 @@
     }, 160);
     aimeLongPressTimer = window.setTimeout(() => {
       aimeLongPressed = true;
-      setAimeCollapsed(true);
+      dockAimeRight();
     }, 620);
   });
 
   aimeFab.addEventListener("pointermove", (event) => {
     if (event.pointerId !== aimePointerId) return;
-    const distance = event.clientX - aimePointerStartX;
-    if (Math.abs(distance) <= 6 && !aimeDragging) return;
+    const distanceX = event.clientX - aimePointerStartX;
+    const distanceY = event.clientY - aimePointerStartY;
+    if (Math.hypot(distanceX, distanceY) <= 6 && !aimeDragging) return;
     aimeDragging = true;
     clearAimePressTimers();
-    const offset = aimeCollapsed
-      ? Math.max(-62, Math.min(0, distance))
-      : Math.max(0, Math.min(70, distance));
-    aimeFab.style.transform = `translateX(${offset}px)`;
+    const rawLeft = aimeDragOriginLeft + distanceX;
+    aimeRightBoundaryExceeded = rawLeft > getAimeDragBounds().maxLeft;
+    aimeDockedRight = false;
+    setAimePosition(rawLeft, aimeDragOriginTop + distanceY);
   });
 
   aimeFab.addEventListener("pointerup", (event) => {
     if (event.pointerId !== aimePointerId) return;
     clearAimePressTimers();
-    const distance = event.clientX - aimePointerStartX;
     const wasDragging = aimeDragging;
     const wasLongPressed = aimeLongPressed;
-    aimeFab.style.removeProperty("transform");
+    const shouldDockRight = aimeRightBoundaryExceeded;
     aimeFab.classList.remove("is-dragging");
     aimeFab.releasePointerCapture(event.pointerId);
     aimePointerId = null;
+    aimeRightBoundaryExceeded = false;
 
     if (wasLongPressed) return;
     if (wasDragging) {
-      setAimeCollapsed(aimeCollapsed ? distance >= -20 : distance > 20);
+      if (shouldDockRight) dockAimeRight();
       return;
     }
     if (aimeCollapsed) {
@@ -450,14 +606,31 @@
   aimeFab.addEventListener("pointercancel", (event) => {
     if (event.pointerId !== aimePointerId) return;
     clearAimePressTimers();
-    aimeFab.style.removeProperty("transform");
+    const shouldDockRight = aimeRightBoundaryExceeded;
     aimeFab.classList.remove("is-dragging");
     aimePointerId = null;
+    aimeRightBoundaryExceeded = false;
+    if (shouldDockRight) dockAimeRight();
     if (aimeCollapsed) playAimePeek();
     else playAimeState("idle");
   });
 
   aimeFab.addEventListener("click", (event) => event.preventDefault());
+
+  aimeFab.addEventListener("transitionend", (event) => {
+    if (event.target !== aimeFab || event.propertyName !== "width" || !aimePositioned || !aimeDockedRight) return;
+    snapAimeToRightEdge();
+  });
+
+  window.addEventListener("resize", () => {
+    if (!aimePositioned) return;
+    if (aimeDockedRight) {
+      snapAimeToRightEdge();
+      return;
+    }
+    const rect = aimeFab.getBoundingClientRect();
+    setAimePosition(rect.left, rect.top);
+  });
 
   document.addEventListener("click", (event) => {
     const socialDrawerButton = event.target.closest("[data-social-drawer-trigger]");
@@ -478,7 +651,11 @@
     if (nav) return switchView(nav.dataset.nav);
 
     const viewTarget = event.target.closest("[data-view-target]");
-    if (viewTarget) return switchView(viewTarget.dataset.viewTarget);
+    if (viewTarget) {
+      switchView(viewTarget.dataset.viewTarget);
+      if (viewTarget.hasAttribute("data-market-open-news")) selectMarketView(document.querySelector('[data-market-view-tab="news"]'));
+      return;
+    }
 
     const wallet = event.target.closest(".wallet-option");
     if (wallet) return updateWallet(wallet);
@@ -486,7 +663,7 @@
     const marketSortButton = event.target.closest("[data-market-sort]");
     if (marketSortButton) return sortMarketRows(marketSortButton);
 
-    const marketCategoryTab = event.target.closest("[data-market-category]");
+    const marketCategoryTab = event.target.closest('[role="tab"][data-market-category]');
     if (marketCategoryTab) return selectMarketCategory(marketCategoryTab);
 
     const exclusive = event.target.closest(".segmented-control button, .asset-tabs button, .chain-chips button, .chart-range button, .record-filters button, .state-chips button");
@@ -525,16 +702,7 @@
     if (action === "open-market-search") return openMarketSearch();
     if (action === "clear-market-search") return clearMarketSearch();
     if (action === "close-market-search") return closeMarketSearch();
-    if (action === "toggle-market-favorite") {
-      const symbol = actionTarget.dataset.symbol;
-      const favorited = !marketFavorites.has(symbol);
-      if (favorited) marketFavorites.add(symbol);
-      else marketFavorites.delete(symbol);
-      saveMarketFavorites();
-      updateMarketFavoriteButton(actionTarget, favorited);
-      showToast(favorited ? `已收藏 ${symbol}` : `已取消收藏 ${symbol}`);
-      return;
-    }
+    if (action === "toggle-market-favorite") return toggleMarketFavorite(actionTarget);
     if (action === "fill-max") {
       const input = actionTarget.closest(".amount-input")?.querySelector("input");
       if (input) input.value = "185420.80";
@@ -561,12 +729,21 @@
 
   marketSearch?.addEventListener("submit", (event) => event.preventDefault());
   marketSearchInput?.addEventListener("input", applyMarketSearch);
+  marketViewTabs.forEach((tab) => tab.addEventListener("click", () => selectMarketView(tab)));
 
   document.addEventListener("keydown", (event) => {
-    const marketCategoryTab = event.target.closest?.("[data-market-category]");
+    const marketViewTab = event.target.closest?.("[data-market-view-tab]");
+    if (marketViewTab && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+      event.preventDefault();
+      const currentIndex = marketViewTabs.indexOf(marketViewTab);
+      const nextIndex = getNextMarketTabIndex(currentIndex, marketViewTabs.length, event.key);
+      selectMarketView(marketViewTabs[nextIndex], true);
+      return;
+    }
+    const marketCategoryTab = event.target.closest?.('[role="tab"][data-market-category]');
     if (marketCategoryTab && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
       event.preventDefault();
-      const tabs = [...document.querySelectorAll("[data-market-category]")];
+      const tabs = [...document.querySelectorAll('[role="tab"][data-market-category]')];
       const currentIndex = tabs.indexOf(marketCategoryTab);
       const nextIndex = getNextMarketTabIndex(currentIndex, tabs.length, event.key);
       selectMarketCategory(tabs[nextIndex], true);
@@ -584,16 +761,33 @@
     if (event.key === "Escape") closeModal();
   });
 
-  document.addEventListener("visibilitychange", () => document.hidden ? stopHeroCarousel() : startHeroCarousel());
+  homeNotice?.addEventListener("pointerenter", stopHomeNoticeTicker);
+  homeNotice?.addEventListener("pointerleave", startHomeNoticeTicker);
+  homeNotice?.addEventListener("focus", stopHomeNoticeTicker);
+  homeNotice?.addEventListener("blur", startHomeNoticeTicker);
+  homeNoticeTrack?.addEventListener("transitionend", resetHomeNoticeTrack);
+  reducedMotionQuery.addEventListener("change", () => reducedMotionQuery.matches ? stopHomeNoticeTicker() : startHomeNoticeTicker());
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      stopHeroCarousel();
+      stopHomeNoticeTicker();
+      return;
+    }
+    startHeroCarousel();
+    startHomeNoticeTicker();
+  });
 
   const aimeToggle = document.querySelector('[data-action="toggle-aime"]');
   initializeMarketFavorites();
-  selectMarketCategory(document.querySelector("[data-market-category].is-active"));
+  selectMarketView(document.querySelector("[data-market-view-tab].is-active"));
+  selectMarketCategory(document.querySelector('[role="tab"][data-market-category].is-active'));
   aimeToggle?.classList.toggle("is-on", aimeEnabled);
   aimeToggle?.setAttribute("aria-checked", String(aimeEnabled));
   aimeFab.hidden = !aimeEnabled;
   setAimeCollapsed(true);
   showHeroSlide(0);
+  showHomeNotice(0);
   startHeroCarousel();
 
   const initialPage = new URLSearchParams(location.hash.slice(1)).get("page");
