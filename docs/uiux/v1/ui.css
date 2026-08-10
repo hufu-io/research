@@ -1169,6 +1169,16 @@ body {
   object-fit: contain;
 }
 
+.settings-icon-image {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+.settings-bg .settings-icon-image {
+  opacity: 0.58;
+}
+
 .primary-button .external-link-image {
   filter: brightness(0) invert(1);
 }
