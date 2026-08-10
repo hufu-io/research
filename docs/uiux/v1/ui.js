@@ -5,6 +5,8 @@
   const navItems = [...document.querySelectorAll("[data-nav]")];
   const aimeFab = document.querySelector(".aime-fab");
   const aimeStage = document.querySelector(".aime-pet-visual");
+  const aimePetTrigger = document.querySelector(".aime-pet-trigger");
+  const aimePanel = document.querySelector('[data-modal="aime"]');
   const bottomNav = document.querySelector(".bottom-nav");
   const aimeComponents = window.AimeAnimationComponents;
   const aimeStorage = {
@@ -456,10 +458,38 @@
 
   function closeModal(restoreFocus = true) {
     if (!activeModal) return;
-    activeModal.hidden = true;
+    const closingModal = activeModal;
+    closingModal.hidden = true;
     overlay.hidden = true;
     activeModal = null;
+    if (closingModal === aimePanel) setAimePanelExpanded(false);
     if (restoreFocus && returnFocus instanceof HTMLElement) returnFocus.focus();
+  }
+
+  function setAimePanelExpanded(expanded) {
+    if (!aimePanel) return;
+    const expandButton = aimePanel.querySelector("[data-aime-expand]");
+    const expandIcon = aimePanel.querySelector("[data-aime-expand-icon]");
+    aimePanel.classList.toggle("is-full", expanded);
+    expandButton?.setAttribute("aria-pressed", String(expanded));
+    expandButton?.setAttribute("aria-label", expanded ? "收起为半屏对话" : "展开完整对话");
+    expandIcon?.setAttribute("href", expanded ? "#i-collapse" : "#i-expand");
+  }
+
+  function openAimePanel(trigger) {
+    const activeView = document.querySelector("[data-view]:not([hidden])")?.dataset.view || "home";
+    const labels = {
+      home: "Hufu 首页",
+      social: "社交",
+      market: "市场",
+      discover: "发现",
+      profile: "我的",
+      settings: "设置"
+    };
+    const context = aimePanel?.querySelector("[data-aime-context]");
+    if (context) context.textContent = labels[activeView] || "当前页面";
+    setAimePanelExpanded(false);
+    return openModal("aime", trigger);
   }
 
   function updateWallet(option) {
@@ -492,6 +522,42 @@
     logo.classList.toggle("logo-rwa", name === "FullOn RWA");
     logo.classList.toggle("logo-redpacket", name === "Red Packet");
     return openModal("dapp-confirm", button);
+  }
+
+  function addAimeMessage(text, user = false, pending = false) {
+    const messages = aimePanel?.querySelector(".aime-messages");
+    if (!messages) return null;
+    const wrapper = document.createElement("div");
+    wrapper.className = `message ${user ? "user-message" : "aime-message"}${pending ? " pending-message" : ""}`;
+    if (!user) {
+      const avatar = document.createElement("span");
+      avatar.className = "aime-message-avatar";
+      avatar.textContent = "Ai";
+      avatar.setAttribute("aria-hidden", "true");
+      wrapper.appendChild(avatar);
+    }
+    const paragraph = document.createElement("p");
+    paragraph.textContent = text;
+    wrapper.appendChild(paragraph);
+    messages.appendChild(wrapper);
+    messages.scrollTop = messages.scrollHeight;
+    return wrapper;
+  }
+
+  function answerAime(question) {
+    const network = document.querySelector(".wallet-network")?.textContent.trim() || "当前";
+    const wallet = document.querySelector(".wallet-name")?.textContent.trim() || "当前钱包";
+    const answers = {
+      "FullSwap 是什么？": "FullSwap 是 FullOn 生态的去中心化兑换入口。打开前请确认官方域名 fullswap.flon.network，连接、授权和交易仍需逐步确认。",
+      "如何安全跨链？": "先核对源链、目标链、资产、接收账户和预计到账数量。异常授权、网络不匹配或域名错误时应立即停止。",
+      "解释当前网络": `当前是 ${network} 网络和${wallet}。切换钱包后，资产、行情、DApp 和后续签名上下文会同步更新。`
+    };
+    addAimeMessage(question, true);
+    const pending = addAimeMessage("正在结合当前页面整理…", false, true);
+    window.setTimeout(() => {
+      pending?.remove();
+      addAimeMessage(answers[question] || "我已整理操作路径。原型只提供说明，不会替你连接钱包、签名或发起交易。", false);
+    }, 420);
   }
 
   function createAimeAnimation(component, options) {
@@ -555,7 +621,8 @@
     const stateChanged = aimeCollapsed !== collapsed;
     aimeCollapsed = collapsed;
     aimeFab.classList.toggle("is-collapsed", collapsed);
-    aimeFab.setAttribute("aria-label", collapsed ? "展开 Aime 智能助手" : "打开 Aime 智能助手");
+    aimePetTrigger?.setAttribute("aria-label", collapsed ? "展开 Aime 智能助手" : "与 Aime 宠物互动");
+    aimePetTrigger?.setAttribute("title", collapsed ? "点击展开 Aime" : "点击与 Aime 宠物互动");
     if (aimePositioned && aimeDockedRight) window.requestAnimationFrame(snapAimeToRightEdge);
     if (!stateChanged) {
       aimeFab.classList.remove("is-transitioning");
@@ -640,6 +707,7 @@
   }
 
   aimeFab.addEventListener("pointerdown", (event) => {
+    if (event.target.closest?.("[data-aime-bubble]")) return;
     if (!event.isPrimary || event.button > 0 || aimePointerId !== null) return;
     aimePointerId = event.pointerId;
     aimePointerStartX = event.clientX;
@@ -768,6 +836,9 @@
     const socialFilterTab = event.target.closest("[data-social-filter]");
     if (socialFilterTab) return selectSocialFilter(socialFilterTab);
 
+    const aimePrompt = event.target.closest("[data-aime-prompt]");
+    if (aimePrompt) return answerAime(aimePrompt.dataset.aimePrompt);
+
     const exclusive = event.target.closest(".segmented-control button, .asset-tabs button, .chain-chips button, .chart-range button, .record-filters button, .state-chips button");
     if (exclusive) {
       [...exclusive.parentElement.children].forEach((item) => {
@@ -792,6 +863,12 @@
       "open-scan": "scan"
     };
     if (modalActions[action]) return openModal(modalActions[action], actionTarget);
+    if (action === "open-aime") return openAimePanel(actionTarget);
+    if (action === "toggle-aime-full") {
+      setAimePanelExpanded(!aimePanel?.classList.contains("is-full"));
+      return;
+    }
+    if (action === "minimize-aime") return closeModal();
     if (action === "open-dapp") return prepareDappConfirm(actionTarget);
     if (action === "confirm-dapp") {
       const name = pendingDapp?.name || "DApp";
@@ -828,6 +905,15 @@
     event.preventDefault();
     closeModal(false);
     showToast("转账信息已保存，下一步将进行安全核对");
+  });
+
+  document.querySelector("[data-aime-form]")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const input = event.currentTarget.elements.message;
+    const value = input.value.trim();
+    if (!value) return;
+    input.value = "";
+    answerAime(value);
   });
 
   marketSearch?.addEventListener("submit", (event) => event.preventDefault());

@@ -35,10 +35,10 @@
 - `assets/aime/components/`：由每组 JSON + PNG 生成的自包含运行时组件，页面状态只选择组件，不直接管理资源路径或帧区间。
 - `scripts/build_aime_vector_sources.py`：使用 512×512 原始母版生成高清 Lottie 图片图层、整体关键帧和矢量眼睑，禁止低分辨率量化与色块化。
 - `scripts/build_aime_components.mjs`：把每组 JSON 的高清图片图层内联进 `animationData`，同时输出独立 `fallbackImage`；使用 `--check` 可验证生成产物是否最新。
-- 气泡由 HTML/CSS 独立绘制，不包含在 Lottie 内，且只有一个向下尖角。
+- 气泡由 HTML/CSS 独立绘制，不包含在 Lottie 内；展开后点击“问问我吧”会打开半屏 Aime 对话面板，用户可在面板内展开完整对话，宠物自身点击继续走独立交互。
 - AIMe 每次进入原型默认以右贴边姿态显示，点击宠物可展开；拖拽或长按可再次贴边。只有“我的 → Aime 智能助手”设置开关可真正隐藏宠物，并保存用户的主动选择。
 - 每个组件同时封装高清 `animationData`、独立 PNG `fallbackImage`、循环配置和 marker；JSON 首次渲染成功后隐藏兜底，Lottie 缺失、创建失败或 `data_failed` 时只显示 PNG。
 - 宠物可在画布与底部导航之间自由拖动；未越过右侧最大边界时松手会自动靠近右边并保持展开，越界松手后贴住右边并收起；长按同样右贴边收起，贴边后点击即可展开。
 - 贴边状态禁止回退成圆形 AI 图标：`.aime-pet-visual` 必须保持显示，气泡与箭头隐藏，并播放 `aime_peek.json`。
 - Lottie Web 已放在 `vendor/lottie.min.js`，本地预览不依赖 CDN。
-- 可运行 `node tests/aime_contract_test.mjs` 检查一组 JSON + PNG、512px 高清内联图层、独立 fallback、眨眼关键帧、故障注入、peek marker 和分段播放协议。
+- 可运行 `node tests/aime_contract_test.mjs` 检查一组 JSON + PNG、512px 高清内联图层、独立 fallback、眨眼关键帧、故障注入、peek marker 和分段播放协议；运行 `node tests/aime_bubble_chat_contract_test.mjs` 检查气泡事件隔离与对话面板契约。

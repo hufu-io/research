@@ -13,7 +13,7 @@ const prefix = "window.TigerLoadingAnimationData=";
 assert(html.includes("data-launch-loading"));
 assert(html.includes("data-launch-loading-animation"));
 assert(html.indexOf("vendor/lottie.min.js") < html.indexOf("tiger_loading.component.js"));
-assert(html.indexOf("tiger_loading.component.js") < html.indexOf("ui.js?v=44"));
+assert(html.indexOf("tiger_loading.component.js") < html.indexOf("ui.js?v=45"));
 assert(component.startsWith(prefix));
 assert(component.endsWith(";\n"));
 assert(!component.includes("fetch("));

@@ -7,7 +7,7 @@
   <meta name="description" content="Hufu Wallet · UI/UX v1 正式视觉设计稿">
   <link rel="icon" href="data:,">
   <title>Hufu Wallet · UI/UX v1</title>
-  <link rel="stylesheet" href="ui.css?v=133">
+  <link rel="stylesheet" href="ui.css?v=134">
 </head>
 <body>
   <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -38,6 +38,7 @@
     <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
     <symbol id="i-minimize" viewBox="0 0 24 24"><path d="M6 12h12"/></symbol>
     <symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 4H4v5M15 4h5v5M20 15v5h-5M4 15v5h5"/></symbol>
+    <symbol id="i-collapse" viewBox="0 0 24 24"><path d="M4 9h5V4M20 9h-5V4M20 15h-5v5M4 15h5v5"/></symbol>
     <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
     <symbol id="i-pin" viewBox="0 0 24 24"><path d="m9 4 6 0-1 5 3 3v2H7v-2l3-3zM12 14v7"/></symbol>
     <symbol id="i-muted" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4zM16 9l5 6M21 9l-5 6"/></symbol>
@@ -420,11 +421,11 @@
       </aside>
     </div>
 
-    <button class="aime-fab is-collapsed" type="button" data-state="peek2" aria-label="展开 Aime 智能助手" aria-description="点击可展开 Aime" title="点击展开 Aime">
-      <span class="aime-fab-bubble"><span>问问我吧</span></span>
+    <div class="aime-fab is-collapsed" data-state="peek2">
+      <button class="aime-fab-bubble" type="button" data-action="open-aime" data-aime-bubble aria-label="打开 Aime 对话"><span>问问我吧</span></button>
       <span class="aime-fab-arrow" aria-hidden="true"></span>
-      <span class="aime-pet-visual" aria-hidden="true"></span>
-    </button>
+      <button class="aime-pet-trigger" type="button" aria-label="展开 Aime 智能助手" aria-description="点击可展开 Aime" title="点击展开 Aime"><span class="aime-pet-visual" aria-hidden="true"></span></button>
+    </div>
 
     <nav class="bottom-nav canvas-fixed" aria-label="主导航">
       <button class="nav-item is-active" type="button" data-nav="home" aria-current="page"><span class="nav-icon-state" aria-hidden="true"><img class="nav-icon nav-icon-default" src="assets/images/navigation/nav-home.svg" alt=""><img class="nav-icon nav-icon-active" src="assets/images/navigation/nav-home-active.svg" alt=""></span><span>首页</span></button>
@@ -473,6 +474,20 @@
         <button class="secondary-button full-width" type="button" data-action="toast" data-message="进入钱包管理"><svg class="icon icon-sm"><use href="#i-plus"></use></svg>管理或添加钱包</button>
       </div>
     </section>
+
+    <section class="aime-panel canvas-fixed" data-modal="aime" role="dialog" aria-modal="true" aria-labelledby="aime-title" hidden>
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <div class="aime-header">
+        <div class="aime-title"><span class="aime-avatar" aria-hidden="true"><svg class="icon"><use href="#i-spark"></use></svg></span><span><strong id="aime-title">Aime</strong><small><span></span>FullOn 智能助手</small></span></div>
+        <div><button class="icon-button" type="button" aria-label="展开完整对话" aria-pressed="false" data-action="toggle-aime-full" data-aime-expand data-initial-focus><svg class="icon"><use href="#i-expand" data-aime-expand-icon></use></svg></button><button class="icon-button" type="button" data-action="minimize-aime" aria-label="最小化对话"><svg class="icon"><use href="#i-minimize"></use></svg></button></div>
+      </div>
+      <div class="aime-context"><svg class="icon icon-sm"><use href="#i-spark"></use></svg><span>正在解释：<strong data-aime-context>Hufu 首页</strong></span><button type="button" data-action="toast" data-message="Aime 仅使用当前页面公开上下文">隐私说明</button></div>
+      <div class="aime-messages" aria-live="polite">
+        <div class="message aime-message"><span class="aime-message-avatar" aria-hidden="true">Ai</span><p>你好，我可以帮你理解当前页面、查询 FullOn 生态应用，或准备操作步骤。所有资产操作仍由你确认。</p></div>
+        <div class="aime-suggestions"><button type="button" data-aime-prompt="FullSwap 是什么？">FullSwap 是什么？</button><button type="button" data-aime-prompt="如何安全跨链？">如何安全跨链？</button><button type="button" data-aime-prompt="解释当前网络">解释当前网络</button></div>
+      </div>
+      <form class="aime-input" data-aime-form><label class="sr-only" for="aime-input-field">向 Aime 提问</label><input id="aime-input-field" name="message" type="text" placeholder="向 Aime 提问…" autocomplete="off"><button type="submit" aria-label="发送问题"><svg class="icon"><use href="#i-send"></use></svg></button></form>
+    </section>
   </div>
 
   <script src="vendor/lottie.min.js"></script>
@@ -483,6 +498,6 @@
   <script src="assets/aime/components/aime_greeting.component.js?v=3"></script>
   <script src="assets/aime/components/aime_peek.component.js?v=3"></script>
   <script src="assets/aime/components/aime_peek2.component.js?v=3"></script>
-  <script src="ui.js?v=44"></script>
+  <script src="ui.js?v=45"></script>
 </body>
 </html>
