@@ -9,3 +9,13 @@ Thumbs.db
 .agents
 AGENTS.md
 .workbuddy
+/temp
+.openclaw
+HEARTBEAT.md
+IDENTITY.md
+SOUL.md
+TOOLS.md
+USER.md
+.cluster
+.openclaw-attachments
+/config

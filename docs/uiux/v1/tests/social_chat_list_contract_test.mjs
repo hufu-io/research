@@ -25,11 +25,11 @@ assert.match(socialSection, /<small>\[图片\]<\/small>/, "图片消息摘要必
 assert.match(socialSection, /aria-label="已置顶"/, "置顶状态必须具有可访问文本");
 assert.match(socialSection, /data-social-chat-empty hidden/, "必须提供搜索空结果状态");
 
-assert.match(css, /\.social-search \{[\s\S]*?min-height:\s*48px;/, "搜索框高度必须达到 48px");
-assert.match(css, /\.social-filter-tabs button \{[\s\S]*?min-height:\s*44px;/, "分类触控目标必须达到 44px");
-assert.match(css, /\.social-filter-tabs \{[\s\S]*?min-height:\s*46px;[\s\S]*?padding:\s*0;/, "分类栏视觉高度必须保持紧凑");
-assert.match(css, /\.social-chat-list \.chat-row \{[\s\S]*?grid-template-columns:\s*52px minmax\(0, 1fr\);/, "会话行必须使用头像和弹性文本列");
-assert.match(css, /\.social-chat-list \.chat-row::after \{[\s\S]*?left:\s*82px;/, "会话分割线必须从文本列开始");
+assert.match(css, /\.social-search \{[\s\S]*?min-height:\s*92px;/, "搜索框高度必须达到 48px");
+assert.match(css, /\.social-filter-tabs button \{[\s\S]*?min-height:\s*85px;/, "分类触控目标必须达到 44px");
+assert.match(css, /\.social-filter-tabs \{[\s\S]*?min-height:\s*88px;[\s\S]*?padding:\s*0;/, "分类栏视觉高度必须保持紧凑");
+assert.match(css, /\.social-chat-list \.chat-row \{[\s\S]*?grid-template-columns:\s*100px minmax\(0, 1fr\);/, "会话行必须使用头像和弹性文本列");
+assert.match(css, /\.social-chat-list \.chat-row::after \{[\s\S]*?left:\s*158px;/, "会话分割线必须从文本列开始");
 assert.match(css, /text-overflow:\s*ellipsis;/, "长会话文案必须提供省略保护");
 
 assert.match(js, /function applySocialChatFilter\(\)/, "必须实现搜索和分类过滤");

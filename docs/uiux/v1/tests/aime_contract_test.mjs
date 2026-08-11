@@ -145,9 +145,9 @@ assert.doesNotMatch(js, /(?<!window\.)localStorage\./, "Runtime must not use ung
 const collapsedCss = css.match(/\.aime-fab\.is-collapsed \{[\s\S]*?\n\}/)?.[0] ?? "";
 assert.match(collapsedCss, /width:\s*var\(--aime-collapsed-width\)/, "Collapsed hit area must use the stable collapsed width token");
 assert.match(collapsedCss, /right:\s*var\(--canvas-inset\)/, "Collapsed pet must align with the canvas right edge without clipping");
-assert.match(css, /\.aime-fab:not\(\.is-collapsed\) \.aime-pet-visual \{\s*transform:\s*translateX\(22px\);/, "Expanded pet must sit close to the canvas right edge");
-assert.match(css, /\.aime-fab:not\(\.is-collapsed\) \.aime-fab-bubble \{\s*transform:\s*translate\(18px, -18px\);/, "Expanded bubble must keep a clear gap above the three-circle trail");
-assert.match(css, /\.aime-fab:not\(\.is-collapsed\) \.aime-fab-arrow \{\s*transform:\s*translate\(32px, -14px\) scaleX\(-1\);/, "Expanded mirrored bubble trail must stay fully visible between the bubble and head");
+assert.match(css, /\.aime-fab:not\(\.is-collapsed\) \.aime-pet-visual \{\s*transform:\s*translateX\(42px\);/, "Expanded pet must sit close to the canvas right edge");
+assert.match(css, /\.aime-fab:not\(\.is-collapsed\) \.aime-fab-bubble \{\s*transform:\s*translate\(35px, -35px\);/, "Expanded bubble must keep a clear gap above the three-circle trail");
+assert.match(css, /\.aime-fab:not\(\.is-collapsed\) \.aime-fab-arrow \{\s*transform:\s*translate\(62px, -27px\) scaleX\(-1\);/, "Expanded mirrored bubble trail must stay fully visible between the bubble and head");
 assert.match(css, /\.aime-fab-arrow \{[\s\S]*?z-index:\s*2;/, "All three bubble circles must render above the pet artwork");
 assert.match(css, /\.aime-pet-visual\.is-lottie-ready \{\s*background-image:\s*none;/, "A successful JSON animation must hide fallback");
 assert.match(js, /component\.segment\("peek_enter"\)/, "Runtime must play peek_enter by marker");
@@ -159,9 +159,9 @@ assert.match(js, /aimeLongPressTimer = window\.setTimeout\(\(\) => \{\s*aimeLong
 assert.match(js, /const distanceY = event\.clientY - aimePointerStartY;/, "Dragging must track vertical pointer movement");
 assert.match(js, /const rawLeft = aimeDragOriginLeft \+ distanceX;\s*aimeRightBoundaryExceeded = rawLeft > getAimeDragBounds\(\)\.maxLeft;/, "Dragging must retain whether the raw position exceeds the right boundary");
 assert.match(js, /setAimePosition\(rawLeft, aimeDragOriginTop \+ distanceY\);/, "Dragging must update both visible coordinates after boundary intent is captured");
-assert.match(js, /navigationTop - fabRect\.height - 12/, "Dragging must stay above the bottom navigation");
-assert.match(css, /--aime-expanded-width:\s*132px;[\s\S]*?--aime-collapsed-width:\s*108px;/, "AIMe must expose stable target widths for one-step right alignment");
-assert.match(js, /const targetWidth = getAimeTargetWidth\(aimeCollapsed\);\s*const targetLeft = aimeCollapsed \? frameRect\.right - targetWidth : frameRect\.right - targetWidth - 12;[\s\S]*?renderAimePosition\(Math\.max\(bounds\.minLeft, targetLeft\), top\);/, "AIMe must calculate stable collapsed and expanded right-side targets without a second correction");
+assert.match(js, /navigationTop - fabRect\.height - 23/, "Dragging must stay above the bottom navigation");
+assert.match(css, /--aime-expanded-width:\s*254px;[\s\S]*?--aime-collapsed-width:\s*208px;/, "AIMe must expose stable target widths for one-step right alignment");
+assert.match(js, /const targetWidth = getAimeTargetWidth\(aimeCollapsed\);\s*const targetLeft = aimeCollapsed \? frameRect\.right - targetWidth : frameRect\.right - targetWidth - 23;[\s\S]*?renderAimePosition\(Math\.max\(bounds\.minLeft, targetLeft\), top\);/, "AIMe must calculate stable collapsed and expanded right-side targets without a second correction");
 assert.match(js, /function dockAimeRight\(\) \{\s*aimeDockedRight = true;\s*setAimeCollapsed\(true\);\s*snapAimeToRightEdge\(\);/, "Docking must enter the collapsed state before calculating its final right-edge position");
 assert.match(js, /function settleAimeRight\(\) \{\s*aimeDockedRight = true;\s*setAimeCollapsed\(false\);\s*snapAimeToRightEdge\(\);/, "A normal drag release must remain expanded and settle near the right edge");
 assert.match(js, /aimeFab\.addEventListener\("transitionend", \(event\) => \{\s*if \(event\.target !== aimeFab \|\| event\.propertyName !== "width" \|\| !aimePositioned \|\| !aimeDockedRight\) return;\s*snapAimeToRightEdge\(\);/, "AIMe must recalibrate the right edge after its collapse width transition");

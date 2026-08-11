@@ -41,13 +41,13 @@ assert.doesNotMatch(newsPanel, /market-news-tags|market-news-footer/, "News feed
 
 const marketHeader = html.match(/<header class="appbar market-appbar">[\s\S]*?<\/header>/)?.[0] || "";
 assert.doesNotMatch(marketHeader, /market-search-trigger/, "Market header must not contain the search icon trigger");
-assert.match(css, /\.market-search-entry \{[\s\S]*?min-height:\s*44px;/, "Search entry must meet the mobile touch target");
+assert.match(css, /\.market-search-entry \{[\s\S]*?min-height:\s*88px;/, "Search entry must meet the mobile touch target");
 assert.match(css, /\.market-search-entry:focus-visible/, "Search entry must expose keyboard focus");
-assert.match(css, /\.market-view-tabs button \{[\s\S]*?min-height:\s*44px;/, "Primary tabs must meet the mobile touch target");
+assert.match(css, /\.market-view-tabs button \{[\s\S]*?min-height:\s*85px;/, "Primary tabs must meet the mobile touch target");
 assert.match(css, /\.market-view-tabs button:focus-visible/, "Primary tabs must expose keyboard focus");
 assert.match(css, /\.market-news-item:focus-visible/, "News items must expose keyboard focus");
-assert.match(css, /\.market-news-item \{[\s\S]*?grid-template-columns:\s*44px 12px minmax\(0, 1fr\);/, "News items must use a compact timeline grid");
-assert.match(css, /\.market-news-item \{[\s\S]*?min-height:\s*88px;/, "News rows must stay compact while retaining a generous touch target");
+assert.match(css, /\.market-news-item \{[\s\S]*?grid-template-columns:\s*85px 23px minmax\(0, 1fr\);/, "News items must use a compact timeline grid");
+assert.match(css, /\.market-news-item \{[\s\S]*?min-height:\s*169px;/, "News rows must stay compact while retaining a generous touch target");
 assert.match(css, /\.market-news-subtitle \{[\s\S]*?text-overflow:\s*ellipsis;[\s\S]*?white-space:\s*nowrap;/, "News subtitles must remain single-line previews");
 assert.doesNotMatch(css, /\.market-news-item\.is-important|\.market-news-badge/, "Removed important status styles must not remain");
 assert.match(css, /\.market-content > \.market-view-panel \{\s*margin-top:\s*0;/, "Primary panels must not shift the existing market layout");

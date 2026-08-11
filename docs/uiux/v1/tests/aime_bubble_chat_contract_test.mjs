@@ -35,10 +35,10 @@ assert.match(js, /function answerAime\(question\)/, "必须实现本地原型回
 assert.match(js, /document\.querySelector\("\[data-aime-form\]"\)\?\.addEventListener\("submit"/, "聊天输入必须处理提交事件");
 assert.match(js, /const value = input\.value\.trim\(\);\s*if \(!value\) return;/, "空白问题不得生成消息");
 
-assert.match(css, /\.aime-fab-bubble \{[\s\S]*?min-height:\s*44px;/, "气泡触控高度必须至少为 44px");
-assert.match(css, /\.aime-pet-trigger \{[\s\S]*?width:\s*108px;[\s\S]*?height:\s*108px;/, "宠物独立入口必须保持原有命中尺寸");
-assert.match(css, /\.aime-panel \{[\s\S]*?height:\s*min\(62dvh, 560px\);[\s\S]*?border-radius:\s*16px 16px 0 0;/, "Aime 初始面板必须保持半屏底部弹窗形态");
+assert.match(css, /\.aime-fab-bubble \{[\s\S]*?min-height:\s*85px;/, "气泡触控高度必须至少为 44px");
+assert.match(css, /\.aime-pet-trigger \{[\s\S]*?width:\s*208px;[\s\S]*?height:\s*208px;/, "宠物独立入口必须保持原有命中尺寸");
+assert.match(css, /\.aime-panel \{[\s\S]*?height:\s*min\(62dvh, 1077px\);[\s\S]*?border-radius:\s*31px 31px 0 0;/, "Aime 初始面板必须保持半屏底部弹窗形态");
 assert.match(css, /\.aime-panel\.is-full \{[\s\S]*?height:\s*100dvh;[\s\S]*?max-height:\s*100dvh;/, "完整对话状态必须占满画布高度");
-assert.match(baseCss, /\.aime-input \{[\s\S]*?calc\(10px \+ var\(--safe-bottom\)\)/, "对话输入区必须避让底部安全区");
+assert.match(baseCss, /\.aime-input \{[\s\S]*?calc\(19px \+ var\(--safe-bottom\)\)/, "对话输入区必须避让底部安全区");
 
 console.log("AIMe bubble: isolated trigger, half-sheet chat and full-view contract passed");

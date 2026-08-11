@@ -1,5 +1,18 @@
 (() => {
   const frame = document.querySelector("#app-frame");
+  const pageStack = document.querySelector(".page-stack");
+  let canvasScale = 0.5;
+  const fitCanvas = () => {
+    const cw = Math.min(window.innerWidth, 375);
+    const ch = Math.min(812, window.innerHeight);
+    canvasScale = cw / 750;
+    frame.style.height = `${ch / canvasScale}px`;
+    frame.style.transform = `scale(${canvasScale})`;
+    frame.style.transformOrigin = "top center";
+    frame.style.margin = `${Math.max(0, (window.innerHeight - ch) / 2)}px auto 0`;
+  };
+  window.addEventListener("resize", fitCanvas);
+  fitCanvas();
   const overlay = document.querySelector("[data-overlay]");
   const views = [...document.querySelectorAll("[data-view]")];
   const navItems = [...document.querySelectorAll("[data-nav]")];
@@ -649,10 +662,10 @@
     const frameRect = frame.getBoundingClientRect();
     const fabRect = aimeFab.getBoundingClientRect();
     const navigationTop = bottomNav?.getBoundingClientRect().top || frameRect.bottom;
-    const minLeft = frameRect.left + 12;
-    const maxLeft = Math.max(minLeft, frameRect.right - fabRect.width - 12);
-    const minTop = frameRect.top + 12;
-    const maxTop = Math.max(minTop, navigationTop - fabRect.height - 12);
+    const minLeft = frameRect.left + 23;
+    const maxLeft = Math.max(minLeft, frameRect.right - fabRect.width - 23);
+    const minTop = frameRect.top + 23;
+    const maxTop = Math.max(minTop, navigationTop - fabRect.height - 23);
     return { minLeft, maxLeft, minTop, maxTop };
   }
 
@@ -667,8 +680,8 @@
   function renderAimePosition(left, top) {
     aimePositioned = true;
     aimeFab.classList.add("is-positioned");
-    aimeFab.style.left = `${left}px`;
-    aimeFab.style.top = `${top}px`;
+    aimeFab.style.left = `${left / canvasScale}px`;
+    aimeFab.style.top = `${top / canvasScale}px`;
     aimeFab.style.right = "auto";
     aimeFab.style.bottom = "auto";
   }
@@ -689,7 +702,7 @@
     const bounds = getAimeDragBounds();
     const rect = aimeFab.getBoundingClientRect();
     const targetWidth = getAimeTargetWidth(aimeCollapsed);
-    const targetLeft = aimeCollapsed ? frameRect.right - targetWidth : frameRect.right - targetWidth - 12;
+    const targetLeft = aimeCollapsed ? frameRect.right - targetWidth : frameRect.right - targetWidth - 23;
     const top = Math.max(bounds.minTop, Math.min(bounds.maxTop, rect.top));
     renderAimePosition(Math.max(bounds.minLeft, targetLeft), top);
   }
