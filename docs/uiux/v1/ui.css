@@ -918,13 +918,13 @@ body {
 }
 
 .social-chat-list .muted-state .icon {
-  -webkit-mask-image: url("assets/images/social/muted.svg");
-  mask-image: url("assets/images/social/muted.svg");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 5 6 9H3v6h3l5 4zM16 9l5 6M21 9l-5 6'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 5 6 9H3v6h3l5 4zM16 9l5 6M21 9l-5 6'/%3E%3C/svg%3E");
 }
 
 .social-chat-list .pin-state .icon {
-  -webkit-mask-image: url("assets/images/social/pin.svg");
-  mask-image: url("assets/images/social/pin.svg");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 4 6 0-1 5 3 3v2H7v-2l3-3zM12 14v7'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 4 6 0-1 5 3 3v2H7v-2l3-3zM12 14v7'/%3E%3C/svg%3E");
 }
 
 .social-chat-list .unread-badge {
