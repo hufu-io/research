@@ -63,6 +63,10 @@
   const marketViewTabs = [...document.querySelectorAll("[data-market-view-tab]")];
   const marketViewPanels = [...document.querySelectorAll("[data-market-view-panel]")];
   const marketPage = document.querySelector('[data-view="market"]');
+  const discoverChainTabs = [...document.querySelectorAll("[data-discover-chain]")];
+  const discoverCategoryTabs = [...document.querySelectorAll("[data-discover-category]")];
+  const discoverCards = [...document.querySelectorAll("[data-discover-card]")];
+  const discoverEmpty = document.querySelector("[data-discover-empty]");
   let activeModal = null;
   let returnFocus = null;
   let assetsVisible = true;
@@ -95,6 +99,8 @@
   let marketActiveCategory = "self";
   let marketActiveView = "quotes";
   let socialActiveFilter = "all";
+  let discoverActiveChain = "flon";
+  let discoverActiveCategory = "all";
   const marketViewScroll = { quotes: 0, news: 0 };
   const launchLoading = document.querySelector("[data-launch-loading]");
   const launchLoadingStage = document.querySelector("[data-launch-loading-animation]");
@@ -259,6 +265,46 @@
       item.tabIndex = active ? 0 : -1;
     });
     applySocialChatFilter();
+    if (moveFocus) tab.focus();
+  }
+
+  function applyDiscoverFilter() {
+    let visibleCount = 0;
+    discoverCards.forEach((card) => {
+      const chains = (card.dataset.discoverChains || "").split(/\s+/).filter(Boolean);
+      const chainMatches = chains.includes(discoverActiveChain);
+      const categoryMatches = discoverActiveCategory === "all" || card.dataset.discoverCategoryKey === discoverActiveCategory;
+      const visible = chainMatches && categoryMatches;
+      card.hidden = !visible;
+      card.querySelector(".dapp-type-tag")?.toggleAttribute("hidden", discoverActiveCategory === "all");
+      if (visible) visibleCount += 1;
+    });
+    if (discoverEmpty) discoverEmpty.hidden = visibleCount > 0;
+  }
+
+  function selectDiscoverChain(tab, moveFocus = false) {
+    if (!tab) return;
+    discoverActiveChain = tab.dataset.discoverChain || "flon";
+    discoverChainTabs.forEach((item) => {
+      const active = item === tab;
+      item.classList.toggle("is-active", active);
+      item.setAttribute("aria-selected", String(active));
+      item.tabIndex = active ? 0 : -1;
+    });
+    selectDiscoverCategory(discoverCategoryTabs[0]);
+    if (moveFocus) tab.focus();
+  }
+
+  function selectDiscoverCategory(tab, moveFocus = false) {
+    if (!tab) return;
+    discoverActiveCategory = tab.dataset.discoverCategory || "all";
+    discoverCategoryTabs.forEach((item) => {
+      const active = item === tab;
+      item.classList.toggle("is-active", active);
+      item.setAttribute("aria-selected", String(active));
+      item.tabIndex = active ? 0 : -1;
+    });
+    applyDiscoverFilter();
     if (moveFocus) tab.focus();
   }
 
@@ -849,6 +895,12 @@
     const socialFilterTab = event.target.closest("[data-social-filter]");
     if (socialFilterTab) return selectSocialFilter(socialFilterTab);
 
+    const discoverChainTab = event.target.closest("[data-discover-chain]");
+    if (discoverChainTab) return selectDiscoverChain(discoverChainTab);
+
+    const discoverCategoryTab = event.target.closest("[data-discover-category]");
+    if (discoverCategoryTab) return selectDiscoverCategory(discoverCategoryTab);
+
     const aimePrompt = event.target.closest("[data-aime-prompt]");
     if (aimePrompt) return answerAime(aimePrompt.dataset.aimePrompt);
 
@@ -961,6 +1013,22 @@
       selectSocialFilter(socialFilterTabs[nextIndex], true);
       return;
     }
+    const discoverChainTab = event.target.closest?.("[data-discover-chain]");
+    if (discoverChainTab && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+      event.preventDefault();
+      const currentIndex = discoverChainTabs.indexOf(discoverChainTab);
+      const nextIndex = getNextMarketTabIndex(currentIndex, discoverChainTabs.length, event.key);
+      selectDiscoverChain(discoverChainTabs[nextIndex], true);
+      return;
+    }
+    const discoverCategoryTab = event.target.closest?.("[data-discover-category]");
+    if (discoverCategoryTab && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+      event.preventDefault();
+      const currentIndex = discoverCategoryTabs.indexOf(discoverCategoryTab);
+      const nextIndex = getNextMarketTabIndex(currentIndex, discoverCategoryTabs.length, event.key);
+      selectDiscoverCategory(discoverCategoryTabs[nextIndex], true);
+      return;
+    }
     if (event.key === "Escape" && marketSearch && !marketSearch.hidden) {
       closeMarketSearch();
       return;
@@ -996,6 +1064,7 @@
   selectMarketView(document.querySelector("[data-market-view-tab].is-active"));
   selectMarketCategory(document.querySelector('[role="tab"][data-market-category].is-active'));
   selectSocialFilter(document.querySelector("[data-social-filter].is-active"));
+  selectDiscoverChain(document.querySelector("[data-discover-chain].is-active"));
   aimeToggle?.classList.toggle("is-on", aimeEnabled);
   aimeToggle?.setAttribute("aria-checked", String(aimeEnabled));
   aimeFab.hidden = !aimeEnabled;

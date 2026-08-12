@@ -9,11 +9,13 @@ const css = fs.readFileSync(path.join(root, "ui.css"), "utf8");
 const script = fs.readFileSync(path.join(root, "ui.js"), "utf8");
 const component = fs.readFileSync(path.join(root, "assets/loading/tiger_loading.component.js"), "utf8");
 const prefix = "window.TigerLoadingAnimationData=";
+const uiScriptIndex = html.search(/ui\.js\?v=\d+/);
 
 assert(html.includes("data-launch-loading"));
 assert(html.includes("data-launch-loading-animation"));
 assert(html.indexOf("vendor/lottie.min.js") < html.indexOf("tiger_loading.component.js"));
-assert(html.indexOf("tiger_loading.component.js") < html.indexOf("ui.js?v=50"));
+assert(uiScriptIndex > 0);
+assert(html.indexOf("tiger_loading.component.js") < uiScriptIndex);
 assert(component.startsWith(prefix));
 assert(component.endsWith(";\n"));
 assert(!component.includes("fetch("));

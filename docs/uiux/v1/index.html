@@ -7,7 +7,7 @@
   <meta name="description" content="Hufu Wallet · UI/UX v1 正式视觉设计稿">
   <link rel="icon" href="data:,">
   <title>Hufu Wallet · UI/UX v1</title>
-  <link rel="stylesheet" href="ui.css?v=143">
+  <link rel="stylesheet" href="ui.css?v=144">
 </head>
 <body>
   <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -341,16 +341,29 @@
               <button class="recent-dapp-manage" type="button" data-view-target="discover"><span class="dapp-logo logo-more"><img class="manage-icon-image" src="assets/images/icon/manage.svg" alt="" aria-hidden="true"></span><span class="recent-dapp-name">管理</span></button>
             </div>
           </section>
-          <div class="chain-chips" role="list" aria-label="公链筛选">
-            <button class="is-active" type="button">全部</button><button type="button"><img src="assets/images/dapplogo/flon.png" alt="">FullOn</button><button type="button"><img src="assets/images/icon/ETH.png" alt="">Ethereum</button><button type="button"><span aria-hidden="true">◎</span>Solana</button>
-          </div>
-          <section aria-label="DApp 列表">
-            <div class="discover-grid">
-              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="FullSwap" data-domain="fullswap.flon.network" data-network="FullOn" data-logo="FS" data-dapp-type="DeFi"><span class="dapp-logo logo-swap">FS</span><span><strong>FullSwap</strong><small>兑换 · 流动性</small></span><span class="dapp-card-meta"><span class="dapp-type-tag">DeFi</span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></span></button>
-              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="FullBridge" data-domain="fullbridge.flon.network" data-network="FullOn" data-logo="FB" data-dapp-type="日常工具"><span class="dapp-logo logo-bridge">FB</span><span><strong>FullBridge</strong><small>跨链 · 资产桥</small></span><span class="dapp-card-meta"><span class="dapp-type-tag">日常工具</span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></span></button>
-              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="FullOn RWA" data-domain="rwa.flon.network" data-network="FullOn" data-logo="R" data-dapp-type="NFT"><span class="dapp-logo logo-rwa">R</span><span><strong>FullOn RWA</strong><small>RWA · 资产服务</small></span><span class="dapp-card-meta"><span class="dapp-type-tag">NFT</span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></span></button>
-              <button class="discover-card" type="button" data-action="open-dapp" data-dapp="Red Packet" data-domain="redpacket.flon.network" data-network="FullOn" data-logo="RP" data-dapp-type="游戏"><span class="dapp-logo logo-redpacket">RP</span><span><strong>Red Packet</strong><small>社交 · 数字红包</small></span><span class="dapp-card-meta"><span class="dapp-type-tag">游戏</span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></span></button>
+          <div class="discover-filter-panel">
+            <div class="chain-chips" role="tablist" aria-label="公链筛选">
+              <button class="is-active" type="button" role="tab" aria-selected="true" tabindex="0" data-discover-chain="flon"><img src="assets/images/icon/FLON.png" alt="">FLON</button>
+              <button type="button" role="tab" aria-selected="false" tabindex="-1" data-discover-chain="ethereum"><img src="assets/images/icon/ETH.png" alt="">ETH</button>
+              <button type="button" role="tab" aria-selected="false" tabindex="-1" data-discover-chain="binance-smart-chain"><img src="assets/images/icon/BNB.png" alt="">BSC</button>
+              <button type="button" role="tab" aria-selected="false" tabindex="-1" data-discover-chain="stt"><img src="assets/images/icon/STT.png" alt="">Statter</button>
+              <button type="button" role="tab" aria-selected="false" tabindex="-1" data-discover-chain="fantom-opera"><img src="assets/images/icon/fantom.png" alt="">FTM</button>
+              <button type="button" role="tab" aria-selected="false" tabindex="-1" data-discover-chain="solana"><img src="assets/images/icon/SOLANA.png" alt="">Solana</button>
             </div>
+            <div class="discover-category-tabs" role="tablist" aria-label="DApp 分类筛选">
+              <button class="is-active" type="button" role="tab" aria-selected="true" tabindex="0" data-discover-category="all">全部</button>
+              <button type="button" role="tab" aria-selected="false" tabindex="-1" data-discover-category="dex">DEX</button>
+              <button type="button" role="tab" aria-selected="false" tabindex="-1" data-discover-category="utilities">日常工具</button>
+            </div>
+          </div>
+          <section class="discover-dapp-list" aria-label="DApp 列表">
+            <div class="discover-grid">
+              <button class="discover-card" type="button" data-action="open-dapp" data-discover-card data-discover-chains="flon stt" data-discover-category-key="dex" data-dapp="GMSwap" data-domain="gmswap.fufi.dev" data-network="FLON" data-logo="GM" data-dapp-type="DEX"><img class="dapp-logo" src="assets/images/dapp/gmswap.png" alt="GMSwap"><span><strong>GMSwap</strong><small>赋能多链资产自由、高效交换</small></span><span class="dapp-card-meta"><span class="dapp-type-tag" hidden>DEX</span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></span></button>
+              <button class="discover-card" type="button" data-action="open-dapp" data-discover-card data-discover-chains="flon ethereum binance-smart-chain solana stt" data-discover-category-key="utilities" data-dapp="FullBridge" data-domain="fullbridge.fufi.dev" data-network="FLON" data-logo="FB" data-dapp-type="日常工具"><img class="dapp-logo" src="assets/images/dapp/fullbridge.png" alt="FullBridge"><span><strong>FullBridge</strong><small>高效连接多链生态，实现资产无缝转移</small></span><span class="dapp-card-meta"><span class="dapp-type-tag" hidden>日常工具</span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></span></button>
+              <button class="discover-card" type="button" data-action="open-dapp" data-discover-card data-discover-chains="flon" data-discover-category-key="utilities" data-dapp="FullOn Explorer" data-domain="testnet.flonscan.io" data-network="FLON" data-logo="FE" data-dapp-type="日常工具"><img class="dapp-logo" src="assets/images/dapp/fullon-explorer.jpg" alt="FullOn Explorer"><span><strong>区块链浏览器</strong><small>查询区块、交易、账户和智能合约信息</small></span><span class="dapp-card-meta"><span class="dapp-type-tag" hidden>日常工具</span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></span></button>
+              <button class="discover-card" type="button" data-action="open-dapp" data-discover-card data-discover-chains="flon ethereum binance-smart-chain solana stt" data-discover-category-key="dex" data-dapp="FullSwap" data-domain="fullswap.fufi.dev" data-network="FLON" data-logo="FS" data-dapp-type="DEX"><img class="dapp-logo" src="assets/images/dapp/fullswap.png" alt="FullSwap"><span><strong>FullSwap</strong><small>助力多链资产高效互换</small></span><span class="dapp-card-meta"><span class="dapp-type-tag" hidden>DEX</span><span class="verified-label"><svg class="icon icon-xs"><use href="#i-shield"></use></svg>已核验</span></span></button>
+            </div>
+            <div class="discover-empty" data-discover-empty hidden><strong>当前分类暂无 DApp</strong><small>请选择其他分类或公链查看</small></div>
           </section>
         </div>
       </section>
@@ -497,6 +510,6 @@
   <script src="assets/aime/components/aime_greeting.component.js?v=3"></script>
   <script src="assets/aime/components/aime_peek.component.js?v=3"></script>
   <script src="assets/aime/components/aime_peek2.component.js?v=3"></script>
-  <script src="ui.js?v=50"></script>
+  <script src="ui.js?v=51"></script>
 </body>
 </html>
