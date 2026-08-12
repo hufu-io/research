@@ -658,7 +658,7 @@ body {
   margin-top: 0;
 }
 
-.social-content {
+.page-content.social-content {
   min-height: calc(100dvh - 138px);
   padding: 15px 0 calc(var(--nav-h) + var(--safe-bottom) + 54px);
   background: var(--surface);
@@ -905,9 +905,26 @@ body {
 
 .social-chat-list .muted-state .icon,
 .social-chat-list .pin-state .icon {
+  display: inline-block;
   width: 31px;
   height: 31px;
-  stroke-width: 2;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.social-chat-list .muted-state .icon {
+  -webkit-mask-image: url("assets/images/social/muted.svg");
+  mask-image: url("assets/images/social/muted.svg");
+}
+
+.social-chat-list .pin-state .icon {
+  -webkit-mask-image: url("assets/images/social/pin.svg");
+  mask-image: url("assets/images/social/pin.svg");
 }
 
 .social-chat-list .unread-badge {
@@ -2508,7 +2525,8 @@ body {
 }
 
 .dapp-confirm-sheet {
-  max-height: min(82dvh, 1308px);
+  max-height: none;
+  overflow: visible;
 }
 
 .dapp-confirm-sheet .dapp-confirm-head {
