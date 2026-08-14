@@ -23,15 +23,15 @@ async function buildState({ name, loop }) {
   const jsonPath = resolve(sourceDir, `aime_${name}.json`);
   const animationData = JSON.parse(await readFile(jsonPath, "utf8"));
   const fallback = await readFile(resolve(sourceDir, "images", `aime_${name}.png`));
-  const animationImageName = name === "peek2" ? "aime_peek.png" : `aime_${name}.png`;
-  const animationImage = await readFile(resolve(sourceDir, "images", animationImageName));
   const fallbackImage = `data:image/png;base64,${fallback.toString("base64")}`;
-  const animationImageData = `data:image/png;base64,${animationImage.toString("base64")}`;
-  const imageAsset = animationData.assets?.find(({ id }) => id === `aime_${name}_image`);
-  if (!imageAsset) throw new Error(`Missing AIMe image asset: ${jsonPath}`);
-  imageAsset.u = "";
-  imageAsset.p = animationImageData;
-  imageAsset.e = 1;
+  const imageAssets = animationData.assets?.filter(({ p }) => typeof p === "string" && !p.startsWith("data:")) || [];
+  if (!imageAssets.length) throw new Error(`Missing AIMe image asset: ${jsonPath}`);
+  await Promise.all(imageAssets.map(async (imageAsset) => {
+    const image = await readFile(resolve(sourceDir, imageAsset.u || "", imageAsset.p));
+    imageAsset.u = "";
+    imageAsset.p = `data:image/png;base64,${image.toString("base64")}`;
+    imageAsset.e = 1;
+  }));
   const outputPath = resolve(outputDir, `aime_${name}.component.js`);
   const expected = componentSource({ name, loop, animationData, fallbackImage });
   if (checkOnly) {

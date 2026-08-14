@@ -12,7 +12,7 @@ const states = [
   { name: "thinking", loop: true, duration: 90, componentVersion: 3 },
   { name: "greeting", loop: false, duration: 30, componentVersion: 3 },
   { name: "peek", loop: false, duration: 90, componentVersion: 3 },
-  { name: "peek2", loop: false, duration: 90, componentVersion: 3, animationImage: "aime_peek.png" }
+  { name: "peek2", loop: false, duration: 90, componentVersion: 4 }
 ];
 
 function descendants(value, result = []) {
@@ -51,7 +51,7 @@ const fallbackNames = (await readdir(resolve(root, "assets/aime/images")))
 assert.deepEqual(sourceJsonNames, states.map(({ name }) => `aime_${name}.json`).sort(), "Each state must have exactly one JSON");
 assert.deepEqual(fallbackNames, states.map(({ name }) => `aime_${name}.png`).sort(), "Each state must have exactly one fallback PNG");
 
-for (const { name, loop, duration, componentVersion, animationImage = `aime_${name}.png` } of states) {
+for (const { name, loop, duration, componentVersion } of states) {
   assert.match(html, new RegExp(`assets/aime/components/aime_${name}\\.component\\.js\\?v=${componentVersion}`), `${name} component must be loaded`);
   const sourceAnimation = JSON.parse(await read(`assets/aime/aime_${name}.json`));
   const componentSource = await read(`assets/aime/components/aime_${name}.component.js`);
@@ -61,12 +61,13 @@ for (const { name, loop, duration, componentVersion, animationImage = `aime_${na
   assert.equal(component.name, name, `${name} component name must match its state`);
   assert.equal(component.loop, loop, `${name} loop behavior must stay encapsulated`);
   const expectedAnimation = structuredClone(sourceAnimation);
-  const expectedImageAsset = expectedAnimation.assets.find(({ id }) => id === `aime_${name}_image`);
-  const animationMaster = await readFile(resolve(root, "assets/aime/images", animationImage));
-  const animationImageData = `data:image/png;base64,${animationMaster.toString("base64")}`;
-  expectedImageAsset.u = "";
-  expectedImageAsset.p = animationImageData;
-  expectedImageAsset.e = 1;
+  const expectedImageAssets = expectedAnimation.assets.filter(({ p }) => typeof p === "string" && !p.startsWith("data:"));
+  await Promise.all(expectedImageAssets.map(async (asset) => {
+    const animationMaster = await readFile(resolve(root, "assets/aime", asset.u || "", asset.p));
+    asset.u = "";
+    asset.p = `data:image/png;base64,${animationMaster.toString("base64")}`;
+    asset.e = 1;
+  }));
   assert.deepEqual(component.animationData, expectedAnimation, `${name} component must only inline the paired HD image`);
   assert.equal(component.animationData.fr, 30, `${name} must run at 30 FPS`);
   assert.equal(component.animationData.op, duration, `${name} duration must match the blink timeline`);
@@ -75,18 +76,35 @@ for (const { name, loop, duration, componentVersion, animationImage = `aime_${na
   assert.equal(component.fallbackImage, `data:image/png;base64,${sourceImage.toString("base64")}`, `${name} fallback must match its paired PNG`);
   const sourceNodes = descendants(sourceAnimation);
   const nodes = descendants(component.animationData);
-  assert.equal(sourceNodes.filter(({ ty }) => ty === 2).length, 1, `${name} source JSON must contain one HD image layer`);
-  const sourceAsset = sourceAnimation.assets.find(({ id }) => id === `aime_${name}_image`);
-  assert.deepEqual([sourceAsset.w, sourceAsset.h, sourceAsset.u, sourceAsset.p, sourceAsset.e], [512, 512, "images/", animationImage, 0], `${name} source JSON must reference the 512px animation master`);
-  const componentAsset = component.animationData.assets.find(({ id }) => id === `aime_${name}_image`);
-  assert.deepEqual([componentAsset.w, componentAsset.h, componentAsset.u, componentAsset.e], [512, 512, "", 1], `${name} component must inline the HD image asset`);
-  assert.equal(componentAsset.p, animationImageData, `${name} animation must inline its lossless motion master`);
-  assert.ok(nodes.some(({ ty, nm }) => ty === 2 && nm?.includes("HD Artwork")), `${name} must contain HD artwork`);
-  const eyelids = nodes.find(({ ty, nm }) => ty === 4 && nm?.includes("Vector Eyelids"));
-  assert.ok(eyelids, `${name} must contain a dedicated vector eyelid layer`);
-  assert.equal(eyelids.ks.o.a, 1, `${name} eyelids must be animated`);
-  const opacityValues = eyelids.ks.o.k.flatMap(({ s }) => s);
-  assert.ok(opacityValues.includes(0) && opacityValues.includes(100), `${name} eyelids must open and close`);
+  if (name === "peek2") {
+    const sourceAssets = sourceAnimation.assets.filter(({ p }) => typeof p === "string");
+    assert.deepEqual(
+      sourceAssets.map(({ id, u, p, e }) => [id, u, p, e]),
+      [
+        ["aime_peek_hd_image", "images/", "aime_peek2.png", 0],
+        ["aime_peek_half_image", "images/", "aime_peek2_half.png", 0],
+        ["aime_peek_closed_image", "images/", "aime_peek2_closed.png", 0],
+        ["aime_peek_alpha_matte", "images/", "aime_peek.png", 0]
+      ],
+      "peek2 source JSON must reference only the canonical open, blink, and alpha assets"
+    );
+    assert.ok(sourceNodes.filter(({ ty }) => ty === 2).length >= 8, "peek2 must use complete raster frames for the body and hand");
+    assert.ok(nodes.some(({ nm }) => nm === "AIMe Peek HD Body Half Closed"), "peek2 must contain a complete half-closed body frame");
+    assert.ok(nodes.some(({ nm }) => nm === "AIMe Peek HD Body Closed"), "peek2 must contain a complete closed body frame");
+    assert.ok(nodes.every(({ nm }) => !nm?.includes("Eye Socket")), "peek2 must not restore the removed eye patch layers");
+  } else {
+    assert.equal(sourceNodes.filter(({ ty }) => ty === 2).length, 1, `${name} source JSON must contain one HD image layer`);
+    const sourceAsset = sourceAnimation.assets.find(({ id }) => id === `aime_${name}_image`);
+    assert.deepEqual([sourceAsset.w, sourceAsset.h, sourceAsset.u, sourceAsset.p, sourceAsset.e], [512, 512, "images/", `aime_${name}.png`, 0], `${name} source JSON must reference the 512px animation master`);
+    const componentAsset = component.animationData.assets.find(({ id }) => id === `aime_${name}_image`);
+    assert.deepEqual([componentAsset.w, componentAsset.h, componentAsset.u, componentAsset.e], [512, 512, "", 1], `${name} component must inline the HD image asset`);
+    assert.ok(nodes.some(({ ty, nm }) => ty === 2 && nm?.includes("HD Artwork")), `${name} must contain HD artwork`);
+    const eyelids = nodes.find(({ ty, nm }) => ty === 4 && nm?.includes("Vector Eyelids"));
+    assert.ok(eyelids, `${name} must contain a dedicated vector eyelid layer`);
+    assert.equal(eyelids.ks.o.a, 1, `${name} eyelids must be animated`);
+    const opacityValues = eyelids.ks.o.k.flatMap(({ s }) => s);
+    assert.ok(opacityValues.includes(0) && opacityValues.includes(100), `${name} eyelids must open and close`);
+  }
 }
 
 const peek = JSON.parse(await read("assets/aime/aime_peek.json"));
@@ -98,20 +116,19 @@ assert.deepEqual(
 const peek2 = JSON.parse(await read("assets/aime/aime_peek2.json"));
 assert.deepEqual(
   peek2.markers.map(({ cm, tm, dr }) => [cm, tm, dr]),
-  [["peek_enter", 0, 15], ["peek_loop", 15, 60], ["peek_exit", 75, 15]],
+  [["peek_enter", 0, 25], ["peek_loop", 25, 50], ["peek_exit", 75, 15]],
   "Peek2 animation markers must remain stable"
 );
-const peek2Frame = peek2.layers.find(({ nm }) => nm === "AIMe peek2 Static Wooden Doorframe");
-const peek2Pet = peek2.layers.find(({ nm }) => nm === "AIMe peek2 HD Character");
+const peek2Frame = peek2.layers.find(({ nm }) => nm === "AIMe Static Vector Doorframe");
+const peek2Hand = peek2.layers.find(({ nm }) => nm === "AIMe Peek HD Hand");
+const peek2Bodies = peek2.layers.filter(({ nm }) => nm?.startsWith("AIMe Peek HD Body"));
 assert.ok(peek2Frame, "Peek2 must contain a dedicated wooden doorframe layer");
 assert.deepEqual([peek2Frame.ks.p.a, peek2Frame.ks.s.a, peek2Frame.ks.r.a], [0, 0, 0], "Peek2 doorframe transforms must stay static");
-assert.ok(peek2Pet.ks.p.a && peek2Pet.ks.s.a && peek2Pet.ks.r.a, "Peek2 pet transforms must remain animated independently");
-const peek2Positions = new Map(peek2Pet.ks.p.k.map(({ t, s }) => [t, s]));
-const peek2Scales = new Map(peek2Pet.ks.s.k.map(({ t, s }) => [t, s]));
-assert.deepEqual(peek2Positions.get(15), [378, 256], "Peek2 pet must sit deeper behind the right doorframe");
-assert.deepEqual(peek2Positions.get(45), [376, 254], "Peek2 breathing must keep the paw aligned with the doorframe");
-assert.deepEqual(peek2Scales.get(15), [132, 132], "Peek2 head must use the reduced base scale");
-assert.deepEqual(peek2Scales.get(45), [135, 135], "Peek2 breathing must stay within the reduced scale range");
+assert.ok(peek2Hand?.ks.p.a && peek2Hand?.ks.s.a, "Peek2 hand must animate independently before the head appears");
+assert.equal(peek2Bodies.length, 3, "Peek2 must switch complete open, half-closed, and closed body frames");
+const peek2HandPositions = new Map(peek2Hand.ks.p.k.map(({ t, s }) => [t, s]));
+assert.deepEqual(peek2HandPositions.get(0), [1000, 586, 0], "Peek2 hand must begin outside the right edge");
+assert.deepEqual(peek2HandPositions.get(10), [627, 586, 0], "Peek2 hand must reach the doorframe before the head enters");
 const peekArtwork = peek.layers.find(({ nm }) => nm === "AIMe peek HD Character");
 const peekPositions = new Map(peekArtwork.ks.p.k.map(({ t, s }) => [t, s]));
 const peekScales = new Map(peekArtwork.ks.s.k.map(({ t, s }) => [t, s]));
@@ -121,8 +138,8 @@ assert.deepEqual(peekPositions.get(75), [366, 256], "Peek loop must leave from t
 assert.deepEqual(peekScales.get(15), [150, 150], "Peek head must use the coordinated base scale");
 assert.deepEqual(peekScales.get(45), [153, 153], "Peek breathing must stay within the coordinated scale range");
 
-assert.match(generator, /imageAsset\.p = animationImageData/, "The component generator must inline the motion image into animationData");
-assert.match(generator, /name === "peek2" \? "aime_peek\.png"/, "Peek2 must keep its motion image separate from the framed fallback");
+assert.match(generator, /Promise\.all\(imageAssets\.map/, "The component generator must inline every animation image asset");
+assert.match(generator, /resolve\(sourceDir, imageAsset\.u \|\| "", imageAsset\.p\)/, "The component generator must resolve each canonical source image");
 assert.match(generator, /fallbackImage/, "The component generator must emit a separate fallback field");
 assert.match(vectorGenerator, /Vector Eyelids/, "The vector source generator must create eyelid layers");
 assert.doesNotMatch(vectorGenerator, /resize\(\(128, 128\)\)|quantize\(/, "The source generator must not downsample or quantize the character");
@@ -220,4 +237,4 @@ assert.equal(runtimeComponent.createAnimation({ container }), null, "Creation er
 assert.equal(classes.has("is-lottie-ready"), false, "Creation errors must keep fallback visible");
 assert.deepEqual(Array.from(runtimeComponent.segment("loop")), [2, 7], "Marker ranges must stay component-owned");
 
-console.log("AIMe: HD Lottie image layers, vector blinking, fallback and file-safe component contract passed");
+console.log("AIMe: HD Lottie image layers, complete blink frames, fallback and file-safe component contract passed");

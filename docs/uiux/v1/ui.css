@@ -1905,10 +1905,14 @@ body {
   transition: none;
 }
 
-.aime-fab[data-state="peek"] .aime-pet-visual:not(.is-lottie-ready),
-.aime-fab[data-state="peek2"] .aime-pet-visual:not(.is-lottie-ready) {
+.aime-fab[data-state="peek"] .aime-pet-visual:not(.is-lottie-ready) {
   background-position: 7% 50%;
   background-size: 150% 150%;
+}
+
+.aime-fab[data-state="peek2"] .aime-pet-visual:not(.is-lottie-ready) {
+  background-position: right center;
+  background-size: contain;
 }
 
 .aime-fab:hover .aime-pet-visual,
