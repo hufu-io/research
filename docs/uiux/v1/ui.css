@@ -1197,8 +1197,13 @@ body {
   position: absolute;
   top: 0;
   right: 0;
-  color: var(--text-2);
   background: var(--grouped);
+}
+
+.social-drawer-close-icon {
+  display: block;
+  width: 46px;
+  height: 46px;
 }
 
 .social-drawer-avatar {
@@ -1217,10 +1222,67 @@ body {
   letter-spacing: -0.04em;
 }
 
-.social-drawer-header > strong {
+.social-drawer-header > strong,
+.social-drawer-profile > strong {
   color: var(--text-1);
   font-size: 38px;
   line-height: 1.3;
+}
+
+.social-drawer-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  color: inherit;
+  text-align: left;
+  background: transparent;
+  border-radius: 27px;
+}
+
+.social-drawer-sections {
+  display: grid;
+  gap: 8px;
+  padding-top: 35px;
+}
+
+.social-drawer-sections button {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) 42px;
+  gap: 15px;
+  align-items: center;
+  width: 100%;
+  min-height: 104px;
+  padding: 15px 19px;
+  color: var(--text-1);
+  text-align: left;
+  background: transparent;
+  border-radius: 27px;
+  font-size: 29px;
+  font-weight: 600;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+
+.social-drawer-sections button:hover,
+.social-drawer-sections button:focus-visible {
+  color: var(--brand);
+  background: var(--brand-soft);
+}
+
+.social-drawer-sections button:focus-visible {
+  outline: 2px solid rgba(62, 120, 255, 0.45);
+  outline-offset: -2px;
+}
+
+.social-drawer-sections button[aria-current="true"] {
+  color: var(--brand);
+  background: #eaf1ff;
+}
+
+.social-drawer-divider {
+  height: 1px;
+  margin: 27px 0;
+  background: var(--divider);
 }
 
 .social-drawer-user-meta {
@@ -1251,12 +1313,11 @@ body {
 .social-drawer-actions {
   display: grid;
   gap: 8px;
-  padding-top: 31px;
 }
 
 .social-drawer-actions button {
   display: grid;
-  grid-template-columns: 54px minmax(0, 1fr) 38px;
+  grid-template-columns: 54px minmax(0, 1fr) 42px;
   gap: 15px;
   align-items: center;
   width: 100%;
@@ -1296,7 +1357,9 @@ body {
 }
 
 .social-drawer-chevron {
-  color: var(--text-3);
+  display: block;
+  width: 42px;
+  height: 42px;
 }
 
 .discover-content > .recent-access-panel {

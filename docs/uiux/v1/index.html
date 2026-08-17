@@ -423,16 +423,24 @@
       <button class="social-drawer-scrim" type="button" aria-label="关闭社交菜单" data-social-drawer-close></button>
       <aside class="social-drawer" id="social-drawer" role="dialog" aria-modal="true" aria-labelledby="social-drawer-title">
         <div class="social-drawer-header">
-          <button class="icon-button social-drawer-close" type="button" aria-label="关闭社交菜单" data-social-drawer-close><svg class="icon"><use href="#i-close"></use></svg></button>
-          <div class="social-drawer-avatar" role="img" aria-label="dragonmaster 的模拟用户头像"><span>DM</span></div>
-          <strong id="social-drawer-title">dragonmaster</strong>
-          <div class="social-drawer-user-meta"><span>@dragonmaster</span></div>
+          <button class="icon-button social-drawer-close" type="button" aria-label="关闭社交菜单" data-social-drawer-close><img class="social-drawer-close-icon" src="assets/images/social/close.svg" alt="" aria-hidden="true"></button>
+          <button class="social-drawer-profile" type="button" data-social-drawer-item data-action="toast" data-message="打开个人资料">
+            <div class="social-drawer-avatar" role="img" aria-label="dragonmaster 的模拟用户头像"><span>DM</span></div>
+            <strong id="social-drawer-title">dragonmaster</strong>
+            <div class="social-drawer-user-meta"><span>@dragonmaster</span></div>
+          </button>
         </div>
+        <nav class="social-drawer-sections" aria-label="社交分区">
+          <button type="button" aria-current="true" data-social-drawer-item data-action="toast" data-message="切换到消息分区"><span class="social-drawer-action-icon"><img src="assets/images/social/message.svg" alt=""></span><span>消息</span><img class="social-drawer-chevron" src="assets/images/social/chevron-right.svg" alt="" aria-hidden="true"></button>
+          <button type="button" data-social-drawer-item data-action="toast" data-message="切换到社区分区"><span class="social-drawer-action-icon"><img src="assets/images/social/community.svg" alt=""></span><span>社区</span><img class="social-drawer-chevron" src="assets/images/social/chevron-right.svg" alt="" aria-hidden="true"></button>
+          <button type="button" data-social-drawer-item data-action="toast" data-message="切换到空间分区"><span class="social-drawer-action-icon"><img src="assets/images/social/space.svg" alt=""></span><span>空间</span><img class="social-drawer-chevron" src="assets/images/social/chevron-right.svg" alt="" aria-hidden="true"></button>
+        </nav>
+        <div class="social-drawer-divider" role="separator"></div>
         <nav class="social-drawer-actions" aria-label="社交操作">
-          <button type="button" data-social-drawer-item data-action="toast" data-message="打开添加好友"><span class="social-drawer-action-icon"><img src="assets/images/social/add-friend.svg" alt=""></span><span>添加好友</span><svg class="icon icon-sm social-drawer-chevron"><use href="#i-right"></use></svg></button>
-          <button type="button" data-social-drawer-item data-action="toast" data-message="打开创建群组"><span class="social-drawer-action-icon"><img src="assets/images/social/create-group.svg" alt=""></span><span>创建群组</span><svg class="icon icon-sm social-drawer-chevron"><use href="#i-right"></use></svg></button>
-          <button type="button" data-social-drawer-item data-action="toast" data-message="打开好友申请"><span class="social-drawer-action-icon"><img src="assets/images/social/friend-request.svg" alt=""></span><span>好友申请</span><svg class="icon icon-sm social-drawer-chevron"><use href="#i-right"></use></svg></button>
-          <button type="button" data-social-drawer-item data-action="toast" data-message="打开账号切换"><span class="social-drawer-action-icon"><img src="assets/images/social/switch-account.svg" alt=""></span><span>切换账号</span><svg class="icon icon-sm social-drawer-chevron"><use href="#i-right"></use></svg></button>
+          <button type="button" data-social-drawer-item data-action="toast" data-message="打开添加好友"><span class="social-drawer-action-icon"><img src="assets/images/social/add-friend.svg" alt=""></span><span>添加好友</span><img class="social-drawer-chevron" src="assets/images/social/chevron-right.svg" alt="" aria-hidden="true"></button>
+          <button type="button" data-social-drawer-item data-action="toast" data-message="打开创建群组"><span class="social-drawer-action-icon"><img src="assets/images/social/create-group.svg" alt=""></span><span>创建群组</span><img class="social-drawer-chevron" src="assets/images/social/chevron-right.svg" alt="" aria-hidden="true"></button>
+          <button type="button" data-social-drawer-item data-action="toast" data-message="打开好友申请"><span class="social-drawer-action-icon"><img src="assets/images/social/friend-request.svg" alt=""></span><span>好友申请</span><img class="social-drawer-chevron" src="assets/images/social/chevron-right.svg" alt="" aria-hidden="true"></button>
+          <button type="button" data-social-drawer-item data-action="toast" data-message="打开账号切换"><span class="social-drawer-action-icon"><img src="assets/images/social/switch-account.svg" alt=""></span><span>切换账号</span><img class="social-drawer-chevron" src="assets/images/social/chevron-right.svg" alt="" aria-hidden="true"></button>
         </nav>
       </aside>
     </div>
