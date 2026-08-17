@@ -7,7 +7,7 @@
   <meta name="description" content="Hufu Wallet · UI/UX v1 正式视觉设计稿">
   <link rel="icon" href="data:,">
   <title>Hufu Wallet · UI/UX v1</title>
-  <link rel="stylesheet" href="ui.css?v=145">
+  <link rel="stylesheet" href="ui.css?v=152">
 </head>
 <body>
   <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -208,8 +208,14 @@
             </form>
             <div class="social-filter-tabs" role="tablist" aria-label="会话分类">
               <button class="is-active" type="button" role="tab" aria-selected="true" tabindex="0" data-social-filter="all">全部</button>
-              <button type="button" role="tab" aria-selected="false" tabindex="-1" data-social-filter="other">其他<span>3</span></button>
-              <button type="button" role="tab" aria-selected="false" tabindex="-1" data-social-filter="work">工作<span>3</span></button>
+              <button type="button" role="tab" aria-selected="false" aria-haspopup="menu" aria-expanded="false" tabindex="-1" data-social-filter="other" data-social-folder-name="其他">其他<span>3</span></button>
+              <button type="button" role="tab" aria-selected="false" aria-haspopup="menu" aria-expanded="false" tabindex="-1" data-social-filter="work" data-social-folder-name="工作">工作<span>3</span></button>
+            </div>
+            <div class="social-folder-menu" role="menu" aria-label="分类操作菜单" data-social-folder-menu hidden>
+              <button type="button" role="menuitem" data-social-folder-action="edit"><span data-social-folder-menu-edit>编辑「其他」</span><img class="menu-icon" src="assets/images/social/menu/folder-edit.svg" alt="" aria-hidden="true"></button>
+              <button type="button" role="menuitem" data-social-folder-action="add"><span>添加会话</span><img class="menu-icon" src="assets/images/social/menu/chat-add.svg" alt="" aria-hidden="true"></button>
+              <button type="button" role="menuitem" data-social-folder-action="read"><span>全部已读</span><img class="menu-icon" src="assets/images/social/menu/read-all.svg" alt="" aria-hidden="true"></button>
+              <button class="is-danger" type="button" role="menuitem" data-social-folder-action="remove"><span>删除分类</span><img class="menu-icon" src="assets/images/social/menu/delete.svg" alt="" aria-hidden="true"></button>
             </div>
             <div class="chat-list social-chat-list" data-social-chat-list>
               <button class="chat-row is-pinned" type="button" data-chat-row data-chat-category="other" data-chat-search="Alice.flon 好的 晚点把交易哈希发你" data-action="toast" data-message="打开 Alice 的会话">
@@ -431,6 +437,24 @@
       </aside>
     </div>
 
+    <div class="social-chat-menu-layer canvas-fixed" data-social-chat-menu-layer hidden>
+      <button class="social-chat-menu-scrim" type="button" aria-label="关闭会话操作菜单" data-social-chat-menu-close></button>
+      <div class="social-chat-menu" role="menu" aria-label="会话操作菜单" data-social-chat-menu>
+        <div data-social-chat-menu-main>
+          <button type="button" role="menuitem" data-social-chat-action="folders"><span>添加到分类</span><img class="menu-icon" src="assets/images/social/menu/folder-add.svg" alt="" aria-hidden="true"></button>
+          <button type="button" role="menuitem" data-social-chat-action="unread"><span>标为未读</span><img class="menu-icon" src="assets/images/social/menu/unread.svg" alt="" aria-hidden="true"></button>
+          <button type="button" role="menuitem" data-social-chat-action="pin"><span data-social-chat-pin-label>置顶</span><img class="menu-icon" src="assets/images/social/menu/pin.svg" alt="" aria-hidden="true"></button>
+          <button type="button" role="menuitem" data-social-chat-action="mute"><span data-social-chat-mute-label>静音</span><img class="menu-icon" src="assets/images/social/menu/mute.svg" alt="" aria-hidden="true"></button>
+          <button class="is-danger" type="button" role="menuitem" data-social-chat-action="delete"><span>删除会话</span><img class="menu-icon" src="assets/images/social/menu/delete.svg" alt="" aria-hidden="true"></button>
+        </div>
+        <div data-social-chat-menu-folders hidden>
+          <button type="button" role="menuitem" data-social-chat-action="back"><span>返回会话操作</span><img class="menu-icon" src="assets/images/social/menu/back.svg" alt="" aria-hidden="true"></button>
+          <button type="button" role="menuitem" data-social-chat-category="other"><span>其他</span><img class="menu-icon" src="assets/images/social/menu/folder.svg" alt="" aria-hidden="true"></button>
+          <button type="button" role="menuitem" data-social-chat-category="work"><span>工作</span><img class="menu-icon" src="assets/images/social/menu/folder.svg" alt="" aria-hidden="true"></button>
+        </div>
+      </div>
+    </div>
+
     <div class="aime-fab is-collapsed" data-state="peek2">
       <button class="aime-fab-bubble" type="button" data-action="open-aime" data-aime-bubble aria-label="打开 Aime 对话"><span>问问我吧</span></button>
       <span class="aime-fab-arrow" aria-hidden="true"></span>
@@ -507,6 +531,6 @@
   <script src="assets/aime/components/aime_greeting.component.js?v=3"></script>
   <script src="assets/aime/components/aime_peek.component.js?v=3"></script>
   <script src="assets/aime/components/aime_peek2.component.js?v=4"></script>
-  <script src="ui.js?v=51"></script>
+  <script src="ui.js?v=55"></script>
 </body>
 </html>

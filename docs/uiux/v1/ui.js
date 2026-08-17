@@ -51,7 +51,17 @@
   const socialSearch = document.querySelector("[data-social-search]");
   const socialSearchInput = document.querySelector("[data-social-search-input]");
   const socialSearchClear = document.querySelector("[data-action='clear-social-search']");
+  const socialFilterBar = document.querySelector(".social-filter-tabs");
   const socialFilterTabs = [...document.querySelectorAll("[data-social-filter]")];
+  const socialFolderMenu = document.querySelector("[data-social-folder-menu]");
+  const socialFolderMenuEdit = document.querySelector("[data-social-folder-menu-edit]");
+  const socialChatRows = [...document.querySelectorAll("[data-chat-row]")];
+  const socialChatMenuLayer = document.querySelector("[data-social-chat-menu-layer]");
+  const socialChatMenu = document.querySelector("[data-social-chat-menu]");
+  const socialChatMenuMain = document.querySelector("[data-social-chat-menu-main]");
+  const socialChatMenuFolders = document.querySelector("[data-social-chat-menu-folders]");
+  const socialChatPinLabel = document.querySelector("[data-social-chat-pin-label]");
+  const socialChatMuteLabel = document.querySelector("[data-social-chat-mute-label]");
   const socialChatEmpty = document.querySelector("[data-social-chat-empty]");
   const marketAppbar = document.querySelector(".market-appbar");
   const marketSearch = document.querySelector("[data-market-search]");
@@ -99,6 +109,20 @@
   let marketActiveCategory = "self";
   let marketActiveView = "quotes";
   let socialActiveFilter = "all";
+  let socialFolderPressTimer = null;
+  let socialFolderPressTarget = null;
+  let socialFolderPointerId = null;
+  let socialFolderPointerStartX = 0;
+  let socialFolderPointerStartY = 0;
+  let socialFolderMenuTrigger = null;
+  let suppressSocialFilterClick = false;
+  let socialChatPressTimer = null;
+  let socialChatPressTarget = null;
+  let socialChatPointerId = null;
+  let socialChatPointerStartX = 0;
+  let socialChatPointerStartY = 0;
+  let socialChatMenuTrigger = null;
+  let suppressSocialChatClick = false;
   let discoverActiveChain = "flon";
   let discoverActiveCategory = "all";
   const marketViewScroll = { quotes: 0, news: 0 };
@@ -267,6 +291,221 @@
     applySocialChatFilter();
     if (moveFocus) tab.focus();
   }
+
+  function clearSocialFolderPress() {
+    window.clearTimeout(socialFolderPressTimer);
+    socialFolderPressTimer = null;
+    socialFolderPressTarget?.classList.remove("is-long-pressing");
+    socialFolderPressTarget = null;
+    socialFolderPointerId = null;
+  }
+
+  function closeSocialFolderMenu(restoreFocus = false) {
+    if (!socialFolderMenu) return;
+    const trigger = socialFolderMenuTrigger;
+    socialFolderMenu.hidden = true;
+    trigger?.setAttribute("aria-expanded", "false");
+    socialFolderMenuTrigger = null;
+    if (restoreFocus) trigger?.focus();
+  }
+
+  function openSocialFolderMenu(tab, focusFirst = false) {
+    if (!socialFolderMenu || !socialFilterBar || !tab?.dataset.socialFolderName) return;
+    clearSocialFolderPress();
+    closeSocialFolderMenu(false);
+    const folderName = tab.dataset.socialFolderName;
+    socialFolderMenu.dataset.socialFolderName = folderName;
+    socialFolderMenu.setAttribute("aria-label", `${folderName}分类操作菜单`);
+    if (socialFolderMenuEdit) socialFolderMenuEdit.textContent = `编辑「${folderName}」`;
+    socialFolderMenu.hidden = false;
+    socialFolderMenuTrigger = tab;
+    tab.setAttribute("aria-expanded", "true");
+    const panel = tab.closest(".social-chat-panel");
+    const minLeft = 31;
+    const maxLeft = Math.max(minLeft, (panel?.clientWidth || 750) - socialFolderMenu.offsetWidth - 31);
+    const tabCenter = socialFilterBar.offsetLeft + tab.offsetLeft - socialFilterBar.scrollLeft + tab.offsetWidth / 2;
+    const menuLeft = Math.min(maxLeft, Math.max(minLeft, tabCenter - socialFolderMenu.offsetWidth / 2));
+    socialFolderMenu.style.left = `${menuLeft}px`;
+    socialFolderMenu.style.top = `${socialFilterBar.offsetTop + socialFilterBar.offsetHeight - 1}px`;
+    if (focusFirst) socialFolderMenu.querySelector("[role='menuitem']")?.focus();
+  }
+
+  function runSocialFolderAction(action) {
+    const folderName = socialFolderMenu?.dataset.socialFolderName || "当前";
+    const messages = {
+      edit: `打开「${folderName}」分类编辑`,
+      add: `为「${folderName}」添加会话`,
+      read: `「${folderName}」已全部标记为已读`,
+      remove: `删除「${folderName}」分类前需要再次确认`
+    };
+    closeSocialFolderMenu(false);
+    showToast(messages[action] || "分类操作已记录");
+  }
+
+  socialFilterTabs.filter((tab) => tab.dataset.socialFolderName).forEach((tab) => {
+    tab.addEventListener("pointerdown", (event) => {
+      if (!event.isPrimary || event.button !== 0) return;
+      closeSocialFolderMenu(false);
+      clearSocialFolderPress();
+      socialFolderPressTarget = tab;
+      socialFolderPointerId = event.pointerId;
+      socialFolderPointerStartX = event.clientX;
+      socialFolderPointerStartY = event.clientY;
+      tab.classList.add("is-long-pressing");
+      socialFolderPressTimer = window.setTimeout(() => {
+        suppressSocialFilterClick = true;
+        openSocialFolderMenu(tab);
+      }, 520);
+    });
+
+    tab.addEventListener("pointermove", (event) => {
+      if (event.pointerId !== socialFolderPointerId || socialFolderPressTarget !== tab) return;
+      const distance = Math.hypot(event.clientX - socialFolderPointerStartX, event.clientY - socialFolderPointerStartY);
+      if (distance > 12) clearSocialFolderPress();
+    });
+
+    tab.addEventListener("pointerup", (event) => {
+      if (event.pointerId === socialFolderPointerId) clearSocialFolderPress();
+    });
+
+    tab.addEventListener("pointercancel", (event) => {
+      if (event.pointerId === socialFolderPointerId) clearSocialFolderPress();
+    });
+
+    tab.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+      openSocialFolderMenu(tab, true);
+    });
+  });
+
+  function clearSocialChatPress() {
+    window.clearTimeout(socialChatPressTimer);
+    socialChatPressTimer = null;
+    socialChatPressTarget?.classList.remove("is-long-pressing");
+    socialChatPressTarget = null;
+    socialChatPointerId = null;
+  }
+
+  function showSocialChatMenuView(view) {
+    if (!socialChatMenuMain || !socialChatMenuFolders) return;
+    const showFolders = view === "folders";
+    socialChatMenuMain.hidden = showFolders;
+    socialChatMenuFolders.hidden = !showFolders;
+    const targetView = showFolders ? socialChatMenuFolders : socialChatMenuMain;
+    targetView.querySelector("[role='menuitem']")?.focus();
+  }
+
+  function closeSocialChatMenu(restoreFocus = false) {
+    if (!socialChatMenuLayer) return;
+    const trigger = socialChatMenuTrigger;
+    socialChatMenuLayer.hidden = true;
+    trigger?.setAttribute("aria-expanded", "false");
+    socialChatMenuTrigger = null;
+    if (restoreFocus) trigger?.focus();
+  }
+
+  function openSocialChatMenu(row, focusFirst = false) {
+    if (!socialChatMenuLayer || !socialChatMenu || !row) return;
+    clearSocialChatPress();
+    closeSocialFolderMenu(false);
+    closeSocialChatMenu(false);
+    socialChatMenuTrigger = row;
+    const chatName = row.querySelector(".chat-name strong")?.textContent?.trim() || "当前会话";
+    socialChatMenu.dataset.socialChatName = chatName;
+    socialChatMenu.setAttribute("aria-label", `${chatName}会话操作菜单`);
+    if (socialChatPinLabel) socialChatPinLabel.textContent = row.classList.contains("is-pinned") ? "取消置顶" : "置顶";
+    if (socialChatMuteLabel) socialChatMuteLabel.textContent = row.querySelector(".muted-state") ? "取消静音" : "静音";
+    socialChatMenuMain.hidden = false;
+    socialChatMenuFolders.hidden = true;
+    socialChatMenuLayer.hidden = false;
+    row.setAttribute("aria-expanded", "true");
+    const frameRect = frame.getBoundingClientRect();
+    const rowRect = row.getBoundingClientRect();
+    const rowTop = (rowRect.top - frameRect.top) / canvasScale;
+    const rowBottom = (rowRect.bottom - frameRect.top) / canvasScale;
+    const rowCenter = (rowRect.left + rowRect.right - frameRect.left * 2) / (2 * canvasScale);
+    const viewportHeight = frameRect.height / canvasScale;
+    const menuWidth = socialChatMenu.offsetWidth;
+    const menuHeight = socialChatMenu.offsetHeight;
+    const minInset = 31;
+    const gap = 12;
+    const maxLeft = Math.max(minInset, 750 - menuWidth - minInset);
+    const menuLeft = Math.min(maxLeft, Math.max(minInset, rowCenter - menuWidth / 2));
+    const belowTop = rowBottom + gap;
+    const maxTop = viewportHeight - menuHeight - minInset;
+    const placeAbove = belowTop > maxTop;
+    const menuTop = placeAbove ? Math.max(minInset, rowTop - menuHeight - gap) : belowTop;
+    socialChatMenu.style.left = `${menuLeft}px`;
+    socialChatMenu.style.top = `${menuTop}px`;
+    socialChatMenu.dataset.placement = placeAbove ? "above" : "below";
+    if (focusFirst) socialChatMenuMain.querySelector("[role='menuitem']")?.focus();
+  }
+
+  function runSocialChatAction(action) {
+    const chatName = socialChatMenu?.dataset.socialChatName || "当前会话";
+    if (action === "folders") {
+      showSocialChatMenuView("folders");
+      return;
+    }
+    if (action === "back") {
+      showSocialChatMenuView("main");
+      return;
+    }
+    const messages = {
+      unread: `已将「${chatName}」标为未读`,
+      pin: socialChatMenuTrigger?.classList.contains("is-pinned") ? `已取消置顶「${chatName}」` : `已置顶「${chatName}」`,
+      mute: socialChatMenuTrigger?.querySelector(".muted-state") ? `已取消静音「${chatName}」` : `已静音「${chatName}」`,
+      delete: `删除「${chatName}」前需要再次确认`
+    };
+    closeSocialChatMenu(false);
+    showToast(messages[action] || "会话操作已记录");
+  }
+
+  function assignSocialChatCategory(categoryButton) {
+    const chatName = socialChatMenu?.dataset.socialChatName || "当前会话";
+    const categoryName = categoryButton.textContent?.trim() || "分类";
+    closeSocialChatMenu(false);
+    showToast(`已将「${chatName}」添加到「${categoryName}」`);
+  }
+
+  socialChatRows.forEach((row) => {
+    row.setAttribute("aria-haspopup", "menu");
+    row.setAttribute("aria-expanded", "false");
+
+    row.addEventListener("pointerdown", (event) => {
+      if (!event.isPrimary || event.button !== 0) return;
+      closeSocialChatMenu(false);
+      clearSocialChatPress();
+      socialChatPressTarget = row;
+      socialChatPointerId = event.pointerId;
+      socialChatPointerStartX = event.clientX;
+      socialChatPointerStartY = event.clientY;
+      row.classList.add("is-long-pressing");
+      socialChatPressTimer = window.setTimeout(() => {
+        suppressSocialChatClick = true;
+        openSocialChatMenu(row);
+      }, 520);
+    });
+
+    row.addEventListener("pointermove", (event) => {
+      if (event.pointerId !== socialChatPointerId || socialChatPressTarget !== row) return;
+      const distance = Math.hypot(event.clientX - socialChatPointerStartX, event.clientY - socialChatPointerStartY);
+      if (distance > 12) clearSocialChatPress();
+    });
+
+    row.addEventListener("pointerup", (event) => {
+      if (event.pointerId === socialChatPointerId) clearSocialChatPress();
+    });
+
+    row.addEventListener("pointercancel", (event) => {
+      if (event.pointerId === socialChatPointerId) clearSocialChatPress();
+    });
+
+    row.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+      openSocialChatMenu(row, true);
+    });
+  });
 
   function applyDiscoverFilter() {
     let visibleCount = 0;
@@ -859,6 +1098,45 @@
   });
 
   document.addEventListener("click", (event) => {
+    const socialChatAction = event.target.closest("[data-social-chat-action]");
+    if (socialChatAction) {
+      runSocialChatAction(socialChatAction.dataset.socialChatAction);
+      return;
+    }
+
+    const socialChatCategory = event.target.closest("[data-social-chat-category]");
+    if (socialChatCategory) {
+      assignSocialChatCategory(socialChatCategory);
+      return;
+    }
+
+    if (event.target.closest("[data-social-chat-menu-close]")) {
+      closeSocialChatMenu(true);
+      return;
+    }
+
+    const clickedSocialChatRow = event.target.closest("[data-chat-row]");
+    if (suppressSocialChatClick && clickedSocialChatRow === socialChatMenuTrigger) {
+      suppressSocialChatClick = false;
+      return;
+    }
+
+    const socialFolderAction = event.target.closest("[data-social-folder-action]");
+    if (socialFolderAction) {
+      runSocialFolderAction(socialFolderAction.dataset.socialFolderAction);
+      return;
+    }
+
+    const clickedSocialFilterTab = event.target.closest("[data-social-filter]");
+    if (suppressSocialFilterClick && clickedSocialFilterTab === socialFolderMenuTrigger) {
+      suppressSocialFilterClick = false;
+      return;
+    }
+
+    if (socialFolderMenu && !socialFolderMenu.hidden && !event.target.closest("[data-social-folder-menu]")) {
+      closeSocialFolderMenu(false);
+    }
+
     const socialDrawerButton = event.target.closest("[data-social-drawer-trigger]");
     if (socialDrawerButton) {
       openSocialDrawer();
@@ -892,8 +1170,7 @@
     const marketCategoryTab = event.target.closest('[role="tab"][data-market-category]');
     if (marketCategoryTab) return selectMarketCategory(marketCategoryTab);
 
-    const socialFilterTab = event.target.closest("[data-social-filter]");
-    if (socialFilterTab) return selectSocialFilter(socialFilterTab);
+    if (clickedSocialFilterTab) return selectSocialFilter(clickedSocialFilterTab);
 
     const discoverChainTab = event.target.closest("[data-discover-chain]");
     if (discoverChainTab) return selectDiscoverChain(discoverChainTab);
@@ -988,6 +1265,12 @@
   marketViewTabs.forEach((tab) => tab.addEventListener("click", () => selectMarketView(tab)));
 
   document.addEventListener("keydown", (event) => {
+    const socialChatRow = event.target.closest?.("[data-chat-row]");
+    if (socialChatRow && (event.key === "ContextMenu" || (event.shiftKey && event.key === "F10"))) {
+      event.preventDefault();
+      openSocialChatMenu(socialChatRow, true);
+      return;
+    }
     const marketViewTab = event.target.closest?.("[data-market-view-tab]");
     if (marketViewTab && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
       event.preventDefault();
@@ -1006,6 +1289,11 @@
       return;
     }
     const socialFilterTab = event.target.closest?.("[data-social-filter]");
+    if (socialFilterTab?.dataset.socialFolderName && (event.key === "ContextMenu" || (event.shiftKey && event.key === "F10"))) {
+      event.preventDefault();
+      openSocialFolderMenu(socialFilterTab, true);
+      return;
+    }
     if (socialFilterTab && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
       event.preventDefault();
       const currentIndex = socialFilterTabs.indexOf(socialFilterTab);
@@ -1035,6 +1323,14 @@
     }
     if (event.key === "Escape" && socialDrawerLayer && !socialDrawerLayer.hidden) {
       closeSocialDrawer(true);
+      return;
+    }
+    if (event.key === "Escape" && socialChatMenuLayer && !socialChatMenuLayer.hidden) {
+      closeSocialChatMenu(true);
+      return;
+    }
+    if (event.key === "Escape" && socialFolderMenu && !socialFolderMenu.hidden) {
+      closeSocialFolderMenu(true);
       return;
     }
     trapSocialDrawerFocus(event);
