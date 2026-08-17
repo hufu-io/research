@@ -2921,9 +2921,11 @@ body {
   margin-top: 15px;
 }
 
-.settings-content .menu-row .icon:last-child {
-  color: var(--text-3);
+.settings-content .menu-group {
+  margin-top: 12px;
 }
+
+
 
 @media (max-width: 374px) {
   :root {

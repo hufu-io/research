@@ -1483,6 +1483,11 @@ img {
   border-radius: 25px;
 }
 
+.menu-icon-image {
+  width: 46px;
+  height: 46px;
+}
+
 .shield-bg {
   color: #188d78;
   background: #e8f9f5;

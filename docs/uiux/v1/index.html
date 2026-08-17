@@ -16,7 +16,7 @@
     <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
     <symbol id="i-back" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
     <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
-    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 19a2 2 0 0 0 4 0"/></symbol>
     <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
     <symbol id="i-send" viewBox="0 0 24 24"><path d="m21 3-7 18-4-7-7-4z"/><path d="M10 14 21 3"/></symbol>
     <symbol id="i-receive" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></symbol>
@@ -32,13 +32,11 @@
     <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="m3 3 18 18M10.5 6.2A10.4 10.4 0 0 1 12 6c6.5 0 10 6 10 6a17 17 0 0 1-2.2 2.8M6.2 6.2A16.3 16.3 0 0 0 2 12s3.5 6 10 6a9.8 9.8 0 0 0 3.8-.7"/></symbol>
     <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4.5 6v5.5c0 4.8 3.2 8 7.5 9.5 4.3-1.5 7.5-4.7 7.5-9.5V6z"/><path d="m9 12 2 2 4-4"/></symbol>
     <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M4 6.5h14a2 2 0 0 1 2 2V19H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h11"/><path d="M15 11h6v4h-6a2 2 0 0 1 0-4Z"/></symbol>
-    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></symbol>
-    <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 2 1.4 5.1L18 9l-4.6 1.9L12 16l-1.4-5.1L6 9l4.6-1.9zM19 15l.7 2.3L22 18l-2.3.7L19 21l-.7-2.3L16 18l2.3-.7z"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z"/><path d="M18.5 14l.5 1.7 1.7.5-1.7.5-.5 1.7-.5-1.7-1.7-.5 1.7-.5z"/></symbol>
     <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
     <symbol id="i-minimize" viewBox="0 0 24 24"><path d="M6 12h12"/></symbol>
     <symbol id="i-expand" viewBox="0 0 24 24"><path d="M9 4H4v5M15 4h5v5M20 15v5h-5M4 15v5h5"/></symbol>
     <symbol id="i-collapse" viewBox="0 0 24 24"><path d="M4 9h5V4M20 9h-5V4M20 15h-5v5M4 15h5v5"/></symbol>
-    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
   </svg>
 
   <div id="app-frame">
@@ -405,15 +403,27 @@
           <h1 id="settings-title">设置</h1>
         </header>
         <div class="page-content settings-content">
-          <section class="menu-group" aria-label="账户与钱包管理">
-            <button class="menu-row" type="button" data-action="open-security"><span class="menu-icon shield-bg"><svg class="icon"><use href="#i-shield"></use></svg></span><span class="menu-copy"><strong>身份与安全</strong><small>RWID 已绑定 · 安全状态良好</small></span><span class="status-label success-label">安全</span><svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
-            <button class="menu-row" type="button" data-action="open-wallet"><span class="menu-icon wallet-bg"><svg class="icon"><use href="#i-wallet"></use></svg></span><span class="menu-copy"><strong>钱包管理</strong><small>3 个多链钱包 · 本地昵称</small></span><svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
-            <button class="menu-row" type="button" data-view-target="discover"><span class="menu-icon dapp-bg"><svg class="icon"><use href="#i-grid"></use></svg></span><span class="menu-copy"><strong>DApp 管理</strong><small>连接、授权、收藏与最近访问</small></span><svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
+          <section class="menu-group" aria-label="网络与地址">
+            <button class="menu-row" type="button" data-action="toast" data-message="打开网络管理"><span class="menu-icon"><img class="menu-icon-image" src="assets/images/icon/setting/network.svg" alt="" aria-hidden="true"></span><span class="menu-copy"><strong>网络管理</strong><small>管理多链节点与 RPC</small></span><svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
+            <button class="menu-row" type="button" data-action="toast" data-message="打开地址簿"><span class="menu-icon"><img class="menu-icon-image" src="assets/images/icon/setting/address.svg" alt="" aria-hidden="true"></span><span class="menu-copy"><strong>地址簿</strong><small>常用转账地址收藏</small></span><svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
+            <button class="menu-row" type="button" data-action="toast" data-message="打开节点设置"><span class="menu-icon"><img class="menu-icon-image" src="assets/images/icon/setting/node.svg" alt="" aria-hidden="true"></span><span class="menu-copy"><strong>节点设置</strong><small>添加或切换自定义节点</small></span><svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
           </section>
 
           <section class="menu-group" aria-label="Aime 与通用设置">
-            <div class="menu-row aime-setting-row"><span class="menu-icon aime-bg"><svg class="icon"><use href="#i-spark"></use></svg></span><span class="menu-copy"><strong>Aime 智能助手</strong><small>页面解答 · DApp 导航 · 隐私设置</small></span><button class="switch is-on" type="button" role="switch" aria-checked="true" aria-label="开启或关闭 Aime" data-action="toggle-aime"><span></span></button></div>
-            <button class="menu-row" type="button" data-action="toast" data-message="打开通用设置"><span class="menu-icon settings-bg"><img class="settings-icon-image" src="assets/images/icon/settings.svg" alt="" aria-hidden="true"></span><span class="menu-copy"><strong>通用设置</strong><small>语言、货币、网络、主题与通知</small></span><svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
+            <div class="menu-row aime-setting-row"><span class="menu-icon"><img class="menu-icon-image" src="assets/images/icon/setting/aime.svg" alt="" aria-hidden="true"></span><span class="menu-copy"><strong>Aime 智能助手</strong><small>页面解答 · DApp 导航 · 隐私设置</small></span><button class="switch is-on" type="button" role="switch" aria-checked="true" aria-label="开启或关闭 Aime" data-action="toggle-aime"><span></span></button></div>
+            <button class="menu-row" type="button" data-action="toast" data-message="打开货币单位"><span class="menu-icon"><img class="menu-icon-image" src="assets/images/icon/setting/currency.svg" alt="" aria-hidden="true"></span><span class="menu-copy"><strong>货币单位</strong><small>USDT</small></span><svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
+            <button class="menu-row" type="button" data-action="toast" data-message="打开安全锁设置"><span class="menu-icon"><img class="menu-icon-image" src="assets/images/icon/setting/lock.svg" alt="" aria-hidden="true"></span><span class="menu-copy"><strong>安全锁设置</strong><small>关闭</small></span><svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
+            <button class="menu-row" type="button" data-action="toast" data-message="打开多语言"><span class="menu-icon"><img class="menu-icon-image" src="assets/images/icon/setting/language.svg" alt="" aria-hidden="true"></span><span class="menu-copy"><strong>多语言</strong><small>简体中文</small></span><svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
+          </section>
+
+          <section class="menu-group" aria-label="DApp 与通知">
+            <button class="menu-row" type="button" data-action="toast" data-message="打开 DApp 设置"><span class="menu-icon"><img class="menu-icon-image" src="assets/images/icon/setting/dapp.svg" alt="" aria-hidden="true"></span><span class="menu-copy"><strong>DApp 设置</strong><small>连接、授权与收藏</small></span><svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
+            <div class="menu-row"><span class="menu-icon"><img class="menu-icon-image" src="assets/images/icon/setting/notification.svg" alt="" aria-hidden="true"></span><span class="menu-copy"><strong>消息通知</strong><small>接收交易与系统通知</small></span><button class="switch is-on" type="button" role="switch" aria-checked="true" aria-label="开启或关闭消息通知" data-action="toggle-notification"><span></span></button></div>
+          </section>
+
+          <section class="menu-group" aria-label="关于">
+            <button class="menu-row" type="button" data-action="toast" data-message="打开关于我们"><span class="menu-icon"><img class="menu-icon-image" src="assets/images/icon/setting/about.svg" alt="" aria-hidden="true"></span><span class="menu-copy"><strong>关于我们</strong><small>版本信息与协议</small></span><svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
+            <button class="menu-row" type="button" data-action="toast" data-message="检查更新"><span class="menu-icon"><img class="menu-icon-image" src="assets/images/icon/setting/update.svg" alt="" aria-hidden="true"></span><span class="menu-copy"><strong>检查更新</strong><small>v1.0.0</small></span><svg class="icon icon-sm"><use href="#i-right"></use></svg></button>
           </section>
         </div>
       </section>
