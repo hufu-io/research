@@ -918,7 +918,7 @@ img {
 
 .asset-tabs {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   padding: 8px;
   background: var(--grouped);
   border-radius: 27px;
@@ -1405,8 +1405,7 @@ img {
 }
 
 .asset-tabs {
-  flex: 0 0 273px;
-  width: 273px;
+  flex: 0 0 auto;
   margin-bottom: 23px;
 }
 
