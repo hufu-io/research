@@ -38,12 +38,6 @@
       }
     }
   };
-  const heroCarousel = document.querySelector("[data-hero-carousel]");
-  const heroSlides = [...document.querySelectorAll("[data-hero-slide]")];
-  const heroDots = [...document.querySelectorAll("[data-hero-dot]")];
-  const homeNotice = document.querySelector("[data-home-notice]");
-  const homeNoticeTrack = document.querySelector("[data-home-notice-track]");
-  const homeNoticeItems = [...document.querySelectorAll("[data-home-notice-item]")];
   const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   const socialDrawerLayer = document.querySelector("[data-social-drawer-layer]");
   const socialDrawer = document.querySelector(".social-drawer");
@@ -97,11 +91,6 @@
   let aimeRightBoundaryExceeded = false;
   let aimeThinkingTimer = null;
   let aimeLongPressTimer = null;
-  let heroIndex = 0;
-  let heroTimer = null;
-  let homeNoticeIndex = 0;
-  let homeNoticeVisualIndex = 0;
-  let homeNoticeTimer = null;
   let pendingDapp = null;
   let marketSortKey = "";
   let marketSortDirection = "none";
@@ -163,7 +152,7 @@
       launchLoading.classList.add("is-leaving");
       launchLoading.addEventListener("transitionend", finish, { once: true });
       window.setTimeout(finish, 240);
-    }, 1000);
+    }, 500);
   }
 
   const toast = document.createElement("div");
@@ -665,55 +654,6 @@
     }
   }
 
-  function showHeroSlide(index) {
-    heroIndex = (index + heroSlides.length) % heroSlides.length;
-    heroSlides.forEach((slide, slideIndex) => slide.classList.toggle("is-active", slideIndex === heroIndex));
-    heroDots.forEach((dot, dotIndex) => dot.classList.toggle("is-active", dotIndex === heroIndex));
-  }
-
-  function stopHeroCarousel() {
-    window.clearInterval(heroTimer);
-    heroTimer = null;
-  }
-
-  function startHeroCarousel() {
-    stopHeroCarousel();
-    if (!heroCarousel || heroSlides.length < 2 || document.hidden) return;
-    heroTimer = window.setInterval(() => showHeroSlide(heroIndex + 1), 4500);
-  }
-
-  function showHomeNotice(index) {
-    if (!homeNotice || !homeNoticeTrack || !homeNoticeItems.length) return;
-    const nextIndex = (index + homeNoticeItems.length) % homeNoticeItems.length;
-    const loopsToStart = homeNoticeIndex === homeNoticeItems.length - 1 && nextIndex === 0 && index > homeNoticeIndex;
-    homeNoticeIndex = nextIndex;
-    homeNoticeVisualIndex = loopsToStart ? homeNoticeItems.length : homeNoticeIndex;
-    homeNoticeTrack.style.setProperty("--notice-index", homeNoticeVisualIndex);
-    const message = homeNoticeItems[homeNoticeIndex].textContent.trim();
-    homeNotice.setAttribute("aria-label", `查看通知：${message}`);
-  }
-
-  function resetHomeNoticeTrack() {
-    if (!homeNoticeTrack || homeNoticeVisualIndex !== homeNoticeItems.length) return;
-    homeNoticeTrack.classList.add("is-resetting");
-    homeNoticeVisualIndex = 0;
-    homeNoticeTrack.style.setProperty("--notice-index", homeNoticeVisualIndex);
-    requestAnimationFrame(() => requestAnimationFrame(() => homeNoticeTrack.classList.remove("is-resetting")));
-  }
-
-  function stopHomeNoticeTicker() {
-    window.clearInterval(homeNoticeTimer);
-    homeNoticeTimer = null;
-    resetHomeNoticeTrack();
-  }
-
-  function startHomeNoticeTicker() {
-    stopHomeNoticeTicker();
-    const homeView = document.querySelector('[data-view="home"]');
-    if (!homeNotice || homeNoticeItems.length < 2 || document.hidden || homeView?.hidden || reducedMotionQuery.matches) return;
-    homeNoticeTimer = window.setInterval(() => showHomeNotice(homeNoticeIndex + 1), 3000);
-  }
-
   function switchView(name) {
     closeSocialDrawer();
     views.forEach((view) => {
@@ -729,8 +669,6 @@
       if (active) item.setAttribute("aria-current", "page");
       else item.removeAttribute("aria-current");
     });
-    if (name === "home") startHomeNoticeTicker();
-    else stopHomeNoticeTicker();
     try {
       if (history.replaceState) {
         history.replaceState(null, "", `#page=${name}`);
@@ -947,10 +885,10 @@
     const frameRect = frame.getBoundingClientRect();
     const fabRect = aimeFab.getBoundingClientRect();
     const navigationTop = bottomNav?.getBoundingClientRect().top || frameRect.bottom;
-    const minLeft = frameRect.left + 23;
-    const maxLeft = Math.max(minLeft, frameRect.right - fabRect.width - 23);
-    const minTop = frameRect.top + 23;
-    const maxTop = Math.max(minTop, navigationTop - fabRect.height - 23);
+    const minLeft = frameRect.left + 24;
+    const maxLeft = Math.max(minLeft, frameRect.right - fabRect.width - 24);
+    const minTop = frameRect.top + 24;
+    const maxTop = Math.max(minTop, navigationTop - fabRect.height - 24);
     return { minLeft, maxLeft, minTop, maxTop };
   }
 
@@ -987,7 +925,7 @@
     const bounds = getAimeDragBounds();
     const rect = aimeFab.getBoundingClientRect();
     const targetWidth = getAimeTargetWidth(aimeCollapsed);
-    const targetLeft = aimeCollapsed ? frameRect.right - targetWidth : frameRect.right - targetWidth - 23;
+    const targetLeft = frameRect.right - targetWidth - 24;
     const top = Math.max(bounds.minTop, Math.min(bounds.maxTop, rect.top));
     renderAimePosition(Math.max(bounds.minLeft, targetLeft), top);
   }
@@ -1236,7 +1174,7 @@
       actionTarget.setAttribute("aria-checked", String(aimeEnabled));
       aimeStorage.set("hufu-ui-aime-enabled", String(aimeEnabled));
       aimeFab.hidden = !aimeEnabled;
-      if (aimeEnabled) setAimeCollapsed(true);
+      if (aimeEnabled) setAimeCollapsed(false);
       return;
     }
     if (action === "toast") return showToast(actionTarget.dataset.message || "操作已记录");
@@ -1337,23 +1275,6 @@
     if (event.key === "Escape") closeModal();
   });
 
-  homeNotice?.addEventListener("pointerenter", stopHomeNoticeTicker);
-  homeNotice?.addEventListener("pointerleave", startHomeNoticeTicker);
-  homeNotice?.addEventListener("focus", stopHomeNoticeTicker);
-  homeNotice?.addEventListener("blur", startHomeNoticeTicker);
-  homeNoticeTrack?.addEventListener("transitionend", resetHomeNoticeTrack);
-  reducedMotionQuery.addEventListener("change", () => reducedMotionQuery.matches ? stopHomeNoticeTicker() : startHomeNoticeTicker());
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      stopHeroCarousel();
-      stopHomeNoticeTicker();
-      return;
-    }
-    startHeroCarousel();
-    startHomeNoticeTicker();
-  });
-
   const aimeToggle = document.querySelector('[data-action="toggle-aime"]');
   initializeLaunchLoading();
   initializeMarketFavorites();
@@ -1364,10 +1285,7 @@
   aimeToggle?.classList.toggle("is-on", aimeEnabled);
   aimeToggle?.setAttribute("aria-checked", String(aimeEnabled));
   aimeFab.hidden = !aimeEnabled;
-  setAimeCollapsed(true);
-  showHeroSlide(0);
-  showHomeNotice(0);
-  startHeroCarousel();
+  setAimeCollapsed(false);
 
   const initialPage = new URLSearchParams(location.hash.slice(1)).get("page");
   const validViews = ["home", "social", "market", "discover", "profile", "settings"];

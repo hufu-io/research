@@ -1,4 +1,4 @@
-@import url("./base.css?v=9");
+@import url("./base.css?v=14");
 
 /*
  * UI/UX v1 uses the same mobile-canvas shell as the interaction prototype.
@@ -1514,92 +1514,6 @@ body {
   margin-top: 31px;
 }
 
-.home-notice {
-  display: grid;
-  grid-template-columns: 54px minmax(0, 1fr) 54px;
-  align-items: center;
-  gap: 15px;
-  width: 100%;
-  min-height: 92px;
-  margin: 23px 0 0;
-  padding: 0 23px;
-  overflow: hidden;
-  color: var(--text-1);
-  text-align: left;
-  background: var(--brand-soft);
-  border: 1px solid rgba(62, 120, 255, 0.16);
-  border-radius: 23px;
-  transition: background-color 150ms ease, border-color 150ms ease;
-}
-
-.home-notice:hover,
-.home-notice:focus-visible {
-  background: #eaf0ff;
-  border-color: rgba(62, 120, 255, 0.32);
-}
-
-.home-notice:active {
-  background: #e2eaff;
-}
-
-.home-notice:focus-visible {
-  outline: 2px solid rgba(62, 120, 255, 0.36);
-  outline-offset: 2px;
-}
-
-.home-notice-icon {
-  display: grid;
-  place-items: center;
-  width: 54px;
-  height: 54px;
-  color: #fff;
-  background: var(--brand);
-  border-radius: 17px;
-}
-
-.home-notice-icon .icon {
-  width: 31px;
-  height: 31px;
-  stroke-width: 2.2;
-}
-
-.home-notice-viewport {
-  height: 85px;
-  min-width: 0;
-  overflow: hidden;
-}
-
-.home-notice-track {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  transform: translate3d(0, calc(var(--notice-index, 0) * -85px), 0);
-  transition: transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  will-change: transform;
-}
-
-.home-notice-track.is-resetting {
-  transition: none;
-}
-
-.home-notice-item {
-  display: block;
-  flex: 0 0 85px;
-  min-width: 0;
-  overflow: hidden;
-  font-size: 25px;
-  font-weight: 700;
-  line-height: 85px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.home-notice-arrow {
-  display: block;
-  width: 54px;
-  height: 54px;
-}
-
 .home-content .dapp-scroller {
   display: flex;
   gap: 15px;
@@ -2233,15 +2147,15 @@ body {
 }
 
 .aime-fab:not(.is-collapsed) .aime-pet-visual {
-  transform: translateX(42px);
+  transform: translateX(46px);
 }
 
 .aime-fab:not(.is-collapsed) .aime-fab-bubble {
-  transform: translate(35px, -35px);
+  transform: translate(39px, -35px);
 }
 
 .aime-fab:not(.is-collapsed) .aime-fab-arrow {
-  transform: translate(62px, -27px) scaleX(-1);
+  transform: translate(66px, -27px) scaleX(-1);
 }
 
 .aime-pet-visual img,
@@ -2290,9 +2204,9 @@ body {
 }
 
 .aime-fab {
-  --aime-expanded-width: 254px;
-  --aime-collapsed-width: 208px;
-  right: calc(var(--canvas-inset) + 31px);
+  --aime-expanded-width: 264px;
+  --aime-collapsed-width: 172px;
+  right: calc(var(--canvas-inset) + 24px);
   width: var(--aime-expanded-width);
   transition: left 240ms cubic-bezier(0.2, 0.8, 0.2, 1), top 240ms cubic-bezier(0.2, 0.8, 0.2, 1), right 320ms cubic-bezier(0.2, 0.8, 0.2, 1), width 320ms ease;
   will-change: left, top;
@@ -2322,13 +2236,13 @@ body {
 
 .aime-pet-trigger {
   display: grid;
-  flex: 0 0 208px;
+  flex: 0 0 172px;
   place-items: center;
-  width: 208px;
-  height: 208px;
+  width: 172px;
+  height: 172px;
   padding: 0;
   background: transparent;
-  border-radius: 54px;
+  border-radius: 44px;
   touch-action: none;
 }
 
@@ -2337,15 +2251,16 @@ body {
 }
 
 .aime-panel {
-  height: min(62dvh, 1077px);
-  max-height: min(82dvh, 1346px);
+  height: 60%;
+  max-height: 60%;
+  min-height: 720px;
   background: var(--surface);
   border-radius: 31px 31px 0 0;
 }
 
 .aime-panel .aime-header {
-  min-height: 123px;
-  padding: 19px 23px 19px 31px;
+  min-height: 80px;
+  padding: 12px 20px 12px 27px;
 }
 
 .aime-panel .aime-header > div:last-child {
@@ -2380,50 +2295,36 @@ body {
 
 .aime-panel .aime-title strong {
   color: var(--text);
-  font-size: 29px;
-}
-
-.aime-panel .aime-title small {
-  font-size: 21px;
-}
-
-.aime-panel .aime-context {
-  min-height: 85px;
-  padding: 12px 31px;
-  font-size: 23px;
-}
-
-.aime-panel .aime-context button {
-  font-size: 21px;
+  font-size: 25px;
 }
 
 .aime-panel .aime-messages {
-  padding: 31px;
+  padding: 23px 27px;
   background: var(--grouped);
 }
 
 .aime-panel .message p {
-  font-size: 25px;
+  font-size: 21px;
   line-height: 1.6;
 }
 
 .aime-panel .aime-suggestions {
-  gap: 15px;
-  padding-left: 81px;
+  gap: 12px;
+  padding-left: 80px;
 }
 
 .aime-panel .aime-suggestions button {
-  padding: 0 23px;
-  font-size: 21px;
+  padding: 0 19px;
+  font-size: 18px;
 }
 
 .aime-panel .aime-input input {
-  font-size: 27px;
+  font-size: 21px;
 }
 
 .aime-panel.is-full {
-  height: 100dvh;
-  max-height: 100dvh;
+  height: 100%;
+  max-height: 100%;
   border-radius: 0;
 }
 
@@ -2444,15 +2345,6 @@ body {
   text-align: center;
 }
 
-.hero-carousel {
-  position: relative;
-  aspect-ratio: 2 / 1;
-  overflow: hidden;
-  background: var(--brand-dark);
-  border-radius: 46px;
-  box-shadow: 0 35px 77px rgba(45, 101, 235, 0.24);
-}
-
 .home-content > .home-hero-actions {
   margin-top: 0;
 }
@@ -2462,13 +2354,6 @@ body {
   overflow: hidden;
   background: var(--surface);
   border-radius: 46px;
-}
-
-.home-hero-actions .hero-carousel {
-  aspect-ratio: 2.16 / 1;
-  border-radius: 46px 46px 0 0;
-  box-shadow: none;
-  clip-path: ellipse(160% 100% at 50% 0);
 }
 
 .home-hero-actions .quick-section {
@@ -2817,65 +2702,11 @@ body {
   background: var(--grouped);
 }
 
-.hero-carousel-link,
-.hero-carousel-track,
-.hero-slide,
-.hero-slide img {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.hero-carousel-link {
-  padding: 0;
-  overflow: hidden;
-  background: transparent;
-  border: 0;
-  border-radius: inherit;
-}
-
-.hero-carousel-link:focus-visible {
-  outline: 3px solid #fff;
-  outline-offset: -5px;
-}
-
-.hero-carousel-track {
-  position: relative;
-}
-
-.hero-slide {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transform: scale(1.025);
-  transition: opacity 520ms ease, transform 800ms ease;
-}
-
-.hero-slide.is-active {
-  z-index: 1;
-  opacity: 1;
-  transform: scale(1);
-}
-
-.hero-slide img {
-  object-fit: cover;
-}
-
-.hero-carousel .hero-pagination {
-  z-index: 2;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .app-launch-loading {
     transition-duration: 1ms;
   }
 
-  .hero-slide {
-    transition: none;
-  }
-
-  .home-notice,
-  .home-notice-track,
   .quick-action,
   .holding-market-card {
     transition: none;

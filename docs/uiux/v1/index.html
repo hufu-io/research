@@ -7,7 +7,7 @@
   <meta name="description" content="Hufu Wallet · UI/UX v1 正式视觉设计稿">
   <link rel="icon" href="data:,">
   <title>Hufu Wallet · UI/UX v1</title>
-  <link rel="stylesheet" href="ui.css?v=153">
+  <link rel="stylesheet" href="ui.css?v=166">
 </head>
 <body>
   <a class="skip-link" href="#main-content">跳到主要内容</a>
@@ -76,21 +76,6 @@
           </section>
 
           <div class="home-hero-actions">
-            <section class="hero-carousel" aria-label="FullBridge 重点推荐" data-hero-carousel>
-              <button class="hero-carousel-link" type="button" data-action="open-bridge" aria-label="查看 FullBridge 跨链推荐">
-                <span class="hero-carousel-track">
-                  <span class="hero-slide is-active" data-hero-slide><img src="assets/images/home/banner/redesign/fullbridge-launch.jpg" alt="FullBridge 跨链状态追踪现已上线"></span>
-                  <span class="hero-slide" data-hero-slide><img src="assets/images/home/banner/redesign/fullbridge-journey.jpg" alt="全程追踪跨链状态,从源链确认到目标链到账"></span>
-                  <span class="hero-slide" data-hero-slide><img src="assets/images/home/banner/redesign/fullbridge-multichain.jpg" alt="FullBridge 连接 FullOn 与多条公链"></span>
-                </span>
-              </button>
-              <div class="hero-pagination" aria-hidden="true">
-                <span class="is-active" data-hero-dot="0"></span>
-                <span data-hero-dot="1"></span>
-                <span data-hero-dot="2"></span>
-              </div>
-            </section>
-
             <section class="quick-section" aria-label="首页快捷功能">
               <div class="quick-grid" role="group" aria-label="首页快捷功能">
                 <button class="quick-action" type="button" data-action="open-transfer">
@@ -112,19 +97,6 @@
               </div>
             </section>
           </div>
-
-          <button class="home-notice" type="button" data-home-notice data-view-target="market" data-market-open-news aria-label="查看通知：FullBridge 跨链状态追踪现已上线">
-            <span class="home-notice-icon" aria-hidden="true"><svg class="icon icon-sm"><use href="#i-bell"></use></svg></span>
-            <span class="home-notice-viewport" aria-hidden="true">
-              <span class="home-notice-track" data-home-notice-track>
-                <span class="home-notice-item" data-home-notice-item>FullBridge 跨链状态追踪现已上线</span>
-                <span class="home-notice-item" data-home-notice-item>FullOn 网络 Gas 费回落至本周低位</span>
-                <span class="home-notice-item" data-home-notice-item>USDT 跨链流动性持续提升</span>
-                <span class="home-notice-item" aria-hidden="true">FullBridge 跨链状态追踪现已上线</span>
-              </span>
-            </span>
-            <img class="home-notice-arrow" src="assets/images/home/notice-arrow.svg" alt="" aria-hidden="true">
-          </button>
 
           <section class="ecosystem-section" aria-labelledby="ecosystem-title">
             <h2 class="sr-only" id="ecosystem-title">探索生态</h2>
@@ -529,10 +501,9 @@
     <section class="aime-panel canvas-fixed" data-modal="aime" role="dialog" aria-modal="true" aria-labelledby="aime-title" hidden>
       <div class="sheet-handle" aria-hidden="true"></div>
       <div class="aime-header">
-        <div class="aime-title"><span class="aime-avatar" aria-hidden="true"><svg class="icon"><use href="#i-spark"></use></svg></span><span><strong id="aime-title">Aime</strong><small><span></span>FullOn 智能助手</small></span></div>
+        <div class="aime-title"><strong id="aime-title">Aime</strong></div>
         <div><button class="icon-button" type="button" aria-label="展开完整对话" aria-pressed="false" data-action="toggle-aime-full" data-aime-expand data-initial-focus><svg class="icon"><use href="#i-expand" data-aime-expand-icon></use></svg></button><button class="icon-button" type="button" data-action="minimize-aime" aria-label="最小化对话"><svg class="icon"><use href="#i-minimize"></use></svg></button></div>
       </div>
-      <div class="aime-context"><svg class="icon icon-sm"><use href="#i-spark"></use></svg><span>正在解释：<strong data-aime-context>Hufu 首页</strong></span><button type="button" data-action="toast" data-message="Aime 仅使用当前页面公开上下文">隐私说明</button></div>
       <div class="aime-messages" aria-live="polite">
         <div class="message aime-message"><span class="aime-message-avatar" aria-hidden="true">Ai</span><p>你好，我可以帮你理解当前页面、查询 FullOn 生态应用，或准备操作步骤。所有资产操作仍由你确认。</p></div>
         <div class="aime-suggestions"><button type="button" data-aime-prompt="FullSwap 是什么？">FullSwap 是什么？</button><button type="button" data-aime-prompt="如何安全跨链？">如何安全跨链？</button><button type="button" data-aime-prompt="解释当前网络">解释当前网络</button></div>
@@ -549,6 +520,6 @@
   <script src="assets/aime/components/aime_greeting.component.js?v=3"></script>
   <script src="assets/aime/components/aime_peek.component.js?v=3"></script>
   <script src="assets/aime/components/aime_peek2.component.js?v=4"></script>
-  <script src="ui.js?v=55"></script>
+  <script src="ui.js?v=58"></script>
 </body>
 </html>
