@@ -1,4 +1,4 @@
-@import url("./base.css?v=14");
+@import url("./base.css?v=18");
 
 /*
  * UI/UX v1 uses the same mobile-canvas shell as the interaction prototype.
@@ -2745,15 +2745,15 @@ body {
 }
 
 .settings-content {
-  padding-top: 8px;
+  padding-top: 4px;
 }
 
 .settings-content > .menu-group:first-child {
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 .settings-content .menu-group {
-  margin-top: 12px;
+  margin-top: 8px;
 }
 
 
